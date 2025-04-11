@@ -1,0 +1,129 @@
+.buttonGroup {
+  margin-top: 2rem;
+}
+
+.timesFont {
+  font-family: 'Times New Roman', Times, serif;
+}
+
+
+.outlineButton {
+  background-color: transparent;
+  color: #ec4899;
+  padding: 0.75rem 2rem;
+  border: 2px solid #ec4899;
+  border-radius: 9999px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.outlineButton:hover {
+  background-color: #ec4899;
+  color: white;
+}
+  
+  @media (max-width: 768px) {
+    .buttonGroup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .buttonGroup button {
+      margin-right: 0 !important;
+      margin-bottom: 1rem !important;
+      width: 200px;
+    }
+  }
+  
+  .heroSection {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    min-height: 400px;
+    overflow: hidden;
+  }
+  
+  .heroImage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .image {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .heroSection {
+      height: 40vh;
+      min-height: 300px;
+    }
+  }
+  
+  .aboutSection {
+    padding: 2rem 0;
+    background-color: #FDF2F8;
+  }
+  
+  .aboutText {
+    color: var(--text-color);
+    line-height: 1.8;
+    margin-bottom: 0.6rem;
+    font-family: 'Times New Roman', Times, serif;
+  }
+  
+  .serviceCard {
+    text-align: center;
+    padding: 0.8rem;
+    height: 100%;
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  }
+  
+  .serviceCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(110, 31, 73, 0.05);
+  
+  }
+  
+  .iconWrapper {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: var(--light-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+  
+  .icon {
+    width: 30px;
+    height: 30px;
+    color: var(--secondary-color);
+  }
+  
+  .imageWrapper {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+     }
+  
+  .storyImage {
+    object-fit: cover;
+  }
+   
+  @media (max-width: 992px) {
+    .imageWrapper {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+  }
+  
+  

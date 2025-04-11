@@ -1,0 +1,239 @@
+.cartPage {
+    padding: 2rem 0;
+    background-color: #f9f9f9;
+    min-height: 70vh;
+  }
+  
+  .pageTitle {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+  
+  .cartItems {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  
+  .cartItem {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #eee;
+    position: relative;
+  }
+  
+  .cartItem:last-child {
+    border-bottom: none;
+  }
+  
+  .itemImage {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-right: 1.5rem;
+  }
+  
+  .itemImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .itemDetails {
+    flex: 1;
+  }
+  
+  .itemName {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: #333;
+  }
+  
+  .itemDescription {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.3rem;
+  }
+  
+  .itemPrice {
+    font-size: 0.9rem;
+    color: #e83e8c;
+    font-weight: 600;
+  }
+  
+  .itemQuantity {
+    display: flex;
+    align-items: center;
+    margin: 0 2rem;
+  }
+  
+  .quantityBtn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .quantityBtn:hover {
+    background-color: #e83e8c;
+    color: white;
+    border-color: #e83e8c;
+  }
+  
+  .itemQuantity span {
+    margin: 0 1rem;
+    font-weight: 600;
+  }
+  
+  .itemTotal {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #333;
+    margin-right: 1.5rem;
+  }
+  
+  .removeBtn {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .removeBtn:hover {
+    color: #e83e8c;
+    transform: scale(1.1);
+  }
+  
+  .continueShoppingBtn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: white;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 2rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  
+  .continueShoppingBtn:hover {
+    background-color: #f8f0ff;
+    color: #e83e8c;
+    border-color: #e83e8c;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  .orderSummary {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  .summaryTitle {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .summaryDetails {
+    margin-bottom: 1.5rem;
+  }
+  
+  .summaryRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .totalRow {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #e83e8c;
+    border-bottom: none;
+  }
+  
+  .checkoutBtn {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #e83e8c;
+    color: white;
+    border: none;
+    border-radius: 2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .checkoutBtn:hover {
+    background-color: #d63384;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(232, 62, 140, 0.3);
+  }
+  
+  .emptyCart {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+  }
+  
+  .emptyCart h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .emptyCart p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    .cartItem {
+      flex-wrap: wrap;
+      padding: 1rem;
+    }
+  
+    .itemImage {
+      width: 60px;
+      height: 60px;
+      margin-right: 1rem;
+    }
+  
+    .itemDetails {
+      width: calc(100% - 80px);
+      margin-bottom: 1rem;
+    }
+  
+    .itemQuantity {
+      margin: 0 1rem 0 0;
+    }
+  
+    .removeBtn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+  }
+  

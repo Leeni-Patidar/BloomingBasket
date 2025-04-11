@@ -1,0 +1,149 @@
+.footer {
+  background-color: #f2f3f6;
+  padding: 1.5rem 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.footerTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.footerTitle::after {
+  content: "";
+  position: absolute;
+  width: 25px;
+  height: 2px;
+  background-color: #e83e8c;
+  bottom: -6px;
+  left: 0;
+}
+
+.footerText {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.footerLinks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footerLinks li {
+  margin-bottom: 0.5rem;
+}
+
+.footerLinks a {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+}
+
+.footerLinks a::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: #e83e8c;
+  transition: all 0.3s ease;
+}
+
+.footerLinks a:hover {
+  color: #e83e8c;
+  transform: translateX(3px);
+}
+
+.footerLinks a:hover::before {
+  width: 100%;
+}
+
+.newsletterForm {
+  display: flex;
+  margin-top: 1rem;
+}
+
+.newsletterInput {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 2rem 0 0 2rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.newsletterInput:focus {
+  border-color: #e83e8c;
+}
+
+.newsletterBtn {
+  background-color: #e83e8c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0 2rem 2rem 0;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.newsletterBtn:hover {
+  background-color: #d63384;
+  transform: translateX(3px);
+}
+
+.footerDivider {
+  margin: 1.5rem 0;
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
+.copyright {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.socialLink {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.socialLink:hover {
+  background-color: #e83e8c;
+  color: white;
+  transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 2rem 0 1rem;
+  }
+
+  .footerTitle {
+    margin-bottom: 0.75rem;
+  }
+
+  .socialLinks {
+    margin-top: 0.75rem;
+  }
+}

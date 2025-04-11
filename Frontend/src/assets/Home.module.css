@@ -1,0 +1,503 @@
+/* Base Styles */
+.homePage {
+    font-family: "Poppins", sans-serif;
+    overflow-x: hidden;
+  }
+  
+
+  .outlineButton {
+    background-color: transparent;
+    color: #ec4899;
+    padding: 0.75rem 2rem;
+    border: 2px solid #ec4899;
+    border-radius: 9999px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .outlineButton:hover {
+    background-color: #ec4899;
+    color: white;
+  }
+    
+   
+  /* Hero Section */
+  .heroSection {
+    background-color: #fff5f7;
+    padding: 5rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .heroContent {
+    padding: 2rem 0;
+  }
+  
+  .heroTitle {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 1s ease;
+  }
+  
+  .heroText {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+    animation: fadeInUp 1.2s ease;
+  }
+  
+  .heroImageWrapper {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1.5s ease;
+    transition: transform 0.5s ease;
+  }
+  
+  .heroImageWrapper:hover {
+    transform: translateY(-10px);
+  }
+  
+  .heroImage {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .heroImageWrapper:hover .heroImage {
+    transform: scale(1.05);
+  }
+  
+  /* Button Styles */
+  .btnPrimary {
+    background-color: #e83e8c;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+  
+  .btnPrimary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.5s ease;
+    z-index: -1;
+  }
+  
+  .btnPrimary:hover {
+    background-color: #d63384;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(232, 62, 140, 0.3);
+  }
+  
+  .btnPrimary:hover::before {
+    left: 100%;
+  }
+  
+  .btnOutline {
+    background-color: transparent;
+    color: #e83e8c;
+    border: 2px solid #e83e8c;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  
+  .btnOutline:hover {
+    background-color: #e83e8c;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(232, 62, 140, 0.3);
+  }
+  
+  .btnAnimated {
+    animation: fadeInUp 1.4s ease;
+  }
+  
+  /* Category Section */
+  .categorySection {
+    padding: 5rem 0;
+    background-color: white;
+  }
+  
+  .sectionTitle {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 2rem;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .sectionTitle::after {
+    content: "";
+    position: absolute;
+    width: 50px;
+    height: 3px;
+    background-color: #e83e8c;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .categoryCard {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .categoryCard:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .categoryImageWrapper {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+  }
+  
+  .categoryImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .categoryCard:hover .categoryImage {
+    transform: scale(1.1);
+  }
+  
+  .categoryName {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    color: white;
+    padding: 1rem;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  /* Occasion Section */
+  .occasionSection {
+    padding: 5rem 0;
+    background-color: #fff5f7;
+  }
+  
+  .occasionItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+  
+  .occasionItem:hover {
+    transform: translateY(-5px);
+  }
+  
+  .occasionIcon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .occasionItem:hover .occasionIcon {
+    background-color: #e83e8c;
+    transform: scale(1.1);
+  }
+  
+  .occasionName {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+    margin: 0;
+  }
+  
+  /* Products Section */
+  .productsSection {
+    padding: 5rem 0;
+    background-color: white;
+  }
+  
+  .productCard {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+    position: relative;
+  }
+  
+  .productCard:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .productImageWrapper {
+    position: relative;
+    overflow: hidden;
+    height: 250px;
+  }
+  
+  .productImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .productCard:hover .productImage {
+    transform: scale(1.1);
+  }
+  
+  .wishlistBtn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: white;
+    color: #999;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  
+  .productCard:hover .wishlistBtn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .wishlistBtn:hover {
+    background-color: #e83e8c;
+    color: white;
+  }
+  
+  .productInfo {
+    padding: 1.5rem;
+  }
+  
+  .productName {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+  
+  .productDescription {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+  
+  .productPrice {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #e83e8c;
+  }
+  
+  .addToCartBtn {
+    background-color: #e83e8c;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  
+  .addToCartBtn:hover {
+    background-color: #d63384;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(232, 62, 140, 0.3);
+  }
+  
+  /* Custom Section */
+  .customSection {
+    padding: 5rem 0;
+    background-color: #fff5f7;
+  }
+  
+  .customContent {
+    padding: 2rem;
+  }
+  
+  .customTitle {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+  
+  .customText {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+  
+  .customImageWrapper {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s ease;
+  }
+  
+  .customImageWrapper:hover {
+    transform: translateY(-10px);
+  }
+  
+  .customImage {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .customImageWrapper:hover .customImage {
+    transform: scale(1.05);
+  }
+  
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 992px) {
+    .heroTitle {
+      font-size: 2rem;
+    }
+  
+    .customTitle {
+      font-size: 1.8rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .heroSection {
+      padding: 3rem 0;
+    }
+  
+    .heroContent {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+  
+    .categorySection,
+    .occasionSection,
+    .productsSection,
+    .customSection {
+      padding: 3rem 0;
+    }
+  
+    .customContent {
+      text-align: center;
+      padding: 2rem 1rem;
+      order: 2;
+    }
+  
+    .customImageWrapper {
+      margin-bottom: 2rem;
+      order: 1;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .heroTitle {
+      font-size: 1.8rem;
+    }
+  
+    .heroText {
+      font-size: 1rem;
+    }
+  
+    .sectionTitle {
+      font-size: 1.5rem;
+    }
+  
+    .categoryName {
+      font-size: 1rem;
+    }
+  
+    .productName {
+      font-size: 1rem;
+    }
+  }
+  
+  

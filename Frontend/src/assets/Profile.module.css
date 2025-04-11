@@ -1,0 +1,436 @@
+.profilePage {
+    padding: 2rem 0;
+    background-color: #f9f9f9;
+    min-height: 70vh;
+  }
+  
+  .pageTitle {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+  
+  /* User Card Styles */
+  .userCard {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .userAvatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  
+  .avatarIcon {
+    font-size: 2rem;
+    color: #e83e8c;
+  }
+  
+  .userName {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .userEmail,
+  .userPhone {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+  }
+  
+  /* Navigation Tabs */
+  .navTabs {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .navTab {
+    padding: 1rem 1.5rem;
+    border: none;
+    background-color: transparent;
+    text-align: left;
+    font-weight: 500;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+  
+  .navTab:hover {
+    background-color: #f8f0ff;
+    color: #e83e8c;
+  }
+  
+  .navTab.active {
+    background-color: #f8f0ff;
+    color: #e83e8c;
+    border-left: 3px solid #e83e8c;
+  }
+  
+  .tabIcon {
+    margin-right: 0.75rem;
+    width: 18px;
+  }
+  
+  .logoutBtn {
+    padding: 1rem 1.5rem;
+    border: none;
+    background-color: transparent;
+    text-align: left;
+    font-weight: 500;
+    color: #e83e8c;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+  }
+  
+  .logoutBtn:hover {
+    background-color: #fff0f5;
+  }
+  
+  /* Content Card */
+  .contentCard {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    height: 100%;
+  }
+  
+  .contentTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  /* Orders Tab */
+  .ordersList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .orderItem {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .orderHeader {
+    padding: 1rem;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .orderId {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: #333;
+  }
+  
+  .orderDate {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0;
+  }
+  
+  .orderStatus {
+    text-align: right;
+  }
+  
+  .statusBadge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  
+  .delivered {
+    background-color: #e6f7e6;
+    color: #28a745;
+  }
+  
+  .processing {
+    background-color: #fff3cd;
+    color: #ffc107;
+  }
+  
+  .shipped {
+    background-color: #cce5ff;
+    color: #007bff;
+  }
+  
+  .cancelled {
+    background-color: #f8d7da;
+    color: #dc3545;
+  }
+  
+  .orderTotal {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #e83e8c;
+  }
+  
+  .orderItems {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .orderItemRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .itemName {
+    flex: 1;
+  }
+  
+  .itemQuantity {
+    width: 50px;
+    text-align: center;
+  }
+  
+  .itemPrice {
+    width: 80px;
+    text-align: right;
+    font-weight: 600;
+  }
+  
+  .orderActions {
+    padding: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+  
+  .viewDetailsBtn,
+  .reorderBtn {
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .viewDetailsBtn {
+    background-color: transparent;
+    color: #333;
+    border: 1px solid #ddd;
+  }
+  
+  .viewDetailsBtn:hover {
+    background-color: #f8f0ff;
+    color: #e83e8c;
+    border-color: #e83e8c;
+  }
+  
+  .reorderBtn {
+    background-color: #e83e8c;
+    color: white;
+    border: none;
+  }
+  
+  .reorderBtn:hover {
+    background-color: #d63384;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(232, 62, 140, 0.3);
+  }
+  
+  .emptyState {
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .shopNowBtn {
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #e83e8c;
+    color: white;
+    border: none;
+    border-radius: 2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .shopNowBtn:hover {
+    background-color: #d63384;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(232, 62, 140, 0.3);
+  }
+  
+  /* Customer Care Tab */
+  .customerCare {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .careSection {
+    margin-bottom: 1.5rem;
+  }
+  
+  .careSection h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .contactList,
+  .tipsList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .contactList li,
+  .tipsList li {
+    margin-bottom: 0.75rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+  
+  .contactList li:before,
+  .tipsList li:before {
+    content: "•";
+    color: #e83e8c;
+    position: absolute;
+    left: 0;
+  }
+  
+  .contactBtn {
+    padding: 0.75rem 1.5rem;
+    background-color: #e83e8c;
+    color: white;
+    border: none;
+    border-radius: 2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+  }
+  
+  .contactBtn:hover {
+    background-color: #d63384;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(232, 62, 140, 0.3);
+  }
+  
+  /* Terms & Conditions Tab */
+  .termsContent {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 1rem;
+  }
+  
+  .termsContent h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.75rem;
+    color: #333;
+  }
+  
+  .termsContent p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    color: #555;
+  }
+  
+  .lastUpdated {
+    font-style: italic;
+    color: #777;
+    margin-top: 2rem;
+    text-align: right;
+  }
+  
+  /* FAQs Tab */
+  .faqList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .faqItem {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1.5rem;
+  }
+  
+  .faqItem:last-child {
+    border-bottom: none;
+  }
+  
+  .faqQuestion {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #333;
+  }
+  
+  .faqAnswer {
+    line-height: 1.6;
+    color: #555;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 992px) {
+    .contentCard {
+      margin-top: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .orderHeader {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .orderStatus {
+      text-align: left;
+      margin-top: 0.75rem;
+    }
+  
+    .orderActions {
+      flex-direction: column;
+    }
+  
+    .viewDetailsBtn,
+    .reorderBtn {
+      width: 100%;
+    }
+  }
+  
