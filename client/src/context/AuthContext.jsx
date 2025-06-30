@@ -1,17 +1,10 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect } from "react"
+import { createContext, useState, useEffect } from "react"
+import axios from "axios"
+import { toast } from "react-toastify"
 
-// Create and export the AuthContext
 export const AuthContext = createContext()
-
-export const useAuth = () => {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider")
-  }
-  return context
-}
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
@@ -20,30 +13,19 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      // Verify token and get user data
-      fetchUser()
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
+      getCurrentUser()
     } else {
       setLoading(false)
     }
   }, [token])
 
-  const fetchUser = async () => {
+  const getCurrentUser = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const userData = await response.json()
-        setUser(userData)
-      } else {
-        // Token is invalid
-        logout()
-      }
+      const response = await axios.get("/api/auth/me")
+      setUser(response.data)
     } catch (error) {
-      console.error("Error fetching user:", error)
+      console.error("Get current user error:", error)
       logout()
     } finally {
       setLoading(false)
@@ -52,95 +34,70 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      })
+      const response = await axios.post("/api/auth/login", { email, password })
+      const { token, user } = response.data
 
-      const data = await response.json()
+      localStorage.setItem("token", token)
+      setToken(token)
+      setUser(user)
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
 
-      if (response.ok) {
-        setToken(data.token)
-        setUser(data.user)
-        localStorage.setItem("token", data.token)
-        return { success: true, message: data.message }
-      } else {
-        return { success: false, message: data.message }
-      }
+      toast.success("Login successful!")
+      return { success: true }
     } catch (error) {
-      console.error("Login error:", error)
-      return { success: false, message: "Network error. Please try again." }
+      const message = error.response?.data?.message || "Login failed"
+      toast.error(message)
+      return { success: false, message }
     }
   }
 
-  const register = async (name, email, password, phone) => {
+  const register = async (name, email, password) => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password, phone }),
-      })
+      const response = await axios.post("/api/auth/register", { name, email, password })
+      const { token, user } = response.data
 
-      const data = await response.json()
+      localStorage.setItem("token", token)
+      setToken(token)
+      setUser(user)
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
 
-      if (response.ok) {
-        setToken(data.token)
-        setUser(data.user)
-        localStorage.setItem("token", data.token)
-        return { success: true, message: data.message }
-      } else {
-        return { success: false, message: data.message }
-      }
+      toast.success("Registration successful!")
+      return { success: true }
     } catch (error) {
-      console.error("Registration error:", error)
-      return { success: false, message: "Network error. Please try again." }
+      const message = error.response?.data?.message || "Registration failed"
+      toast.error(message)
+      return { success: false, message }
     }
   }
 
   const logout = () => {
-    setUser(null)
-    setToken(null)
     localStorage.removeItem("token")
+    setToken(null)
+    setUser(null)
+    delete axios.defaults.headers.common["Authorization"]
+    toast.info("Logged out successfully")
   }
 
   const updateProfile = async (profileData) => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(profileData),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        setUser(data.user)
-        return { success: true, message: data.message }
-      } else {
-        return { success: false, message: data.message }
-      }
+      const response = await axios.put("/api/auth/profile", profileData)
+      setUser(response.data.user)
+      toast.success("Profile updated successfully!")
+      return { success: true }
     } catch (error) {
-      console.error("Profile update error:", error)
-      return { success: false, message: "Network error. Please try again." }
+      const message = error.response?.data?.message || "Profile update failed"
+      toast.error(message)
+      return { success: false, message }
     }
   }
 
   const value = {
     user,
-    token,
-    loading,
     login,
     register,
     logout,
     updateProfile,
+    loading,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

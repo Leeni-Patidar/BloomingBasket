@@ -1,98 +1,173 @@
 "use client"
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { CartProvider } from "./context/CartContext"
-import { AuthProvider } from "./context/AuthContext"
-import { ToastContainer } from "react-toastify"
 import { useState, useEffect } from "react"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { ToastContainer } from "react-toastify"
+import { AuthProvider } from "./context/AuthContext"
+import { CartProvider } from "./context/CartContext"
+import { WishlistProvider } from "./context/WishlistContext"
 
-// Import components
-import Navbar from "./components/Navbar"
-import Footer from "./components/Footer"
-import LoaderAnimation from "./components/LoaderAnimation"
-import ErrorBoundary from "./components/ErrorBoundary"
+// Components
+import Navbar from "./components/Navbar/Navbar"
+import Footer from "./components/Footer/Footer"
+import Loader from "./components/Loader/Loader"
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute"
 
-// Import pages
-import Home from "./pages/Home"
-import Shop from "./pages/Shop"
-import Login from "./pages/Login"
-import NotFound from "./pages/NotFound"
+// Pages
+import Home from "./pages/Home/Home"
+import Shop from "./pages/Shop/Shop"
+import About from "./pages/About/About"
+import Customize from "./pages/Customize/Customize"
+import ProductDetail from "./pages/ProductDetail/ProductDetail"
+import Cart from "./pages/Cart/Cart"
+import Wishlist from "./pages/Wishlist/Wishlist"
+import MyOrders from "./pages/MyOrders/MyOrders"
+import OrderDetail from "./pages/OrderDetail/OrderDetail"
+import Login from "./pages/Login/Login"
+import Profile from "./pages/Profile/Profile"
+import Policy from "./pages/Policy/Policy"
+import Terms from "./pages/Terms/Terms"
+import ContactUs from "./pages/ContactUs/ContactUs"
+import FAQ from "./pages/FAQ/FAQ"
+import Help from "./pages/Help/Help"
+import NotFound from "./pages/NotFound/NotFound"
+
+// Admin Pages
+import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin"
+import ProductManagement from "./pages/Admin/ProductManagement/ProductManagement"
+import OrderManagement from "./pages/Admin/OrderManagement/OrderManagement"
 
 import "bootstrap/dist/css/bootstrap.min.css"
+import "@fortawesome/fontawesome-free/css/all.min.css"
 import "react-toastify/dist/ReactToastify.css"
 import "./App.css"
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    try {
-      // Simulate initial loading
-      const timer = setTimeout(() => {
-        setIsLoading(false)
-        console.log("App loaded successfully")
-      }, 2500) // 2.5 seconds loader
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 2000)
 
-      return () => clearTimeout(timer)
-    } catch (err) {
-      console.error("Error during app initialization:", err)
-      setError(err.message)
-      setIsLoading(false)
-    }
+    return () => clearTimeout(timer)
   }, [])
 
-  if (error) {
-    return <NotFound />
-  }
-
-  if (isLoading) {
-    return <LoaderAnimation />
+  if (loading) {
+    return <Loader />
   }
 
   return (
-    <ErrorBoundary>
-      <AuthProvider>
-        <CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <WishlistProvider>
           <Router>
             <div className="App">
-              <ErrorBoundary>
-                <Navbar />
-              </ErrorBoundary>
+              <Navbar />
               <main className="main-content">
-                <ErrorBoundary>
-                  <Routes>
-                    {/* Working Routes */}
-                    <Route path="/" element={<Home />} />
-                    <Route path="/shop" element={<Shop />} />
-                    <Route path="/login" element={<Login />} />
+                <Routes>
+                  {/* Public Routes */}
+                  <Route path="/" element={<Home />} />
+                  <Route path="/shop" element={<Shop />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contactUs" element={<ContactUs />} />
+                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/policy" element={<Policy />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  <Route path="/help" element={<Help />} />
 
-                    {/* All other routes redirect to 404 */}
-                    <Route path="/about" element={<NotFound />} />
-                    <Route path="/customize" element={<NotFound />} />
-                    <Route path="/contact" element={<NotFound />} />
-                    <Route path="/product/:id" element={<NotFound />} />
-                    <Route path="/cart" element={<NotFound />} />
-                    <Route path="/wishlist" element={<NotFound />} />
-                    <Route path="/my-orders" element={<NotFound />} />
-                    <Route path="/order/:id" element={<NotFound />} />
-                    <Route path="/profile" element={<NotFound />} />
-                    <Route path="/admin/*" element={<NotFound />} />
+                  {/* Protected Routes */}
+                  <Route
+                    path="/customize"
+                    element={
+                      <ProtectedRoute>
+                        <Customize />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/cart"
+                    element={
+                      <ProtectedRoute>
+                        <Cart />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/wishlist"
+                    element={
+                      <ProtectedRoute>
+                        <Wishlist />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/my-orders"
+                    element={
+                      <ProtectedRoute>
+                        <MyOrders />
+                      </ProtectedRoute>
+                    }
+                  />
+                 <Route
+                    path="/order/:id"
+                    element={
+                      <ProtectedRoute>
+                        <OrderDetail />
+                      </ProtectedRoute>
+                    }
+                  /> 
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute>
+                        <Profile />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                    {/* Catch all route - 404 */}
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </ErrorBoundary>
+                  {/* Admin Routes */}
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route
+                    path="/admin/products"
+                    element={
+                      <ProtectedRoute adminOnly={true}>
+                        <ProductManagement />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/orders"
+                    element={
+                      <ProtectedRoute adminOnly={true}>
+                        <OrderManagement />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  {/* 404 Route */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
               </main>
-              <ErrorBoundary>
-                <Footer />
-              </ErrorBoundary>
-              <ToastContainer position="top-right" autoClose={3000} />
+              <Footer />
+              <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
             </div>
           </Router>
-        </CartProvider>
-      </AuthProvider>
-    </ErrorBoundary>
+        </WishlistProvider>
+      </CartProvider>
+    </AuthProvider>
   )
 }
 

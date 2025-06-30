@@ -2,14 +2,19 @@ const mongoose = require("mongoose")
 
 const orderSchema = new mongoose.Schema(
   {
-    userId: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
+    orderNumber: {
+      type: String,
+      unique: true,
+      required: true,
+    },
     items: [
       {
-        productId: {
+        product: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
           required: true,
@@ -23,47 +28,105 @@ const orderSchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
+        customization: {
+          message: String,
+          specialInstructions: String,
+          deliveryDate: Date,
+          customImage: String,
+        },
       },
     ],
-    totalAmount: {
-      type: Number,
-      required: true,
+    shippingAddress: {
+      name: {
+        type: String,
+        required: true,
+      },
+      street: {
+        type: String,
+        required: true,
+      },
+      city: {
+        type: String,
+        required: true,
+      },
+      state: {
+        type: String,
+        required: true,
+      },
+      zipCode: {
+        type: String,
+        required: true,
+      },
+      country: {
+        type: String,
+        required: true,
+      },
+      phone: String,
     },
-    status: {
+    paymentInfo: {
+      method: {
+        type: String,
+        enum: ["credit_card", "debit_card", "paypal", "cash_on_delivery"],
+        required: true,
+      },
+      status: {
+        type: String,
+        enum: ["pending", "completed", "failed", "refunded"],
+        default: "pending",
+      },
+      transactionId: String,
+      paidAt: Date,
+    },
+    orderStatus: {
       type: String,
       enum: ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"],
       default: "pending",
     },
-    shippingAddress: {
-      fullName: { type: String, required: true },
-      address: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      zipCode: { type: String, required: true },
-      phone: { type: String, required: true },
+    pricing: {
+      subtotal: {
+        type: Number,
+        required: true,
+      },
+      tax: {
+        type: Number,
+        default: 0,
+      },
+      shipping: {
+        type: Number,
+        default: 0,
+      },
+      discount: {
+        type: Number,
+        default: 0,
+      },
+      total: {
+        type: Number,
+        required: true,
+      },
     },
-    paymentMethod: {
-      type: String,
-      enum: ["credit_card", "debit_card", "paypal", "cash_on_delivery"],
+    deliveryDate: {
+      type: Date,
       required: true,
     },
-    paymentStatus: {
-      type: String,
-      enum: ["pending", "paid", "failed", "refunded"],
-      default: "pending",
-    },
-    orderNumber: {
-      type: String,
-      unique: true,
-    },
-    notes: String,
+    specialInstructions: String,
+    trackingNumber: String,
+    statusHistory: [
+      {
+        status: String,
+        timestamp: {
+          type: Date,
+          default: Date.now,
+        },
+        note: String,
+      },
+    ],
   },
   {
     timestamps: true,
   },
 )
 
-// Generate order number before saving
+// Generate order number
 orderSchema.pre("save", async function (next) {
   if (!this.orderNumber) {
     const count = await mongoose.model("Order").countDocuments()

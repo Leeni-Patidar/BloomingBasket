@@ -16,14 +16,22 @@ const productSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-    originalPrice: {
-      type: Number,
-      min: 0,
-    },
     category: {
       type: String,
       required: true,
-      enum: ["roses", "tulips", "lilies", "orchids", "sunflowers", "mixed", "bouquets", "arrangements"],
+      enum: [
+        "roses",
+        "tulips",
+        "sunflowers",
+        "lilies",
+        "orchids",
+        "carnations",
+        "mixed",
+        "wedding",
+        "birthday",
+        "anniversary",
+        "sympathy",
+      ],
     },
     images: [
       {
@@ -37,13 +45,6 @@ const productSchema = new mongoose.Schema(
       min: 0,
       default: 0,
     },
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
-    tags: [String],
-    colors: [String],
-    occasions: [String],
     rating: {
       average: {
         type: Number,
@@ -58,9 +59,10 @@ const productSchema = new mongoose.Schema(
     },
     reviews: [
       {
-        userId: {
+        user: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
+          required: true,
         },
         rating: {
           type: Number,
@@ -68,29 +70,42 @@ const productSchema = new mongoose.Schema(
           min: 1,
           max: 5,
         },
-        comment: String,
+        comment: {
+          type: String,
+          required: true,
+        },
         createdAt: {
           type: Date,
           default: Date.now,
         },
       },
     ],
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
     featured: {
       type: Boolean,
       default: false,
     },
-    salePrice: Number,
-    onSale: {
-      type: Boolean,
-      default: false,
+    tags: [String],
+    dimensions: {
+      height: Number,
+      width: Number,
+      depth: Number,
     },
+    weight: Number,
+    careInstructions: String,
   },
   {
     timestamps: true,
   },
 )
 
-// Calculate average rating when reviews are updated
+// Index for search functionality
+productSchema.index({ name: "text", description: "text", tags: "text" })
+
+// Calculate average rating
 productSchema.methods.calculateAverageRating = function () {
   if (this.reviews.length === 0) {
     this.rating.average = 0
