@@ -30,7 +30,7 @@ const MyOrders = () => {
       })
     } catch (error) {
       console.error("Error fetching orders:", error)
-      toast.error("Failed to load orders")
+      alert("Failed to load orders")
     } finally {
       setLoading(false)
     }
@@ -43,11 +43,11 @@ const MyOrders = () => {
 
     try {
       await axios.put(`/api/orders/${orderId}/cancel`)
-      toast.success("Order cancelled successfully")
+      alert("Order cancelled successfully")
       fetchOrders()
     } catch (error) {
       const message = error.response?.data?.message || "Failed to cancel order"
-      toast.error(message)
+      alert(message)
     }
   }
 

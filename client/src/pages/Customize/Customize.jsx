@@ -92,7 +92,7 @@ const Customize = () => {
 
   const handleAddToCart = () => {
     if (!customization.occasion || !customization.size || customization.flowerTypes.length === 0) {
-      toast.error("Please complete all required fields")
+      alert("Please complete all required fields")
       return
     }
 
@@ -105,7 +105,7 @@ const Customize = () => {
     }
 
     addToCart(customProduct, 1, customization)
-    toast.success("Custom arrangement added to cart!")
+    alert("Custom arrangement added to cart!")
     navigate("/cart")
   }
 

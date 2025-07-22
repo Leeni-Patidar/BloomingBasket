@@ -80,7 +80,7 @@ const Help = () => {
         </div>
 
         {/* Search Bar */}
-        <div className={styles.searchSection}>
+        {/* <div className={styles.searchSection}>
           <div className="row justify-content-center">
             <div className="col-lg-6">
               <div className={styles.searchBox}>
@@ -90,7 +90,7 @@ const Help = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Quick Links */}
         <div className={styles.quickLinks}>
@@ -103,7 +103,7 @@ const Help = () => {
               </Link>
             </div>
             <div className="col-md-3 mb-3">
-              <Link to="/contact" className={styles.quickLink}>
+              <Link to="/contactUs" className={styles.quickLink}>
                 <i className="fas fa-envelope"></i>
                 <span>Contact Us</span>
               </Link>
@@ -153,7 +153,7 @@ const Help = () => {
           <div className="row">
             <div className="col-lg-8 mx-auto text-center">
               <h3>Still Need Help?</h3>
-              <p>Our customer support team is available to assist you with any questions or concerns.</p>
+              {/* <p>Our customer support team is available to assist you with any questions or concerns.</p> */}
 
               <div className={styles.supportOptions}>
                 <div className={styles.supportOption}>
@@ -178,7 +178,7 @@ const Help = () => {
                 </div>
               </div>
 
-              <Link to="/contact" className={styles.contactBtn}>
+              <Link to="/contactUs" className={styles.contactBtn}>
                 Contact Support
               </Link>
             </div>

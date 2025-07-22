@@ -1,15 +1,15 @@
 .faq {
   padding: 2rem 0;
   min-height: 100vh;
+  background: linear-gradient(135deg, #FDF2F8 0%,#FFFFFF);
 }
 
 .header {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 0.1rem;
   padding: 3rem 0;
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
   border-radius: 20px;
-  color: white;
+  color: black;
 }
 
 .header h1 {
@@ -57,8 +57,8 @@
 }
 
 .faqQuestion.active {
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-  color: white;
+  background:  #fecfef ;
+  color: black;
 }
 
 .chevron {
@@ -89,7 +89,7 @@
 .contactSection {
   text-align: center;
   padding: 3rem;
-  background: #f8f9fa;
+  background: #ede8eb;
   border-radius: 20px;
 }
 
@@ -124,7 +124,7 @@
 .contactOption i {
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  background: linear-gradient(135deg, #da81a4 0%, #fecfef 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;

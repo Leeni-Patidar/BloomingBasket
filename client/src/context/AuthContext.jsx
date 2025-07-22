@@ -42,11 +42,11 @@ export const AuthProvider = ({ children }) => {
       setUser(user)
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
 
-      toast.success("Login successful!")
+      alert("Login successful!")
       return { success: true }
     } catch (error) {
       const message = error.response?.data?.message || "Login failed"
-      toast.error(message)
+      alert(message)
       return { success: false, message }
     }
   }
@@ -61,11 +61,11 @@ export const AuthProvider = ({ children }) => {
       setUser(user)
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
 
-      toast.success("Registration successful!")
+      alert("Registration successful!")
       return { success: true }
     } catch (error) {
       const message = error.response?.data?.message || "Registration failed"
-      toast.error(message)
+      alert(message)
       return { success: false, message }
     }
   }
@@ -75,18 +75,18 @@ export const AuthProvider = ({ children }) => {
     setToken(null)
     setUser(null)
     delete axios.defaults.headers.common["Authorization"]
-    toast.info("Logged out successfully")
+    alert("Logged out successfully")
   }
 
   const updateProfile = async (profileData) => {
     try {
       const response = await axios.put("/api/auth/profile", profileData)
       setUser(response.data.user)
-      toast.success("Profile updated successfully!")
+      alert("Profile updated successfully!")
       return { success: true }
     } catch (error) {
       const message = error.response?.data?.message || "Profile update failed"
-      toast.error(message)
+      alert(message)
       return { success: false, message }
     }
   }

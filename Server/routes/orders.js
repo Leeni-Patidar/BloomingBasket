@@ -6,6 +6,45 @@ const { auth, adminAuth } = require("../middleware/auth")
 
 const router = express.Router()
 
+// ✅ Moved this route to the top to fix path-to-regexp error
+// Get all orders (Admin only)
+router.get("/", adminAuth, async (req, res) => {
+  try {
+    const { page = 1, limit = 20, status, startDate, endDate } = req.query
+
+    const filter = {}
+
+    if (status) {
+      filter.orderStatus = status
+    }
+
+    if (startDate || endDate) {
+      filter.createdAt = {}
+      if (startDate) filter.createdAt.$gte = new Date(startDate)
+      if (endDate) filter.createdAt.$lte = new Date(endDate)
+    }
+
+    const orders = await Order.find(filter)
+      .populate("user", "name email")
+      .populate("items.product", "name price")
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+
+    const total = await Order.countDocuments(filter)
+
+    res.json({
+      orders,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      total,
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: "Server error" })
+  }
+})
+
 // Create order
 router.post(
   "/",
@@ -120,7 +159,7 @@ router.get("/my-orders", auth, async (req, res) => {
   }
 })
 
-// Get single order
+// ✅ FIXED: Corrected from `/id` to `/:id`
 router.get("/:id", auth, async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate("items.product user")
@@ -135,44 +174,6 @@ router.get("/:id", auth, async (req, res) => {
     }
 
     res.json(order)
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: "Server error" })
-  }
-})
-
-// Get all orders (Admin only)
-router.get("/", adminAuth, async (req, res) => {
-  try {
-    const { page = 1, limit = 20, status, startDate, endDate } = req.query
-
-    const filter = {}
-
-    if (status) {
-      filter.orderStatus = status
-    }
-
-    if (startDate || endDate) {
-      filter.createdAt = {}
-      if (startDate) filter.createdAt.$gte = new Date(startDate)
-      if (endDate) filter.createdAt.$lte = new Date(endDate)
-    }
-
-    const orders = await Order.find(filter)
-      .populate("user", "name email")
-      .populate("items.product", "name price")
-      .sort({ createdAt: -1 })
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-
-    const total = await Order.countDocuments(filter)
-
-    res.json({
-      orders,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
-      total,
-    })
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: "Server error" })

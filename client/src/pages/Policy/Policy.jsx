@@ -7,7 +7,7 @@ const Policy = () => {
         <div className={styles.header}>
           <h1>Privacy Policy</h1>
           <p>Your privacy is important to us. Learn how we protect your information.</p>
-          <small>Last updated: January 1, 2024</small>
+          {/* <small>Last updated: January 1, 2024</small> */}
         </div>
 
         <div className="row justify-content-center">

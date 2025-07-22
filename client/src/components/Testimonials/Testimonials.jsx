@@ -49,7 +49,7 @@ const Testimonials = () => {
                   <p className={styles.comment}>"{testimonial.comment}"</p>
                 </div>
                 <div className={styles.testimonialAuthor}>
-                  <img src={testimonial.image || "/placeholder.svg"} alt={testimonial.name} />
+                  {/* <img src={testimonial.image || "/placeholder.svg"} alt={testimonial.name} /> */}
                   <span className={styles.authorName}>{testimonial.name}</span>
                 </div>
               </div>

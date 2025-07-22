@@ -26,10 +26,10 @@ export const CartProvider = ({ children }) => {
         const updatedItems = prevItems.map((item) =>
           item._id === product._id ? { ...item, quantity: item.quantity + quantity } : item,
         )
-        toast.success(`${product.name} quantity updated in cart!`)
+        alert(`${product.name} quantity updated in cart!`)
         return updatedItems
       }
-      toast.success(`${product.name} added to cart!`)
+      alert(`${product.name} added to cart!`)
       return [...prevItems, { ...product, quantity, customization }]
     })
   }
@@ -38,7 +38,7 @@ export const CartProvider = ({ children }) => {
     setCartItems((prevItems) => {
       const item = prevItems.find((item) => item._id === productId)
       if (item) {
-        toast.info(`${item.name} removed from cart`)
+        alert(`${item.name} removed from cart`)
       }
       return prevItems.filter((item) => item._id !== productId)
     })
@@ -54,7 +54,7 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = () => {
     setCartItems([])
-    toast.info("Cart cleared")
+    alert("Cart cleared")
   }
 
   const getCartTotal = () => {

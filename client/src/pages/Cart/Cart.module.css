@@ -1,6 +1,7 @@
 .cart {
   padding: 2rem 0;
   background-color: #fdfdfd;
+   background: linear-gradient(135deg, #FDF2F8 0%,#FFFFFF);
 }
 
 .pageTitle {

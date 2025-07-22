@@ -30,17 +30,17 @@ export const WishlistProvider = ({ children }) => {
 
   const addToWishlist = async (product) => {
     if (!user) {
-      toast.error("Please login to add items to wishlist")
+      alert("Please login to add items to wishlist")
       return
     }
 
     try {
       await axios.post(`/api/users/wishlist/${product._id}`)
       setWishlistItems((prevItems) => [...prevItems, product])
-      toast.success(`${product.name} added to wishlist!`)
+      alert(`${product.name} added to wishlist!`)
     } catch (error) {
       const message = error.response?.data?.message || "Failed to add to wishlist"
-      toast.error(message)
+      alert(message)
     }
   }
 
@@ -52,13 +52,13 @@ export const WishlistProvider = ({ children }) => {
       setWishlistItems((prevItems) => {
         const item = prevItems.find((item) => item._id === productId)
         if (item) {
-          toast.info(`${item.name} removed from wishlist`)
+          alert(`${item.name} removed from wishlist`)
         }
         return prevItems.filter((item) => item._id !== productId)
       })
     } catch (error) {
       const message = error.response?.data?.message || "Failed to remove from wishlist"
-      toast.error(message)
+      alert(message)
     }
   }
 

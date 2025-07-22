@@ -1,6 +1,7 @@
 .shop {
   padding: 2rem 0;
   background-color: #f9f9f9;
+   background: linear-gradient(135deg, #FDF2F8 0%,#FFFFFF);
 }
 
 .shopHeader {

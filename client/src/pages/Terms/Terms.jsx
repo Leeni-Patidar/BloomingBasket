@@ -7,7 +7,7 @@ const Terms = () => {
         <div className={styles.header}>
           <h1>Terms & Conditions</h1>
           <p>Please read these terms carefully before using our services</p>
-          <small>Last updated: January 1, 2024</small>
+          {/* <small>Last updated: January 1, 2024</small> */}
         </div>
 
         <div className="row justify-content-center">

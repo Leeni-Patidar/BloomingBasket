@@ -1,6 +1,5 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import { AuthProvider } from "./context/AuthContext"
@@ -10,8 +9,6 @@ import { WishlistProvider } from "./context/WishlistContext"
 // Components
 import Navbar from "./components/Navbar/Navbar"
 import Footer from "./components/Footer/Footer"
-import Loader from "./components/Loader/Loader"
-import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute"
 
 // Pages
 import Home from "./pages/Home/Home"
@@ -37,26 +34,13 @@ import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin"
 import ProductManagement from "./pages/Admin/ProductManagement/ProductManagement"
 import OrderManagement from "./pages/Admin/OrderManagement/OrderManagement"
 
+// Styles
 import "bootstrap/dist/css/bootstrap.min.css"
 import "@fortawesome/fontawesome-free/css/all.min.css"
 import "react-toastify/dist/ReactToastify.css"
 import "./App.css"
 
 function App() {
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false)
-    }, 2000)
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  if (loading) {
-    return <Loader />
-  }
-
   return (
     <AuthProvider>
       <CartProvider>
@@ -71,83 +55,27 @@ function App() {
                   <Route path="/shop" element={<Shop />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contactUs" element={<ContactUs />} />
-                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/product/id" element={<ProductDetail />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/policy" element={<Policy />} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/faq" element={<FAQ />} />
                   <Route path="/help" element={<Help />} />
 
-                  {/* Protected Routes */}
-                  <Route
-                    path="/customize"
-                    element={
-                      <ProtectedRoute>
-                        <Customize />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/cart"
-                    element={
-                      <ProtectedRoute>
-                        <Cart />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/wishlist"
-                    element={
-                      <ProtectedRoute>
-                        <Wishlist />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/my-orders"
-                    element={
-                      <ProtectedRoute>
-                        <MyOrders />
-                      </ProtectedRoute>
-                    }
-                  />
-                 <Route
-                    path="/order/:id"
-                    element={
-                      <ProtectedRoute>
-                        <OrderDetail />
-                      </ProtectedRoute>
-                    }
-                  /> 
-                  <Route
-                    path="/profile"
-                    element={
-                      <ProtectedRoute>
-                        <Profile />
-                      </ProtectedRoute>
-                    }
-                  />
+                  {/* User Authenticated Routes */}
+                  <Route path="/customize" element={<Customize />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/wishlist" element={<Wishlist />} />
+                  <Route path="/my-orders" element={<MyOrders />} />
+                  <Route path="/order/id" element={<OrderDetail />} />
+                  <Route path="/profile" element={<Profile />} />
 
                   {/* Admin Routes */}
                   <Route path="/admin/login" element={<AdminLogin />} />
-                  <Route
-                    path="/admin/products"
-                    element={
-                      <ProtectedRoute adminOnly={true}>
-                        <ProductManagement />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/admin/orders"
-                    element={
-                      <ProtectedRoute adminOnly={true}>
-                        <OrderManagement />
-                      </ProtectedRoute>
-                    }
-                  />
+                  <Route path="/admin/products" element={<ProductManagement />} />
+                  <Route path="/admin/orders" element={<OrderManagement />} />
 
-                  {/* 404 Route */}
+                  {/* 404 Not Found */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>

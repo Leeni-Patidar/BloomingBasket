@@ -39,12 +39,13 @@ const Navbar = () => {
   }
 
   return (
-    <nav className={`navbar navbar-expand-lg ${styles.navbar}`}>
+    <nav className={`navbar navbar-expand-lg  fixed-top ${styles.navbar}`}>
       <div className="container">
         <Link className={`navbar-brand ${styles.brand}`} to="/">
-          <img src="/placeholder.svg?height=40&width=40" alt="Blooming Basket" className={styles.logo} />
-          Blooming Basket
-        </Link>
+  <img src="logo.jpeg?height=40&width=40" alt="Blooming Basket" className={styles.logo} />
+  Blooming Basket
+</Link>
+
 
         <button
           className="navbar-toggler"
@@ -69,7 +70,7 @@ const Navbar = () => {
               <Link className="nav-link" to="/about">About</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/contactUs">ContactUs</Link>
+              <Link className="nav-link" to="/contactUs">Contact Us</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/customize">Customize</Link>

@@ -13,7 +13,7 @@
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 1rem;
-  color: #ff9a9e;
+  color:#FCE7F3;
 }
 
 .footerSubtitle {
@@ -42,13 +42,13 @@
   height: 40px;
   background: rgba(255, 154, 158, 0.2);
   border-radius: 50%;
-  color: #ff9a9e;
+  color: #e7b1de;
   text-decoration: none;
   transition: all 0.3s ease;
 }
 
 .socialLink:hover {
-  background: #ff9a9e;
+  background: #FCE7F3;
   color: white;
   transform: translateY(-2px);
 }
@@ -70,7 +70,7 @@
 }
 
 .footerLinks a:hover {
-  color: #ff9a9e;
+  color: #FCE7F3;
 }
 
 .contactInfo {
@@ -87,7 +87,7 @@
 }
 
 .contactItem i {
-  color: #ff9a9e;
+  color: #e7b1de;
   width: 20px;
 }
 

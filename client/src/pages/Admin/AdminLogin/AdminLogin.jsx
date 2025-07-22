@@ -38,11 +38,11 @@ const AdminLogin = () => {
         if (user && user.role === "admin") {
           navigate("/admin/products")
         } else {
-          toast.error("Access denied. Admin privileges required.")
+          alert("Access denied. Admin privileges required.")
         }
       }
     } catch (error) {
-      console.error("Admin login error:", error)
+      alert("Admin login error: " + error)
     } finally {
       setLoading(false)
     }

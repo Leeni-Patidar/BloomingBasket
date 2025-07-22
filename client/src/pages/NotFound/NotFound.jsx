@@ -8,10 +8,10 @@ const NotFound = () => {
         <div className="row justify-content-center">
           <div className="col-lg-6 text-center">
             <div className={styles.content}>
-              <div className={styles.errorCode}>404</div>
-              <div className={styles.errorIcon}>
+              {/* <div className={styles.errorCode}>404</div> */}
+              {/* <div className={styles.errorIcon}>
                 <i className="fas fa-seedling"></i>
-              </div>
+              </div> */}
               <h1>Oops! Page Not Found</h1>
               <p>
                 The page you're looking for seems to have wilted away. Don't worry, our beautiful flowers are still
@@ -40,7 +40,7 @@ const NotFound = () => {
                     <Link to="/about">About Us</Link>
                   </li>
                   <li>
-                    <Link to="/contact">Contact Support</Link>
+                    <Link to="/contactUs">Contact Support</Link>
                   </li>
                 </ul>
               </div>

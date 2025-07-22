@@ -2,28 +2,29 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-  color: white;
+  background: linear-gradient(135deg, #FDF2F8 0%,#FFFFFF);
+  color: black;
+  padding: 2rem 0;
 }
 
 .content {
   padding: 3rem;
 }
 
-.errorCode {
+/* .errorCode {
   font-size: 8rem;
   font-weight: bold;
   line-height: 1;
   margin-bottom: 1rem;
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
   opacity: 0.8;
-}
-
+} */
+/* 
 .errorIcon {
   font-size: 4rem;
   margin-bottom: 2rem;
   opacity: 0.9;
-}
+} */
 
 .content h1 {
   font-size: 2.5rem;
@@ -60,25 +61,25 @@
 
 .homeBtn {
   background: rgba(255, 255, 255, 0.2);
-  color: white;
+  color: black;
   border: 2px solid white;
 }
 
 .homeBtn:hover {
-  background: white;
-  color: #ff4757;
+  background: #f080ad ;;
+  color: white;
   transform: translateY(-2px);
 }
 
 .shopBtn {
-  background: #ff4757;
+background: linear-gradient(135deg, #da81a4 0%, #fecfef 100%);
   color: white;
-  border: 2px solid #ff4757;
+  border: 2px solid ;
 }
 
 .shopBtn:hover {
-  background: #ff3742;
-  border-color: #ff3742;
+  background: #f080ad ;
+  /* border-color:  #f977ab ; */
   transform: translateY(-2px);
   color: white;
 }
@@ -106,13 +107,13 @@
 }
 
 .suggestions a {
-  color: white;
+  color: black;
   text-decoration: none;
   transition: all 0.3s ease;
 }
 
 .suggestions a:hover {
-  color: #ffeb3b;
+  color:  #f080ad;
   text-decoration: underline;
 }
 

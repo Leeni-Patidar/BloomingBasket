@@ -45,13 +45,16 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     addToCart(product, quantity)
+    toast.success("Added to cart!")
   }
 
   const handleWishlistToggle = () => {
     if (isInWishlist(product._id)) {
       removeFromWishlist(product._id)
+      toast.info("Removed from wishlist")
     } else {
       addToWishlist(product)
+      toast.success("Added to wishlist")
     }
   }
 
@@ -204,84 +207,82 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* Reviews Section */}
-        <div className={styles.reviewsSection}>
-          <div className="row">
-            <div className="col-12">
-              <h3>Customer Reviews</h3>
+        {/* Customer Reviews Section */}
+        <div className="row">
+          <div className="col-12">
+            <h3>Customer Reviews</h3>
 
-              {user && (
-                <div className={styles.reviewActions}>
-                  <button className={styles.writeReviewBtn} onClick={() => setShowReviewForm(!showReviewForm)}>
-                    Write a Review
-                  </button>
-                </div>
-              )}
-
-              {showReviewForm && (
-                <div className={styles.reviewForm}>
-                  <h4>Write Your Review</h4>
-                  <form onSubmit={handleReviewSubmit}>
-                    <div className="mb-3">
-                      <label className="form-label">Rating</label>
-                      <div className={styles.ratingInput}>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <i
-                            key={star}
-                            className={`fas fa-star ${star <= reviewData.rating ? styles.filled : ""}`}
-                            onClick={() => setReviewData({ ...reviewData, rating: star })}
-                          ></i>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="mb-3">
-                      <label className="form-label">Comment</label>
-                      <textarea
-                        className="form-control"
-                        rows="4"
-                        value={reviewData.comment}
-                        onChange={(e) => setReviewData({ ...reviewData, comment: e.target.value })}
-                        required
-                      ></textarea>
-                    </div>
-                    <div className={styles.reviewFormActions}>
-                      <button type="submit" className="btn btn-primary">
-                        Submit Review
-                      </button>
-                      <button type="button" className="btn btn-secondary" onClick={() => setShowReviewForm(false)}>
-                        Cancel
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
-
-              <div className={styles.reviewsList}>
-                {product.reviews && product.reviews.length > 0 ? (
-                  product.reviews.map((review) => (
-                    <div key={review._id} className={styles.reviewItem}>
-                      <div className={styles.reviewHeader}>
-                        <div className={styles.reviewerInfo}>
-                          <strong>{review.user?.name || "Anonymous"}</strong>
-                          <div className={styles.reviewStars}>
-                            {[...Array(5)].map((_, i) => (
-                              <i key={i} className={`fas fa-star ${i < review.rating ? styles.filled : ""}`}></i>
-                            ))}
-                          </div>
-                        </div>
-                        <div className={styles.reviewDate}>{new Date(review.createdAt).toLocaleDateString()}</div>
-                      </div>
-                      <div className={styles.reviewComment}>
-                        <p>{review.comment}</p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className={styles.noReviews}>
-                    <p>No reviews yet. Be the first to review this product!</p>
-                  </div>
-                )}
+            {user && (
+              <div className={styles.reviewActions}>
+                <button className={styles.writeReviewBtn} onClick={() => setShowReviewForm(!showReviewForm)}>
+                  Write a Review
+                </button>
               </div>
+            )}
+
+            {showReviewForm && (
+              <div className={styles.reviewForm}>
+                <h4>Write Your Review</h4>
+                <form onSubmit={handleReviewSubmit}>
+                  <div className="mb-3">
+                    <label className="form-label">Rating</label>
+                    <div className={styles.ratingInput}>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <i
+                          key={star}
+                          className={`fas fa-star ${star <= reviewData.rating ? styles.filled : ""}`}
+                          onClick={() => setReviewData({ ...reviewData, rating: star })}
+                        ></i>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Comment</label>
+                    <textarea
+                      className="form-control"
+                      rows="4"
+                      value={reviewData.comment}
+                      onChange={(e) => setReviewData({ ...reviewData, comment: e.target.value })}
+                      required
+                    ></textarea>
+                  </div>
+                  <div className={styles.reviewFormActions}>
+                    <button type="submit" className="btn btn-primary">
+                      Submit Review
+                    </button>
+                    <button type="button" className="btn btn-secondary" onClick={() => setShowReviewForm(false)}>
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            <div className={styles.reviewsList}>
+              {product.reviews && product.reviews.length > 0 ? (
+                product.reviews.map((review) => (
+                  <div key={review._id} className={styles.reviewItem}>
+                    <div className={styles.reviewHeader}>
+                      <div className={styles.reviewerInfo}>
+                        <strong>{review.user?.name || "Anonymous"}</strong>
+                        <div className={styles.reviewStars}>
+                          {[...Array(5)].map((_, i) => (
+                            <i key={i} className={`fas fa-star ${i < review.rating ? styles.filled : ""}`}></i>
+                          ))}
+                        </div>
+                      </div>
+                      <div className={styles.reviewDate}>{new Date(review.createdAt).toLocaleDateString()}</div>
+                    </div>
+                    <div className={styles.reviewComment}>
+                      <p>{review.comment}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className={styles.noReviews}>
+                  <p>No reviews yet. Be the first to review this product!</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

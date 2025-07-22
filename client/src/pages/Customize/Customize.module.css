@@ -1,14 +1,14 @@
 .customize {
   padding: 2rem 0;
   min-height: 100vh;
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #FDF2F8 0%,#FFFFFF);
 }
 
 .header {
   text-align: center;
   margin-bottom: 3rem;
   padding: 3rem 0;
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  background: linear-gradient(135deg, #ba54a9 0%, #fecfef 100%);
   border-radius: 20px;
   color: white;
 }
@@ -58,7 +58,7 @@
 }
 
 .progressStep.active .stepNumber {
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  background: linear-gradient(135deg, #ba54a9 0%, #fecfef 100%);
   color: white;
 }
 
@@ -84,7 +84,7 @@
 
 .progressFill {
   height: 100%;
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  background: linear-gradient(135deg, #ba54a9 0%, #fecfef 100%);
   transition: width 0.3s ease;
 }
 
@@ -133,19 +133,19 @@
 }
 
 .occasionCard:hover {
-  border-color: #ff9a9e;
+  border-color: #ba54a9;
   transform: translateY(-2px);
 }
 
 .occasionCard.selected {
   border-color: #ff4757;
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  background: linear-gradient(135deg, #ba54a9 0%, #fecfef 100%);
   color: white;
 }
 
 .occasionCard i {
   font-size: 2rem;
-  color: #ff9a9e;
+  color: #ba54a9;
 }
 
 .occasionCard.selected i {
@@ -169,7 +169,7 @@
 }
 
 .flowerCard:hover {
-  border-color: #ff9a9e;
+  border-color: #ba54a9;
 }
 
 .flowerCard.selected {
@@ -209,7 +209,7 @@
 }
 
 .colorCard:hover {
-  border-color: #ff9a9e;
+  border-color: #ba54a9;
 }
 
 .colorCard.selected {
@@ -241,13 +241,13 @@
 }
 
 .sizeCard:hover {
-  border-color: #ff9a9e;
+  border-color: #ba54a9;
   transform: translateY(-2px);
 }
 
 .sizeCard.selected {
   border-color: #ff4757;
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  background: linear-gradient(135deg, #ba54a9 0%, #fecfef 100%);
   color: white;
 }
 
@@ -361,7 +361,7 @@
 
 .nextBtn,
 .addToCartBtn {
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  background: linear-gradient(135deg, #ba54a9 0%, #fecfef 100%);
   color: white;
   margin-left: auto;
 }
