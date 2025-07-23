@@ -12,7 +12,7 @@ const Register = () => {
     password: "",
   })
   const [loading, setLoading] = useState(false)
-  const { login } = useContext(AuthContext)
+  const { register } = useContext(AuthContext) // Use the register function
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -30,33 +30,24 @@ const Register = () => {
     setLoading(true)
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const result = await register(formData.name, formData.email, formData.password) // Call the actual register function
 
-      const userData = {
-        id: 2,
-        name: formData.name,
-        email: formData.email,
-        role: "user",
+      if (result.success) {
+        // Registration and login successful
+        navigate(from, { replace: true })
+      } else {
+        // Error message handled by AuthContext toast
       }
-
-      // ✅ Save registration flag
-      localStorage.setItem("isRegistered", "true")
-
-      // ✅ Log user in
-      login(userData)
-
-      // ✅ Navigate to original route or home
-      navigate(from, { replace: true })
     } catch (error) {
       console.error("Register error:", error)
+      // Specific error handling if needed, but AuthContext should handle most
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center ">
+    <div className="min-h-screen bg-gradient-to-br from-[#FDF2F8] to-white flex items-center py-8">
       <div className="container mx-auto px-4">
         <div className="flex justify-center">
           <div className="w-full md:w-1/2 lg:w-2/5">

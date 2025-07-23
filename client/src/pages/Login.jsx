@@ -3,7 +3,7 @@
 import { useState, useContext } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import { AuthContext } from "../context/AuthContext"
-// import styles from "./Login.module.css"
+
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -34,20 +34,20 @@ const Login = () => {
 
     const { email, password } = formData
 
-    const result = await login(email, password)
+    const result = await login(email, password) // Call the actual login function
 
     setLoading(false)
 
     if (result.success) {
-      alert("Login successful!")
+      // alert("Login successful!") // AuthContext toast handles this
       navigate(from, { replace: true })
     } else {
-      setError(result.message || "Login failed. Please try again.")
+      setError(result.message || "Login failed. Please try again.") // Display error if AuthContext didn't toast
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center ">
+    <div className="min-h-screen bg-gradient-to-br from-[#FDF2F8] to-white flex items-center py-8">
       <div className="container mx-auto px-4">
         <div className="flex justify-center">
           <div className="w-full md:w-1/2 lg:w-2/5">
