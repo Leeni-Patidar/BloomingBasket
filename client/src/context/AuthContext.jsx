@@ -1,8 +1,5 @@
-"use client"
-
 import { createContext, useState, useEffect } from "react"
 import axios from "axios"
-import { toast } from "react-toastify"
 
 export const AuthContext = createContext()
 
@@ -10,6 +7,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [token, setToken] = useState(localStorage.getItem("token"))
+
+  const API = "http://localhost:5000"
 
   useEffect(() => {
     if (token) {
@@ -22,10 +21,9 @@ export const AuthProvider = ({ children }) => {
 
   const getCurrentUser = async () => {
     try {
-      const response = await axios.get("/api/auth/me")
-      setUser(response.data)
-    } catch (error) {
-      console.error("Get current user error:", error)
+      const res = await axios.get(`${API}/api/auth/me`)
+      setUser(res.data)
+    } catch (err) {
       logout()
     } finally {
       setLoading(false)
@@ -34,39 +32,31 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post("/api/auth/login", { email, password })
-      const { token, user } = response.data
-
+      const res = await axios.post(`${API}/api/auth/login`, { email, password })
+      const { token, user } = res.data
       localStorage.setItem("token", token)
       setToken(token)
       setUser(user)
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
-
-      alert("Login successful!")
       return { success: true }
-    } catch (error) {
-      const message = error.response?.data?.message || "Login failed"
-      alert(message)
-      return { success: false, message }
+    } catch (err) {
+      const msg = err.response?.data?.message || "Login failed"
+      return { success: false, message: msg }
     }
   }
 
   const register = async (name, email, password) => {
     try {
-      const response = await axios.post("/api/auth/register", { name, email, password })
-      const { token, user } = response.data
-
+      const res = await axios.post(`${API}/api/auth/register`, { name, email, password })
+      const { token, user } = res.data
       localStorage.setItem("token", token)
       setToken(token)
       setUser(user)
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
-
-      alert("Registration successful!")
       return { success: true }
-    } catch (error) {
-      const message = error.response?.data?.message || "Registration failed"
-      alert(message)
-      return { success: false, message }
+    } catch (err) {
+      const msg = err.response?.data?.message || "Registration failed"
+      return { success: false, message: msg }
     }
   }
 
@@ -75,30 +65,11 @@ export const AuthProvider = ({ children }) => {
     setToken(null)
     setUser(null)
     delete axios.defaults.headers.common["Authorization"]
-    alert("Logged out successfully")
   }
 
-  const updateProfile = async (profileData) => {
-    try {
-      const response = await axios.put("/api/auth/profile", profileData)
-      setUser(response.data.user)
-      alert("Profile updated successfully!")
-      return { success: true }
-    } catch (error) {
-      const message = error.response?.data?.message || "Profile update failed"
-      alert(message)
-      return { success: false, message }
-    }
-  }
-
-  const value = {
-    user,
-    login,
-    register,
-    logout,
-    updateProfile,
-    loading,
-  }
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
