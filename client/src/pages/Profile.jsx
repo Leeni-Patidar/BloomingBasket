@@ -54,7 +54,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="py-8 min-h-screen bg-gradient-to-br from-[#FDF2F8] to-white">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 py-12 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-2xl text-white">
           <h1 className="text-3xl md:text-[2.5rem] font-bold mb-4 text-shadow">My Profile</h1>
@@ -85,12 +85,7 @@ const Profile = () => {
                 >
                   <i className="fas fa-lock mr-2"></i>Security
                 </button>
-                <button
-                  className={`bg-transparent border-none p-4 text-left rounded-lg transition-all duration-300 ease-in-out text-gray-600 font-medium whitespace-nowrap min-w-[200px] md:min-w-0 ${activeTab === "preferences" ? "bg-gradient-to-br from-[#da81a4] to-[#fecfef] text-white" : "hover:bg-gray-50 hover:text-gray-800"}`}
-                  onClick={() => setActiveTab("preferences")}
-                >
-                  <i className="fas fa-cog mr-2"></i>Preferences
-                </button>
+                
               </nav>
             </div>
           </div>

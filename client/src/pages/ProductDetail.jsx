@@ -102,7 +102,7 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="py-8 min-h-screen bg-gradient-to-br from-[#FDF2F8] to-white">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4">
         <div className="flex flex-wrap -mx-4">
           {/* Product Images */}

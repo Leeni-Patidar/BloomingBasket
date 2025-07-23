@@ -1,14 +1,9 @@
-"use client"
-
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
-// import { AuthProvider } from "./context/AuthContext"
 import { CartProvider } from "./context/CartContext"
 import { WishlistProvider } from "./context/WishlistContext"
 
-// Components
-import Navbar from "./components/Navbar"
-import Footer from "./components/Footer"
+import Layout from "./components/Layout"
 
 // Pages
 import About from "./pages/About"
@@ -29,13 +24,10 @@ import Shop from "./pages/Shop"
 import Terms from "./pages/Terms"
 import Wishlist from "./pages/Wishlist"
 
-
 // Admin Pages
 import AdminLogin from "./pages/Admin/AdminLogin"
 import ProductManagement from "./pages/Admin/ProductManagement"
 import OrderManagement from "./pages/Admin/OrderManagement"
-
-// Styles
 
 import "@fortawesome/fontawesome-free/css/all.min.css"
 import "react-toastify/dist/ReactToastify.css"
@@ -46,39 +38,38 @@ function App() {
     <CartProvider>
       <WishlistProvider>
         <div className="App">
-          <Navbar />
-          <main className="main-content">
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/shop" element={<Shop />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contactUs" element={<ContactUs />} />
-              <Route path="/product/id" element={<ProductDetail />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/policy" element={<Policy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/register" element={<Register />} />
+          <Routes>
+            {/* Public Routes with Layout */}
+            <Route path="/" element={<Layout><Home /></Layout>} />
+            <Route path="/shop" element={<Layout><Shop /></Layout>} />
+            <Route path="/about" element={<Layout><About /></Layout>} />
+            <Route path="/contactUs" element={<Layout><ContactUs /></Layout>} />
+            <Route path="/product/id" element={<Layout><ProductDetail /></Layout>} />
+            <Route path="/policy" element={<Layout><Policy /></Layout>} />
+            <Route path="/terms" element={<Layout><Terms /></Layout>} />
+            <Route path="/faq" element={<Layout><FAQ /></Layout>} />
+            <Route path="/customize" element={<Layout><Customize /></Layout>} />
+            <Route path="/wishlist" element={<Layout><Wishlist /></Layout>} />
+            <Route path="/cart" element={<Layout><Cart /></Layout>} />
 
-              {/* User Authenticated Routes */}
-              <Route path="/customize" element={<Customize />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/wishlist" element={<Wishlist />} />
-              <Route path="/my-orders" element={<MyOrders />} />
-              <Route path="/order/id" element={<OrderDetail />} />
-              <Route path="/profile" element={<Profile />} />
+            {/* Auth Routes without Layout */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-              {/* Admin Routes */}
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin/products" element={<ProductManagement />} />
-              <Route path="/admin/orders" element={<OrderManagement />} />
+            {/* User Protected */}
+            <Route path="/my-orders" element={<Layout><MyOrders /></Layout>} />
+            <Route path="/order/id" element={<Layout><OrderDetail /></Layout>} />
+            <Route path="/profile" element={<Layout><Profile /></Layout>} />
 
-              {/* 404 Not Found */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
+            {/* Admin Routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/products" element={<Layout><ProductManagement /></Layout>} />
+            <Route path="/admin/orders" element={<Layout><OrderManagement /></Layout>} />
+
+            {/* 404 */}
+            <Route path="*" element={<Layout><NotFound /></Layout>} />
+          </Routes>
+
           <ToastContainer
             position="top-right"
             autoClose={3000}

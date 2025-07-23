@@ -84,7 +84,7 @@ const MyOrders = () => {
   }
 
   return (
-    <div className="py-8 min-h-screen bg-gradient-to-br from-[#FDF2F8] to-white">
+    <div className=" min-h-screen ">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 py-12 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-2xl text-white">
           <h1 className="text-3xl md:text-[2.5rem] font-bold mb-4 text-shadow">My Orders</h1>

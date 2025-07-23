@@ -88,7 +88,7 @@ const Cart = () => {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen flex items-center py-8 bg-gradient-to-br from-[#FDF2F8] to-white">
+      <div className="min-h-screen flex items-center ">
         <div className="container mx-auto px-4">
           <div className="flex justify-center">
             <div className="w-full md:w-1/2 text-center">
@@ -109,7 +109,7 @@ const Cart = () => {
   }
 
   return (
-    <div className="py-8 bg-gradient-to-br from-[#FDF2F8] to-white">
+    <div className="">
       <div className="container mx-auto px-4">
         <div className="flex flex-wrap -mx-4">
           <div className="w-full px-4">

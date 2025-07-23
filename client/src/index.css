@@ -1,58 +1,20 @@
 @import "tailwindcss";
 
+/* Define custom variables */
+:root {
+  --bg-body: #e2b4c1;
+  --icon-bg: linear-gradient(135deg, #da81a4 0%, #fecfef 100%);
+  --icon-hover-bg: #ba54a9;
+  --button-bg: linear-gradient(135deg, #ba54a9 0%, #fecfef 100%);
+  --button-hover-shadow: rgba(255, 154, 158, 0.4);
+  --text-color-default: #333;
+  --text-hover-light: white;
+  --font-main: "Inter", sans-serif;
+}
+
 /* Body Background */
 body {
   @apply min-h-screen;
-  background-color: #e2b4c1;
-  font-family: "Inter", sans-serif;
-}
-
-/* Icon Component */
-.Icon {
-  width: 45px;
-  height: 45px;
-  background: linear-gradient(135deg, #da81a4 0%, #fecfef 100%);
-  border-radius: 9999px; /* full rounded */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  color: #333;
-}
-.Icon:hover {
-  background: #ba54a9;
-  color: white;
-  transform: translateY(-2px);
-}
-
-/* Button Styling */
-button {
-  background: linear-gradient(135deg, #ba54a9 0%, #fecfef 100%);
-  border: none;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 25px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  width: 100%;
-  cursor: pointer;
-}
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4);
-}
-
-/* Heading Styling */
-h1 {
-  font-size: 3rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-/* Paragraph Styling */
-p {
-  font-size: 1.2rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background-color: var(--bg-body);
+  font-family: var(--font-main);
 }

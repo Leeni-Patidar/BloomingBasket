@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { AuthContext } from "../context/AuthContext"
 import { CartContext } from "../context/CartContext"
 import { WishlistContext } from "../context/WishlistContext"
-// import styles from "./Navbar.module.css"
+import { HiOutlineMenu, HiX } from "react-icons/hi"
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -19,7 +19,6 @@ const Navbar = () => {
 
   const navigate = useNavigate()
 
-  // Check registration flag from localStorage
   useEffect(() => {
     const registered = localStorage.getItem("isRegistered") === "true"
     setIsUserRegistered(registered)
@@ -48,208 +47,153 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-gray-200 shadow-md py-4">
-      <div className="container mx-auto px-4 flex justify-between items-center">
-        <Link className="text-2xl font-bold font-['Playfair_Display'] text-pink-700 flex items-center gap-2" to="/">
-          <img src="logo.jpeg?height=40&width=40" alt="Blooming Basket" className="w-10 h-10 rounded-full" />
+    <nav className="fixed top-0 left-0 w-full z-50 bg-[#e8eaef] shadow-sm">
+      <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-pink-700 font-['Playfair_Display']">
+          <img src="logo.jpeg" alt="Blooming Basket" className="w-11 h-11 rounded-full shadow" />
           Blooming Basket
         </Link>
 
+        {/* Hamburger Menu */}
         <button
-          className="lg:hidden text-gray-600 focus:outline-none"
-          type="button"
+          className="md:hidden text-gray-800 bg-transparent focus:outline-none"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-controls="navbarNav"
-          aria-expanded={isMenuOpen}
-          aria-label="Toggle navigation"
         >
-          <span className="sr-only">Toggle navigation</span>
-          <i className="fas fa-bars text-2xl"></i>
+          {isMenuOpen ? <HiX className="h-6 w-6" /> : <HiOutlineMenu className="h-6 w-6" />}
         </button>
 
-        <div className={`lg:flex flex-grow items-center ${isMenuOpen ? "block" : "hidden"} lg:block`} id="navbarNav">
-          <ul className="flex flex-col lg:flex-row lg:ml-auto lg:mr-4 mt-4 lg:mt-0">
-            <li className="nav-item">
-              <Link
-                className="block py-2 px-4 text-gray-600 font-medium transition-all duration-300 hover:text-gray-800 hover:underline hover:-translate-y-0.5"
-                to="/"
-              >
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className="block py-2 px-4 text-gray-600 font-medium transition-all duration-300 hover:text-gray-800 hover:underline hover:-translate-y-0.5"
-                to="/shop"
-              >
-                Shop
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className="block py-2 px-4 text-gray-600 font-medium transition-all duration-300 hover:text-gray-800 hover:underline hover:-translate-y-0.5"
-                to="/about"
-              >
-                About
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className="block py-2 px-4 text-gray-600 font-medium transition-all duration-300 hover:text-gray-800 hover:underline hover:-translate-y-0.5"
-                to="/contactUs"
-              >
-                Contact Us
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className="block py-2 px-4 text-gray-600 font-medium transition-all duration-300 hover:text-gray-800 hover:underline hover:-translate-y-0.5"
-                to="/customize"
-              >
-                Customize
-              </Link>
-            </li>
-          </ul>
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center space-x-8">
+          {["/", "/shop", "/about", "/contactUs", "/customize"].map((path, i) => (
+            <Link
+              key={path}
+              to={path}
+              className="text-gray-700 hover:text-pink-600 transition font-medium"
+            >
+              {["Home", "Shop", "About", "Contact Us", "Customize"][i]}
+            </Link>
+          ))}
 
-          <ul className="flex flex-col lg:flex-row items-center mt-4 lg:mt-0">
-            <li className="nav-item mb-2 lg:mb-0 lg:mr-2">
-              <button
-                className="relative p-2 text-gray-600 hover:text-gray-800 focus:outline-none"
-                onClick={() => setIsSearchOpen(!isSearchOpen)}
-                title="Search"
-              >
-                <i className="fas fa-search"></i>
-              </button>
-            </li>
-
-            {isSearchOpen && (
-              <li className="nav-item w-full lg:w-auto mb-2 lg:mb-0">
-                <form className="w-full" onSubmit={handleSearchSubmit}>
-                  <input
-                    type="text"
-                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
-                    placeholder="Search..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    autoFocus
-                  />
-                </form>
-              </li>
-            )}
-
-            <li className="nav-item mb-2 lg:mb-0">
-              <button
-                className="relative p-2 text-gray-600 hover:text-gray-800 focus:outline-none"
-                onClick={() => handleProtectedRoute("/wishlist")}
-                title="Wishlist"
-              >
-                <i className="fas fa-heart"></i>
-                {wishlistItems.length > 0 && (
-                  <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
-                    {wishlistItems.length}
-                  </span>
-                )}
-              </button>
-            </li>
-
-            <li className="nav-item mb-2 lg:mb-0">
-              <button
-                className="relative p-2 text-gray-600 hover:text-gray-800 focus:outline-none"
-                onClick={() => handleProtectedRoute("/cart")}
-                title="Shopping Cart"
-              >
-                <i className="fas fa-shopping-cart"></i>
-                {getCartItemsCount() > 0 && (
-                  <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
-                    {getCartItemsCount()}
-                  </span>
-                )}
-              </button>
-            </li>
-
-            {user ? (
-              <li className="nav-item dropdown relative group">
-                <button
-                  className="py-2 px-4 text-gray-600 hover:text-gray-800 focus:outline-none flex items-center gap-2"
-                  aria-expanded="false"
-                >
-                  <i className="fas fa-user"></i> {user.name} <i className="fas fa-chevron-down text-xs ml-1"></i>
-                </button>
-                <ul className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in-out transform origin-top-right scale-95 group-hover:scale-100">
-                  <li>
-                    <Link
-                      className="block py-3 px-6 text-gray-700 hover:bg-gradient-to-br from-[#da81a4] to-[#fecfef] hover:text-white rounded-t-lg transition-all duration-300"
-                      to="/profile"
-                    >
-                      <i className="fas fa-user-circle mr-2"></i>Profile
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      className="block py-3 px-6 text-gray-700 hover:bg-gradient-to-br from-[#da81a4] to-[#fecfef] hover:text-white transition-all duration-300"
-                      to="/my-orders"
-                    >
-                      <i className="fas fa-box mr-2"></i>My Orders
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      className="block py-3 px-6 text-gray-700 hover:bg-gradient-to-br from-[#da81a4] to-[#fecfef] hover:text-white transition-all duration-300"
-                      to="/customize"
-                    >
-                      <i className="fas fa-palette mr-2"></i>Customize
-                    </Link>
-                  </li>
-                  {user.role === "admin" && (
-                    <>
-                      <li>
-                        <hr className="my-2 border-gray-200" />
-                      </li>
-                      <li>
-                        <Link
-                          className="block py-3 px-6 text-gray-700 hover:bg-gradient-to-br from-[#da81a4] to-[#fecfef] hover:text-white transition-all duration-300"
-                          to="/admin/products"
-                        >
-                          <i className="fas fa-cog mr-2"></i>Manage Products
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className="block py-3 px-6 text-gray-700 hover:bg-gradient-to-br from-[#da81a4] to-[#fecfef] hover:text-white transition-all duration-300"
-                          to="/admin/orders"
-                        >
-                          <i className="fas fa-clipboard-list mr-2"></i>Manage Orders
-                        </Link>
-                      </li>
-                    </>
+          {/* Admin OR User */}
+          {user?.role === "admin" ? (
+            <>
+              <Link to="/admin/orders" className="text-gray-700 hover:text-pink-600 font-medium">Order Management</Link>
+              <Link to="/admin/products" className="text-gray-700 hover:text-pink-600 font-medium">Product Management</Link>
+            </>
+          ) : (
+            <>
+              {/* Wishlist */}
+              {user ? (
+                <Link to="/wishlist" className="relative text-gray-700 hover:text-pink-600 transition">
+                  <i className="fas fa-heart"></i>
+                  {wishlistItems.length > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs px-1">
+                      {wishlistItems.length}
+                    </span>
                   )}
-                  <li>
-                    <hr className="my-2 border-gray-200" />
-                  </li>
-                  <li>
-                    <button
-                      className="w-full text-left py-3 px-6 text-gray-700 hover:bg-gradient-to-br from-[#da81a4] to-[#fecfef] hover:text-white rounded-b-lg transition-all duration-300"
-                      onClick={handleLogout}
-                    >
-                      <i className="fas fa-sign-out-alt mr-2"></i>Logout
-                    </button>
-                  </li>
-                </ul>
-              </li>
-            ) : (
-              <li className="nav-item">
-                <Link
-                  className="block py-2 px-4 text-gray-600 font-medium transition-all duration-300 hover:text-gray-800 hover:underline hover:-translate-y-0.5"
-                  to={isUserRegistered ? "/login" : "/register"}
-                >
-                  <i className="fas fa-sign-in-alt mr-2"></i>
-                  {isUserRegistered ? "Login" : "Register"}
                 </Link>
-              </li>
-            )}
-          </ul>
+              ) : (
+                <button
+                  onClick={() => handleProtectedRoute("/wishlist")}
+                  className="relative text-gray-700 hover:text-pink-600 transition"
+                >
+                  <i className="fas fa-heart"></i>
+                </button>
+              )}
+
+              {/* Cart */}
+              {user ? (
+                <Link to="/cart" className="relative text-gray-700 hover:text-pink-600 transition">
+                  <i className="fas fa-shopping-cart"></i>
+                  {getCartItemsCount() > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs px-1">
+                      {getCartItemsCount()}
+                    </span>
+                  )}
+                </Link>
+              ) : (
+                <button
+                  onClick={() => handleProtectedRoute("/cart")}
+                  className="relative text-gray-700 hover:text-pink-600 transition"
+                >
+                  <i className="fas fa-shopping-cart"></i>
+                </button>
+              )}
+            </>
+          )}
+
+          {/* User Auth */}
+          {user ? (
+            <div className="relative group">
+              <button className="text-gray-700 hover:text-pink-600 flex items-center gap-1">
+                <i className="fas fa-user"></i> {user.name}
+              </button>
+              <div className="absolute right-0 top-10 w-48 bg-white border border-gray-200 shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-40">
+                <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100">Profile</Link>
+                <Link to="/my-orders" className="block px-4 py-2 hover:bg-gray-100">My Orders</Link>
+                {user.role === "admin" && (
+                  <>
+                    <Link to="/admin/products" className="block px-4 py-2 hover:bg-gray-100">Manage Products</Link>
+                    <Link to="/admin/orders" className="block px-4 py-2 hover:bg-gray-100">Manage Orders</Link>
+                  </>
+                )}
+                <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-gray-100 bg-transparent">Logout</button>
+              </div>
+            </div>
+          ) : (
+            <Link to={isUserRegistered ? "/login" : "/register"} className="text-gray-700 hover:text-pink-600 transition">
+              <i className="fas fa-sign-in-alt mr-1"></i>{isUserRegistered ? "Login" : "Register"}
+            </Link>
+          )}
         </div>
       </div>
+
+      {/* Pink Gradient Border Bottom */}
+      <div className="h-1 w-full bg-gradient-to-r from-pink-400 via-pink-500 to-pink-400"></div>
+
+      {/* Search Input (Mobile) */}
+      {isSearchOpen && (
+        <div className="px-4 pb-2 bg-white md:hidden">
+          <form onSubmit={handleSearchSubmit}>
+            <input
+              type="text"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
+            />
+          </form>
+        </div>
+      )}
+
+      {/* Mobile Dropdown Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-gray-100 shadow-md px-4 py-4 space-y-2">
+          {["/", "/shop", "/about", "/contactUs", "/customize"].map((path, i) => (
+            <Link
+              key={path}
+              to={path}
+              onClick={() => setIsMenuOpen(false)}
+              className="block text-gray-700 font-medium"
+            >
+              {["Home", "Shop", "About", "Contact Us", "Customize"][i]}
+            </Link>
+          ))}
+
+          {user?.role === "admin" && (
+            <>
+              <Link to="/admin/orders" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">
+                Order Management
+              </Link>
+              <Link to="/admin/products" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">
+                Product Management
+              </Link>
+            </>
+          )}
+        </div>
+      )}
     </nav>
   )
 }
