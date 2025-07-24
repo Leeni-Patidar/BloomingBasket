@@ -1,0 +1,34 @@
+import mongoose from "mongoose";
+
+const addressSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: {
+      type: String,
+      required: true,
+      match: [/\S+@\S+\.\S+/, "Please enter a valid email address"],
+    },
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    zipcode: { type: String, required: true },
+    country: { type: String, required: true },
+    phone: {
+      type: String,
+      required: true,
+      match: [/^[0-9]{10}$/, "Please enter a valid 10-digit phone number"],
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const Address = mongoose.models.Address || mongoose.model("Address", addressSchema);
+export default Address;

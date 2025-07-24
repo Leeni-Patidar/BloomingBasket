@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
   {
@@ -99,22 +99,22 @@ const productSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  },
-)
+  }
+);
 
-// Index for search functionality
-productSchema.index({ name: "text", description: "text", tags: "text" })
+// Text search index
+productSchema.index({ name: "text", description: "text", tags: "text" });
 
 // Calculate average rating
 productSchema.methods.calculateAverageRating = function () {
   if (this.reviews.length === 0) {
-    this.rating.average = 0
-    this.rating.count = 0
+    this.rating.average = 0;
+    this.rating.count = 0;
   } else {
-    const sum = this.reviews.reduce((acc, review) => acc + review.rating, 0)
-    this.rating.average = sum / this.reviews.length
-    this.rating.count = this.reviews.length
+    const sum = this.reviews.reduce((acc, review) => acc + review.rating, 0);
+    this.rating.average = sum / this.reviews.length;
+    this.rating.count = this.reviews.length;
   }
-}
+};
 
-module.exports = mongoose.model("Product", productSchema)
+module.exports = mongoose.model("Product", productSchema);

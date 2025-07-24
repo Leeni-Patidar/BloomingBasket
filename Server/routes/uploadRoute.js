@@ -1,9 +1,8 @@
-// ✅ Cloudinary Upload Routes (Cleaned)
-
 const express = require("express");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
-const { auth, adminAuth } = require("../middleware/auth");
+const { auth, adminAuth } = require("../middleware/auth.js");
+require("dotenv").config();
 
 const router = express.Router();
 
@@ -12,6 +11,14 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+
+console.log("Cloudinary ENV:", {
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET ? "✔️ Present" : "❌ Missing",
+});
+
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -35,7 +42,11 @@ router.post("/image", adminAuth, upload.single("image"), async (req, res) => {
 
     const result = await uploadToCloudinary(req.file.buffer, {
       folder: "bloomin-basket/products",
-      transformation: [{ width: 800, height: 800, crop: "limit" }, { quality: "auto" }, { format: "auto" }],
+      transformation: [
+        { width: 800, height: 800, crop: "limit" },
+        { quality: "auto" },
+        { format: "auto" },
+      ],
     });
 
     res.json({ message: "File uploaded successfully", url: result.secure_url });
@@ -54,7 +65,11 @@ router.post("/images", adminAuth, upload.array("images", 5), async (req, res) =>
         uploadToCloudinary(file.buffer, {
           folder: "bloomin-basket/products",
           public_id: `product_${Date.now()}_${i}`,
-          transformation: [{ width: 800, height: 800, crop: "limit" }, { quality: "auto" }, { format: "auto" }],
+          transformation: [
+            { width: 800, height: 800, crop: "limit" },
+            { quality: "auto" },
+            { format: "auto" },
+          ],
         })
       )
     );

@@ -13,7 +13,7 @@ const Terms = () => {
         {/* Replaced 'row justify-content-center' and 'col-lg-8' with Tailwind flexbox and width classes */}
         <div className="flex justify-center">
           <div className="w-full lg:w-2/3">
-            <div className="bg-white p-8 px-6 md:p-12 rounded-2xl shadow-xl">
+            <div className="bg-gray-300 p-8 px-6 md:p-12 rounded-2xl shadow-xl">
               <section className="mb-4 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0">
                 <h2 className="text-xl md:text-2xl font-semibold mb-4 text-gray-800">1. Acceptance of Terms</h2>
                 <p className="text-gray-600 leading-[1.8] mb-4">

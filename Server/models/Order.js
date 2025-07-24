@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
@@ -19,15 +19,8 @@ const orderSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
-        quantity: {
-          type: Number,
-          required: true,
-          min: 1,
-        },
-        price: {
-          type: Number,
-          required: true,
-        },
+        quantity: { type: Number, required: true, min: 1 },
+        price: { type: Number, required: true },
         customization: {
           message: String,
           specialInstructions: String,
@@ -37,31 +30,13 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     shippingAddress: {
-      name: {
-        type: String,
-        required: true,
-      },
-      street: {
-        type: String,
-        required: true,
-      },
-      city: {
-        type: String,
-        required: true,
-      },
-      state: {
-        type: String,
-        required: true,
-      },
-      zipCode: {
-        type: String,
-        required: true,
-      },
-      country: {
-        type: String,
-        required: true,
-      },
-      phone: String,
+      name: { type: String, required: true },
+      street: { type: String, required: true },
+      city: { type: String, required: true },
+      state: { type: String, required: true },
+      zipCode: { type: String, required: true },
+      country: { type: String, required: true },
+      phone: { type: String },
     },
     paymentInfo: {
       method: {
@@ -83,26 +58,11 @@ const orderSchema = new mongoose.Schema(
       default: "pending",
     },
     pricing: {
-      subtotal: {
-        type: Number,
-        required: true,
-      },
-      tax: {
-        type: Number,
-        default: 0,
-      },
-      shipping: {
-        type: Number,
-        default: 0,
-      },
-      discount: {
-        type: Number,
-        default: 0,
-      },
-      total: {
-        type: Number,
-        required: true,
-      },
+      subtotal: { type: Number, required: true },
+      tax: { type: Number, default: 0 },
+      shipping: { type: Number, default: 0 },
+      discount: { type: Number, default: 0 },
+      total: { type: Number, required: true },
     },
     deliveryDate: {
       type: Date,
@@ -113,26 +73,23 @@ const orderSchema = new mongoose.Schema(
     statusHistory: [
       {
         status: String,
-        timestamp: {
-          type: Date,
-          default: Date.now,
-        },
+        timestamp: { type: Date, default: Date.now },
         note: String,
       },
     ],
   },
   {
     timestamps: true,
-  },
-)
+  }
+);
 
-// Generate order number
+// ✅ Auto-generate unique order number
 orderSchema.pre("save", async function (next) {
   if (!this.orderNumber) {
-    const count = await mongoose.model("Order").countDocuments()
-    this.orderNumber = `BB${Date.now()}${count + 1}`
+    const count = await mongoose.model("Order").countDocuments();
+    this.orderNumber = `BB${Date.now()}${count + 1}`;
   }
-  next()
-})
+  next();
+});
 
-module.exports = mongoose.model("Order", orderSchema)
+module.exports = mongoose.model("Order", orderSchema);
