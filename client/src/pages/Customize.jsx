@@ -120,9 +120,9 @@ const Customize = () => {
   return (
     <div className=" min-h-screen">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12 py-12 bg-gradient-to-br from-[#ba54a9] to-[#fecfef] rounded-2xl text-white">
-          <h1 className="text-3xl md:text-[2.5rem] font-bold mb-4 text-shadow">Customize Your Perfect Bouquet</h1>
-          <p className="text-[1.1rem] text-shadow-sm">
+        <div className="text-center mb-12  bg-gradient-to-br from-[#ba54a9] to-[#fecfef] rounded-2xl ">
+          <h1 className="text-3xl md:text-[2rem] font-bold mb-4 ">Customize Your Perfect Bouquet</h1>
+          <p className="text-[1.1rem] ">
             Create a unique floral arrangement tailored to your special occasion
           </p>
         </div>
@@ -133,7 +133,7 @@ const Customize = () => {
             {[1, 2, 3, 4].map((stepNum) => (
               <div key={stepNum} className={`flex flex-col items-center gap-2`}>
                 <div
-                  className={`w-12 h-12 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold transition-all duration-300 ${step >= stepNum ? "bg-gradient-to-br from-[#ba54a9] to-[#fecfef] text-white" : ""}`}
+                  className={`w-12 h-12 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold transition-all duration-300 ${step >= stepNum ? "bg-gradient-to-br from-[#ba54a9] to-[#fecfef] " : ""}`}
                 >
                   {stepNum}
                 </div>
@@ -163,16 +163,16 @@ const Customize = () => {
                 {occasions.map((occasion) => (
                   <div
                     key={occasion.id}
-                    className={`bg-white border-2 border-gray-200 rounded-xl p-8 text-center cursor-pointer transition-all duration-300 ease-in-out flex flex-col items-center gap-4 hover:border-[#ba54a9] hover:-translate-y-0.5 ${
+                    className={`bg-white border-2 border-gray-200 rounded-xl p-8 text-center cursor-pointer transition-all duration-300 ease-in-out flex flex-col items-center gap-4 hover:border-[#ba54a9] button-bg:hover ${
                       customization.occasion === occasion.id
-                        ? "border-red-500 bg-gradient-to-br from-[#ba54a9] to-[#fecfef] text-white"
+                        ? "border-red-500 bg-gradient-to-br from-[#ba54a9] to-[#fecfef] "
                         : ""
                     }`}
                     onClick={() => handleInputChange("occasion", occasion.id)}
                   >
                     <i
                       className={`text-3xl text-[#ba54a9] ${
-                        customization.occasion === occasion.id ? "text-white" : ""
+                        customization.occasion === occasion.id ? "" : ""
                       }`}
                     ></i>
                     <span>{occasion.name}</span>
@@ -242,9 +242,9 @@ const Customize = () => {
                   {sizes.map((size) => (
                     <div
                       key={size.id}
-                      className={`bg-white border-2 border-gray-200 rounded-xl p-8 text-center cursor-pointer transition-all duration-300 ease-in-out hover:border-[#ba54a9] hover:-translate-y-0.5 ${
+                      className={`bg-white border-2 border-gray-200 rounded-xl p-8 text-center cursor-pointer transition-all duration-300 ease-in-out hover:border-[#ba54a9] button-bg:hover ${
                         customization.size === size.id
-                          ? "border-red-500 bg-gradient-to-br from-[#ba54a9] to-[#fecfef] text-white"
+                          ? "border-red-500 bg-gradient-to-br from-[#ba54a9] to-[#fecfef] "
                           : ""
                       }`}
                       onClick={() => handleInputChange("size", size.id)}
@@ -253,7 +253,7 @@ const Customize = () => {
                       <p className="mb-4 text-sm">{size.description}</p>
                       <span
                         className={`text-xl font-bold text-red-500 ${
-                          customization.size === size.id ? "text-white" : ""
+                          customization.size === size.id ? "" : ""
                         }`}
                       >
                         ${size.price}
@@ -389,7 +389,7 @@ const Customize = () => {
           <div className="flex flex-col sm:flex-row justify-between items-center mt-12 pt-8 border-t border-gray-200 gap-4">
             {step > 1 && (
               <button
-                className="px-8 py-4 border-none rounded-lg font-semibold transition-all duration-300 ease-in-out flex items-center gap-2 bg-gray-600 text-white hover:bg-gray-700 hover:-translate-y-0.5"
+                className="px-8 py-4 border-none rounded-lg font-semibold transition-all duration-300 ease-in-out flex items-center gap-2 bg-gray-600  hover:bg-gray-700 button-bg:hover"
                 onClick={prevStep}
               >
                 <i className="fas fa-arrow-left mr-2"></i>Previous
@@ -397,14 +397,14 @@ const Customize = () => {
             )}
             {step < 4 ? (
               <button
-                className="px-8 py-4 border-none rounded-lg font-semibold transition-all duration-300 ease-in-out flex items-center gap-2 bg-gradient-to-br from-[#ba54a9] to-[#fecfef] text-white hover:-translate-y-0.5 hover:shadow-lg w-full sm:w-auto sm:ml-auto"
+                className="px-8 py-4 border-none rounded-lg font-semibold transition-all duration-300 ease-in-out flex items-center gap-2 bg-gradient-to-br from-[#ba54a9] to-[#fecfef]  button-bg:hover hover:shadow-lg w-full sm:w-auto sm:ml-auto"
                 onClick={nextStep}
               >
                 Next<i className="fas fa-arrow-right ml-2"></i>
               </button>
             ) : (
               <button
-                className="px-8 py-4 border-none rounded-lg font-semibold transition-all duration-300 ease-in-out flex items-center gap-2 bg-gradient-to-br from-[#ba54a9] to-[#fecfef] text-white hover:-translate-y-0.5 hover:shadow-lg w-full sm:w-auto sm:ml-auto"
+                className="px-8 py-4 border-none rounded-lg font-semibold transition-all duration-300 ease-in-out flex items-center gap-2 bg-gradient-to-br from-[#ba54a9] to-[#fecfef]  button-bg:hover hover:shadow-lg w-full sm:w-auto sm:ml-auto"
                 onClick={handleAddToCart}
               >
                 Add to Cart - ${calculatePrice()}

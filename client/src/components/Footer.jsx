@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../context/authContext"; // ✅ adjust path if needed
+import { AuthContext } from "../context/AuthContext"; // ✅ adjust path if needed
 
 const Footer = () => {
   const { user } = useContext(AuthContext); // ✅ pull from context
@@ -8,7 +8,7 @@ const Footer = () => {
   const isAdmin = user?.isAdmin;
 
   return (
-    <footer className="bg-gradient-to-br from-[#2c3e50] to-[#34495e] text-white py-12 px-0 mt-auto">
+    <footer className="bg-gradient-to-br from-[#2c3e50] to-[#34495e]  py-12 px-0 mt-auto">
       <div className="container mx-auto px-4">
         <div className="flex flex-wrap -mx-4">
           {/* Brand Info */}
@@ -103,15 +103,15 @@ const Footer = () => {
               <h6 className="text-lg font-semibold mb-4 text-gray-200">Contact Info</h6>
               <div className="flex flex-col gap-4 text-gray-400">
                 <div className="flex items-center gap-3">
-                  <i className="fas fa-map-marker-alt text-white w-5"></i>
+                  <i className="fas fa-map-marker-alt  w-5"></i>
                   <span>123 Flower Street, Garden City, GC 12345</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <i className="fas fa-phone text-white w-5"></i>
+                  <i className="fas fa-phone  w-5"></i>
                   <span>+1 (555) 123-4567</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <i className="fas fa-envelope text-white w-5"></i>
+                  <i className="fas fa-envelope  w-5"></i>
                   <span>info@bloomingbasket.com</span>
                 </div>
               </div>

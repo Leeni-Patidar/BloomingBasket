@@ -88,7 +88,7 @@ const Cart = () => {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen flex items-center ">
+      <div className="flex items-center ">
         <div className="container mx-auto px-4">
           <div className="flex justify-center">
             <div className="w-full md:w-1/2 text-center">
@@ -96,7 +96,7 @@ const Cart = () => {
               <h2 className="text-2xl font-semibold mb-2">Your cart is empty</h2>
               <p className="text-gray-600 mb-4">Looks like you haven't added any flowers to your cart yet.</p>
               <button
-                className="inline-block bg-gradient-to-br from-[#ba54a9] to-[#fecfef] text-white px-6 py-3 rounded-full text-lg font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+                className="inline-block bg-gradient-to-br from-[#ba54a9] to-[#fecfef]  px-6 py-3 rounded-full text-lg font-semibold transition-all duration-300 button-bg:hover hover:shadow-lg"
                 onClick={() => navigate("/shop")}
               >
                 Continue Shopping
@@ -113,7 +113,7 @@ const Cart = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-wrap -mx-4">
           <div className="w-full px-4">
-            <h1 className="text-3xl md:text-[2.5rem] font-bold mb-8 text-gray-800">Shopping Cart</h1>
+            <h1 className="text-3xl md:text-[2rem] font-bold mb-8 text-gray-800">Shopping Cart</h1>
           </div>
         </div>
 
@@ -187,7 +187,7 @@ const Cart = () => {
                   <strong>${total.toFixed(2)}</strong>
                 </div>
                 <button
-                  className="w-full bg-gradient-to-br from-[#da81a4] to-[#fecfef] text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg mt-6"
+                  className="w-full button-bg  px-6 py-3 rounded-lg font-semibold transition-all duration-300 button-bg:hover hover:shadow-lg mt-6"
                   onClick={() => setShowCheckout(true)}
                 >
                   Proceed to Checkout
@@ -342,14 +342,14 @@ const Cart = () => {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
                     type="button"
-                    className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:bg-gray-300 hover:-translate-y-0.5"
+                    className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:bg-gray-300 button-bg:hover"
                     onClick={() => setShowCheckout(false)}
                   >
                     Back to Cart
                   </button>
                   <button
                     type="submit"
-                    className="bg-gradient-to-br from-[#da81a4] to-[#fecfef] text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-70 disabled:transform-none"
+                    className="button-bg  px-6 py-3 rounded-lg font-semibold transition-all duration-300 button-bg:hover hover:shadow-lg disabled:opacity-70 disabled:transform-none"
                     disabled={loading}
                   >
                     {loading ? "Placing Order..." : "Place Order"}

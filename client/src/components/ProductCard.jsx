@@ -14,7 +14,7 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist, isInWishlist }) =>
         />
         <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
           <button
-            className={`w-10 h-10 rounded-full border-none bg-white text-gray-600 flex items-center justify-center shadow-md transition-all duration-300 ease-in-out hover:bg-[#ba54a9] hover:text-white hover:scale-110 ${isInWishlist ? "bg-red-500 text-white" : ""}`}
+            className={`w-10 h-10 rounded-full border-none bg-white text-gray-600 flex items-center justify-center shadow-md transition-all duration-300 ease-in-out  hover: hover:scale-110 ${isInWishlist ? "bg-red-500 " : ""}`}
             onClick={onAddToWishlist}
             title="Add to Wishlist"
           >
@@ -22,7 +22,7 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist, isInWishlist }) =>
           </button>
           <Link
             to={`/product/${product._id}`}
-            className="w-10 h-10 rounded-full border-none bg-white text-gray-600 flex items-center justify-center shadow-md transition-all duration-300 ease-in-out hover:bg-[#ba54a9] hover:text-white hover:scale-110"
+            className="w-10 h-10 rounded-full border-none bg-white text-gray-600 flex items-center justify-center shadow-md transition-all duration-300 ease-in-out  hover: hover:scale-110"
             title="View Details"
           >
             <i className="fas fa-eye"></i>
@@ -44,7 +44,7 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist, isInWishlist }) =>
         </div>
         <div className="text-xl font-bold text-red-500 mb-4">${product.price}</div>
         <button
-          className="bg-gradient-to-br from-[#ff9a9e] to-[#fecfef] border-none text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 ease-in-out w-full hover:-translate-y-0.5 hover:shadow-lg"
+          className="bg-gradient-to-br from-[#ff9a9e] to-[#fecfef] border-none  px-6 py-3 rounded-full font-semibold transition-all duration-300 ease-in-out w-full button-bg:hover hover:shadow-lg"
           onClick={onAddToCart}
         >
           Add to Cart

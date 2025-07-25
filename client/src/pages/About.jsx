@@ -1,150 +1,97 @@
-// import styles from "./About.module.css"
-
+"use client"
+import { Link } from "react-router-dom"
 const About = () => {
   return (
-    <div className="py-8">
+    <div className="">
       <div className="container mx-auto px-4">
-        {/* Hero Section */}
-        <div className="py-16 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-2xl mb-16 text-white">
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-8 px-4">
-            <div className="w-full lg:w-1/2 text-center lg:text-left">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 text-shadow">About Blooming Basket</h1>
-              <p className="text-lg leading-relaxed text-shadow-sm">
-                We've been bringing joy and beauty to people's lives through fresh, stunning flowers for over 15 years.
-                Our passion for floriculture and commitment to quality has made us a trusted name in the industry.
-              </p>
-            </div>
-            <div className="w-full lg:w-1/2 flex justify-center">
-              <img
-                src="/placeholder.svg?height=400&width=600"
-                alt="About us"
-                className="w-full max-w-md rounded-xl shadow-2xl"
-              />
-            </div>
-          </div>
+
+        {/* Hero Image */}
+        <div className="w-full mb-10">
+          <img
+            src="/about.jpg" // Replace with your actual image path
+            alt="Cherry blossoms"
+            className="w-full h-auto max-h-[500px] object-cover rounded-xl"
+          />
         </div>
+
+        {/* Our Mission */}
+        <section className="mb-16 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 ">Our Mission</h2>
+          <div className="max-w-4xl mx-auto  text-base md:text-lg leading-relaxed px-2 md:px-6 ">
+            <p className="mb-4">
+              At Blooming Basket, our mission is simple yet profound: to bring joy, beauty, and thoughtfulness to every occasion through the timeless gift of flowers.We believe that flowers have the power to express emotions, celebrate milestones, and brighten any space. We are committed to providing only the freshest, most beautiful blooms, sourced from trusted growers with a focus on sustainability and quality.Each bouquet is designed with love and care, offering a personalized experience that transforms any floral arrangement into something truly special.
+            </p>
+            
+            <p>
+              Our goal is to make every moment memorable. Whether it's a heartfelt gift or a treat for yourself, Blooming Basket brings a smile and a touch of nature’s beauty to your door.
+            </p>
+          </div>
+        </section>
+
+        {/* Why Choose */}
+        <section className="mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 ">Why Choose Blooming Basket?</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: "🌸", title: "Fresh Picks", desc: "Handpicked daily from trusted farms" },
+              { icon: "🖌️", title: "Custom Designs", desc: "Tailored to your message or event" },
+              { icon: "🚚", title: "Same-Day Delivery", desc: "Fast delivery, even last minute" },
+              { icon: "🌿", title: "Eco-Friendly", desc: "Committed to sustainable practices" }
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-white text-center p-6 rounded-xl shadow-md hover:shadow-lg transition"
+              >
+                <div className="text-3xl mb-4">{item.icon}</div>
+                <h5 className="text-lg font-semibold mb-2">{item.title}</h5>
+                <p className=" text-sm">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* Our Story */}
-        <div className="py-16">
-          <div className="flex flex-wrap -mx-4">
-            <div className="w-full px-4 text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8">Our Story</h2>
-            </div>
-            <div className="w-full lg:w-1/2 px-4 mb-8">
-              <div className="bg-white p-8 rounded-xl shadow-md h-full">
-                <h4 className="text-red-500 mb-4 font-semibold">Founded with Love</h4>
-                <p className="text-gray-600 leading-relaxed">
-                  Blooming Basket was founded in 2008 by Sarah and Michael Johnson, two passionate florists who wanted
-                  to share their love for flowers with the world. What started as a small local flower shop has grown
-                  into a thriving online business serving customers nationwide.
-                </p>
-              </div>
-            </div>
-            <div className="w-full lg:w-1/2 px-4 mb-8">
-              <div className="bg-white p-8 rounded-xl shadow-md h-full">
-                <h4 className="text-red-500 mb-4 font-semibold">Quality First</h4>
-                <p className="text-gray-600 leading-relaxed">
-                  We source our flowers directly from trusted growers and ensure they're fresh, vibrant, and
-                  long-lasting. Every arrangement is carefully crafted by our skilled florists who take pride in their
-                  artistry and attention to detail.
-                </p>
-              </div>
-            </div>
+        <section className="mb-16 flex flex-col lg:flex-row items-center ">
+          <div className="w-full lg:w-1/3">
+            <img
+              src="/about2.png" 
+              alt="Florist"
+              className="w-90 rounded-xl shadow-md"
+            />
           </div>
-        </div>
+          <div className="w-full lg:w-2/3">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 ">Our Story</h2>
+            <p className=" leading-relaxed text-base md:text-lg text-justify" >
+             Blooming Basket was born out of a simple yet powerful love for flowers and the belief that each bloom has a unique way of expressing emotions. What started as a small dream to share the beauty of nature with others quickly grew into a passion to make every occasion brighter and more memorable through carefully curated floral arrangements.
+Our founder’s journey began with a deep appreciation for the magic flowers bring — from the joy of receiving a fresh bouquet to the comforting power they hold during life’s most significant moments. With this in mind, Blooming Basket was created to offer more than just flowers; we wanted to provide a heartfelt experience that connects people and celebrates their special moments.
+Today, we continue to pour that same passion and care into every bouquet we create. Whether it’s for a birthday, anniversary, or just because, we aim to deliver beauty, joy, and warmth to our customers’ lives. 
+            </p>
+          </div>
+        </section>
 
-        {/* Values */}
-        <div className="py-16">
-          <div className="flex flex-wrap -mx-4">
-            <div className="w-full px-4 text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8">Our Values</h2>
-            </div>
-            <div className="w-full md:w-1/3 px-4 mb-8">
-              <div className="text-center p-8 bg-white rounded-xl shadow-md transition-transform duration-300 ease-in-out hover:-translate-y-1 h-full">
-                <div className="w-20 h-20 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center mx-auto mb-6 text-3xl text-white">
-                  <i className="fas fa-heart"></i>
-                </div>
-                <h5 className="text-gray-800 mb-2 font-semibold">Passion</h5>
-                <p className="text-gray-600 leading-relaxed">
-                  We pour our heart into every arrangement, ensuring each bouquet tells a beautiful story.
-                </p>
-              </div>
-            </div>
-            <div className="w-full md:w-1/3 px-4 mb-8">
-              <div className="text-center p-8 bg-white rounded-xl shadow-md transition-transform duration-300 ease-in-out hover:-translate-y-1 h-full">
-                <div className="w-20 h-20 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center mx-auto mb-6 text-3xl text-white">
-                  <i className="fas fa-leaf"></i>
-                </div>
-                <h5 className="text-gray-800 mb-2 font-semibold">Sustainability</h5>
-                <p className="text-gray-600 leading-relaxed">
-                  We're committed to eco-friendly practices and supporting sustainable flower farming.
-                </p>
-              </div>
-            </div>
-            <div className="w-full md:w-1/3 px-4 mb-8">
-              <div className="text-center p-8 bg-white rounded-xl shadow-md transition-transform duration-300 ease-in-out hover:-translate-y-1 h-full">
-                <div className="w-20 h-20 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center mx-auto mb-6 text-3xl text-white">
-                  <i className="fas fa-users"></i>
-                </div>
-                <h5 className="text-gray-800 mb-2 font-semibold">Community</h5>
-                <p className="text-gray-600 leading-relaxed">
-                  We believe in giving back to our community and supporting local causes.
-                </p>
-              </div>
-            </div>
+        {/* Final CTA */}
+        <section className="text-center mt-16">
+          <h2 className="text-2xl md:text-3xl font-bold  mb-4">
+            Ready to Create Something Beautiful?
+          </h2>
+          <p className=" mb-6">
+            Let us help you design the perfect floral arrangement for any occasion.
+          </p>
+          <div className="flex justify-center gap-4">
+           <Link
+                  to="/shop"
+                  className="px-8 py-4 rounded-lg no-underline font-semibold transition-all duration-300 flex items-center justify-center button-bg  border-2 border-transparent  button-bg:hover "  >
+                  
+                  Shop Now
+                </Link>
+            <Link
+                  to="/contactUs"
+                  className="px-8 py-4 rounded-lg no-underline font-semibold transition-all duration-300 flex items-center justify-center button-bg  border-2 border-transparent  button-bg:hover "  >
+                  
+                 Contact Us
+                </Link>
           </div>
-        </div>
-
-        {/* Team */}
-        <div className="py-16">
-          <div className="flex flex-wrap -mx-4">
-            <div className="w-full px-4 text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8">Meet Our Team</h2>
-            </div>
-            <div className="w-full lg:w-1/3 md:w-1/2 px-4 mb-8">
-              <div className="text-center bg-white p-8 rounded-xl shadow-md transition-transform duration-300 ease-in-out hover:-translate-y-1">
-                <img
-                  src="/placeholder.svg?height=300&width=300"
-                  alt="Sarah Johnson"
-                  className="w-36 h-36 rounded-full object-cover mx-auto mb-4"
-                />
-                <h5 className="text-gray-800 mb-2 font-semibold">Sarah Johnson</h5>
-                <p className="text-red-500 font-semibold mb-4">Co-Founder & Head Florist</p>
-                <p className="text-gray-600 leading-relaxed">
-                  With over 20 years of experience, Sarah brings creativity and expertise to every arrangement.
-                </p>
-              </div>
-            </div>
-            <div className="w-full lg:w-1/3 md:w-1/2 px-4 mb-8">
-              <div className="text-center bg-white p-8 rounded-xl shadow-md transition-transform duration-300 ease-in-out hover:-translate-y-1">
-                <img
-                  src="/placeholder.svg?height=300&width=300"
-                  alt="Michael Johnson"
-                  className="w-36 h-36 rounded-full object-cover mx-auto mb-4"
-                />
-                <h5 className="text-gray-800 mb-2 font-semibold">Michael Johnson</h5>
-                <p className="text-red-500 font-semibold mb-4">Co-Founder & Operations Manager</p>
-                <p className="text-gray-600 leading-relaxed">
-                  Michael ensures smooth operations and maintains our high standards of customer service.
-                </p>
-              </div>
-            </div>
-            <div className="w-full lg:w-1/3 md:w-1/2 px-4 mb-8">
-              <div className="text-center bg-white p-8 rounded-xl shadow-md transition-transform duration-300 ease-in-out hover:-translate-y-1">
-                <img
-                  src="/placeholder.svg?height=300&width=300"
-                  alt="Emma Davis"
-                  className="w-36 h-36 rounded-full object-cover mx-auto mb-4"
-                />
-                <h5>Emma Davis</h5>
-                <p className="text-red-500 font-semibold mb-4">Senior Florist</p>
-                <p className="text-gray-600 leading-relaxed">
-                  Emma specializes in wedding arrangements and brings artistic flair to special occasions.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        </section>
       </div>
     </div>
   )

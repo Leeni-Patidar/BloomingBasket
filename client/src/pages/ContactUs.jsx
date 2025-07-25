@@ -44,13 +44,13 @@ const Contact = () => {
   }
 
   return (
-    <div className="min-h-screen ">
+    <div className=" ">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-8 py-12 rounded-2xl">
-          <h1 className="text-3xl md:text-[2.5rem] font-bold mb-4 text-shadow">We'd love to hear from you!</h1>
-          <p className="text-lg text-shadow-sm">
-            Whether you have a question, need assistance, or just want to say hello, we're here to help. Reach out to us
+        <div className="text-center mb-8  rounded-2xl">
+          <h1 className="text-3xl md:text-[2rem] font-bold mb-4 ">We'd love to hear from you!</h1>
+          <p className="text-[1rem] mb-4 ">
+            Whether you have a question, we're here to help. Reach out to us
             anytime, and we'll respond as quickly as possible!
           </p>
         </div>
@@ -131,7 +131,7 @@ const Contact = () => {
                       className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base transition-all duration-300 ease-in-out focus:border-[#ba54a9] focus:ring-4 focus:ring-[#ff9a9e]/25"
                       id="message"
                       name="message"
-                      rows="5"
+                      rows="4"
                       value={formData.message}
                       onChange={handleChange}
                       placeholder="Tell us how we can help you..."
@@ -141,7 +141,7 @@ const Contact = () => {
                   <div className="w-full px-2">
                     <button
                       type="submit"
-                      className="w-full bg-gradient-to-br from-[#da81a4] to-[#fecfef] border-none text-white px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-70 disabled:transform-none"
+                      className="w-full button-bg border-none text-black px-8 py-4 text-lg font-semibold rounded-2xl transition-all duration-300 ease-in-out button-bg:hover hover:shadow-lg disabled:opacity-70 disabled:transform-none"
                       disabled={loading}
                     >
                       {loading ? "Sending..." : "Send Message"}
@@ -154,11 +154,11 @@ const Contact = () => {
 
           {/* Contact Info */}
           <div className="w-full lg:w-1/3 px-4">
-            <div className="bg-white p-6 md:p-10 rounded-xl shadow-xl h-fit">
+           <div className="bg-white p-6 md:p-10 rounded-xl shadow-xl">
               <h3 className="text-gray-800 mb-8 font-semibold">Get in Touch</h3>
 
               <div className="flex items-start mb-8 gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center text-xl text-white flex-shrink-0">
+                <div className="w-12 h-12 button-bg rounded-full flex items-center justify-center text-xl flex-shrink-0">
                   <i className="fas fa-map-marker-alt"></i>
                 </div>
                 <div>
@@ -172,7 +172,7 @@ const Contact = () => {
               </div>
 
               <div className="flex items-start mb-8 gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center text-xl text-white flex-shrink-0">
+                <div className="w-12 h-12 button-bg rounded-full flex items-center justify-center text-xl flex-shrink-0 button-bg:hover">
                   <i className="fas fa-phone"></i>
                 </div>
                 <div>
@@ -182,7 +182,7 @@ const Contact = () => {
               </div>
 
               <div className="flex items-start mb-8 gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center text-xl text-white flex-shrink-0">
+                <div className="w-12 h-12 button-bg rounded-full flex items-center justify-center text-xlflex-shrink-0">
                   <i className="fas fa-envelope"></i>
                 </div>
                 <div>
@@ -196,25 +196,25 @@ const Contact = () => {
                 <div className="flex gap-4 justify-center md:justify-start">
                   <a
                     href="#"
-                    className="w-11 h-11 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center text-gray-800 no-underline transition-all duration-300 ease-in-out hover:bg-[#ba54a9] hover:text-white hover:-translate-y-0.5"
+                    className="w-11 h-11 button-bg rounded-full flex items-center justify-center text-gray-800 no-underline transition-all duration-300 ease-in-out  button-bg:hover"
                   >
                     <i className="fab fa-facebook-f"></i>
                   </a>
                   <a
                     href="#"
-                    className="w-11 h-11 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center text-gray-800 no-underline transition-all duration-300 ease-in-out hover:bg-[#ba54a9] hover:text-white hover:-translate-y-0.5"
+                    className="w-11 h-11 button-bg rounded-full flex items-center justify-center text-gray-800 no-underline transition-all duration-300 ease-in-out  button-bg:hover"
                   >
                     <i className="fab fa-instagram"></i>
                   </a>
                   <a
                     href="#"
-                    className="w-11 h-11 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center text-gray-800 no-underline transition-all duration-300 ease-in-out hover:bg-[#ba54a9] hover:text-white hover:-translate-y-0.5"
+                    className="w-11 h-11 button-bg rounded-full flex items-center justify-center text-gray-800 no-underline transition-all duration-300 ease-in-out   button-bg:hover"
                   >
                     <i className="fab fa-twitter"></i>
                   </a>
                   <a
                     href="#"
-                    className="w-11 h-11 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center text-gray-800 no-underline transition-all duration-300 ease-in-out hover:bg-[#ba54a9] hover:text-white hover:-translate-y-0.5"
+                    className="w-11 h-11 button-bg rounded-full flex items-center justify-center text-gray-800 no-underline transition-all duration-300 ease-in-out  button-bg:hover "
                   >
                     <i className="fab fa-pinterest"></i>
                   </a>
@@ -224,13 +224,6 @@ const Contact = () => {
           </div>
         </div>
 
-        <div className="mt-16 text-center">
-          <h3 className="text-gray-800 mb-8 font-semibold">Our Location</h3>
-          <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl p-16 text-gray-600">
-            <i className="fas fa-map-marked-alt text-5xl mb-4 text-[#ba54a9]"></i>
-            <p>Map Placeholder</p>
-          </div>
-        </div>
       </div>
     </div>
   )

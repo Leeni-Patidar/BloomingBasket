@@ -31,7 +31,7 @@ const Wishlist = () => {
               </p>
               <Link
                 to="/shop"
-                className="inline-block bg-gradient-to-br from-[#ba54a9] to-[#fecfef] text-white px-6 py-3 rounded-full text-lg font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+                className="inline-block bg-gradient-to-br from-[#ba54a9] to-[#fecfef]  px-6 py-3 rounded-full text-lg font-semibold transition-all duration-300 button-bg:hover hover:shadow-lg"
               >
                 Browse Flowers
               </Link>
@@ -45,8 +45,8 @@ const Wishlist = () => {
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12 py-12 rounded-2xl text-white bg-gradient-to-br from-[#da81a4] to-[#fecfef]">
-          <h1 className="text-3xl md:text-[2.5rem] font-bold mb-4">My Wishlist</h1>
+        <div className="text-center mb-12  rounded-2xl  button-bg">
+          <h1 className="text-3xl md:text-[2rem] font-bold mb-4">My Wishlist</h1>
           <p className="text-[1.1rem]">
             Your saved favorite flowers ({wishlistItems.length} item{wishlistItems.length > 1 ? "s" : ""})
           </p>

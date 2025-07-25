@@ -38,26 +38,29 @@ const Register = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FDF2F8] to-white flex items-center py-8">
+    <div
+      className="min-h-screen w-screen flex items-center justify-center bg-cover bg-center bg-no-repeat bg-fixed"
+      style={{ backgroundImage: "url('/login1.jpg')" }}
+    >
       <div className="container mx-auto px-4">
         <div className="flex justify-center">
           <div className="w-full max-w-md">
-            <div className="bg-white rounded-2xl p-10 shadow-2xl">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-800 mb-1">Create Account</h2>
-                <p className="text-gray-600 text-sm">Join Blooming Basket today</p>
+            <div className=" mt-10 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl p-8 md:p-10 lg:p-12 shadow-xl">
+              <div className="text-center mb-2">
+                <h1 className="text-3xl md:text-[2rem] font-bold mb-2 ">Create Account</h1>
+                <p className="">Join Blooming Basket today</p>
               </div>
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                  <label htmlFor="name" className="block text-gray-700 text-sm font-medium mb-1">
+                  <label htmlFor="name" className="block  text-sm font-medium mb-1">
                     Full Name
                   </label>
                   <input
                     type="text"
                     id="name"
                     name="name"
-                    className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 transition-all focus:border-pink-400 focus:ring-2 focus:ring-pink-200"
+                    className="w-full border-2 border-black rounded-lg px-4 py-3 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
                     value={formData.name}
                     onChange={handleChange}
                     required
@@ -65,14 +68,14 @@ const Register = () => {
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="email" className="block text-gray-700 text-sm font-medium mb-1">
+                  <label htmlFor="email" className="block  text-sm font-medium mb-1">
                     Email
                   </label>
                   <input
                     type="email"
                     id="email"
                     name="email"
-                    className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 transition-all focus:border-pink-400 focus:ring-2 focus:ring-pink-200"
+                    className="w-full border-2 border-black rounded-lg px-4 py-3 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
                     value={formData.email}
                     onChange={handleChange}
                     required
@@ -80,14 +83,14 @@ const Register = () => {
                 </div>
 
                 <div className="mb-6">
-                  <label htmlFor="password" className="block text-gray-700 text-sm font-medium mb-1">
+                  <label htmlFor="password" className="block text-sm font-medium mb-1">
                     Password
                   </label>
                   <input
                     type="password"
                     id="password"
                     name="password"
-                    className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 transition-all focus:border-pink-400 focus:ring-2 focus:ring-pink-200"
+                    className="w-full border-2 border-black rounded-lg px-4 py-3 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
                     value={formData.password}
                     onChange={handleChange}
                     required
@@ -97,19 +100,16 @@ const Register = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-br from-[#da81a4] to-[#fecfef] text-white font-semibold py-3 rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                  className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-300 button-bg:hover disabled:opacity-70"
                 >
                   {loading ? "Please wait..." : "Create Account"}
                 </button>
               </form>
 
-              <div className="text-center mt-6 border-t pt-6 text-sm">
-                <span className="text-gray-600">
+              <div className="text-center mt-2  border-0 border-gray-200">
+                <span className="">
                   Already have an account?{" "}
-                  <Link
-                    to="/login"
-                    className="text-pink-600 font-semibold hover:underline"
-                  >
+                  <Link to="/login" className="text-[#ba54a9] font-semibold underline hover:text-[#da81a4]">
                     Sign In
                   </Link>
                 </span>

@@ -2,14 +2,23 @@
 
 /* Define custom variables */
 :root {
-  --bg-body: #e2b4c1;
+  --bg-body: #FDF2F8;
   --icon-bg: linear-gradient(135deg, #da81a4 0%, #fecfef 100%);
   --icon-hover-bg: #ba54a9;
-  --button-bg: linear-gradient(135deg, #ba54a9 0%, #fecfef 100%);
+
   --button-hover-shadow: rgba(255, 154, 158, 0.4);
   --text-color-default: #333;
   --text-hover-light: white;
-  --font-main: "Inter", sans-serif;
+  --font-main: "Playfair Display"
+}
+
+.button-bg {
+  background-image: linear-gradient(to right, #ba54a9 0%, #fecfef 50%, #ba54a9 100%);
+}
+.button-bg:hover {
+  background-image: linear-gradient(to right, #761461 0%, #fecfef 50%, #761461 100%);
+  
+  transform: translateY(-2px); /* Equivalent to -translate-y-0.5 */
 }
 
 /* Body Background */
@@ -18,3 +27,4 @@ body {
   background-color: var(--bg-body);
   font-family: var(--font-main);
 }
+

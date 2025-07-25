@@ -80,7 +80,7 @@ const Shop = () => {
     <div className="min-h-screen">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 pt-10">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-shadow">Shop Flowers</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 ">Shop Flowers</h1>
           <p className="text-lg text-gray-600">Discover our beautiful collection of fresh flowers and arrangements</p>
         </div>
 
@@ -108,7 +108,7 @@ const Shop = () => {
                     <button
                       key={category.value}
                       className={`px-3 py-1.5 border border-gray-300 rounded text-left bg-white transition-all duration-200 hover:bg-gray-100 ${
-                        filters.category === category.value ? "bg-pink-600 text-white border-pink-600" : ""
+                        filters.category === category.value ? "bg-pink-600  border-pink-600" : ""
                       }`}
                       onClick={() => handleFilterChange("category", category.value)}
                     >
@@ -228,7 +228,7 @@ const Shop = () => {
                             onClick={() => handlePageChange(i + 1)}
                             className={`px-4 py-2 border rounded ${
                               pagination.currentPage === i + 1
-                                ? "bg-pink-600 text-white"
+                                ? "bg-pink-600 "
                                 : "bg-white hover:bg-gray-100"
                             }`}
                           >

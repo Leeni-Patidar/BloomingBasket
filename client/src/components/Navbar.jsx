@@ -47,7 +47,7 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-[#e8eaef] shadow-sm">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-pink-700 font-['Playfair_Display']">
@@ -82,7 +82,7 @@ const Navbar = () => {
               <Link to="/wishlist" className="relative text-gray-700 hover:text-pink-600 transition">
                 <i className="fas fa-heart"></i>
                 {wishlistItems.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs px-1">
+                  <span className="absolute -top-2 -right-2 bg-red-500  rounded-full text-xs px-1">
                     {wishlistItems.length}
                   </span>
                 )}
@@ -90,7 +90,7 @@ const Navbar = () => {
               <Link to="/cart" className="relative text-gray-700 hover:text-pink-600 transition">
                 <i className="fas fa-shopping-cart"></i>
                 {getCartItemsCount() > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs px-1">
+                  <span className="absolute -top-2 -right-2 bg-red-500  rounded-full text-xs px-1">
                     {getCartItemsCount()}
                   </span>
                 )}

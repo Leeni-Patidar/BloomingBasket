@@ -1,56 +1,91 @@
+"use client"
 
-import React, { useState } from 'react';
-import axios from 'axios';
+import { useState } from "react"
+import { Link } from "react-router-dom"
+import axios from "axios"
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("")
+  const [message, setMessage] = useState("")
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage('');
-    setError('');
+    e.preventDefault()
+    setLoading(true)
+    setMessage("")
+    setError("")
+
     try {
-      const res = await axios.post('/api/auth/forgot-password', { email });
-      setMessage(res.data.message || 'Reset link sent to your email');
+      const res = await axios.post("/api/auth/forgot-password", { email })
+      setMessage(res.data.message || "Reset link sent to your email")
     } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong');
+      setError(err.response?.data?.message || "Something went wrong")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4">Forgot Password</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block mb-1 text-gray-700">Email Address</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full px-3 py-2 border rounded"
-            />
+    <div
+      className="min-h-screen w-screen flex items-center justify-center bg-cover bg-center bg-no-repeat overflow-y-auto py-10"
+      style={{ backgroundImage: "url('/login1.jpg')" }}
+    >
+      <div className="container mx-auto px-4">
+        <div className="flex justify-center">
+          <div className="w-full max-w-md">
+            <div className="bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl p-8 md:p-10 lg:p-12 shadow-xl">
+              <div className="text-center mb-6">
+                <h1 className="text-3xl md:text-[2rem] font-bold mb-2">Forgot Password</h1>
+                <p>Enter your email to receive a reset link</p>
+              </div>
+
+              <form onSubmit={handleSubmit}>
+                <div className="mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium mb-1">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    className="w-full border-2 border-black rounded-lg px-4 py-3 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="text-right mb-4">
+                  <Link
+                    to="/login"
+                    className="text-[#ba54a9] text-sm font-semibold underline hover:text-[#da81a4]"
+                  >
+                    Back to Login
+                  </Link>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-300 button-bg:hover disabled:opacity-70"
+                >
+                  {loading ? "Sending..." : "Send Reset Link"}
+                </button>
+              </form>
+
+              {message && (
+                <p className="mt-4 text-center text-green-600 font-medium">{message}</p>
+              )}
+              {error && (
+                <p className="mt-4 text-center text-red-600 font-medium">{error}</p>
+              )}
+            </div>
           </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            {loading ? 'Sending...' : 'Send Reset Link'}
-          </button>
-        </form>
-        {message && <p className="mt-4 text-green-600">{message}</p>}
-        {error && <p className="mt-4 text-red-600">{error}</p>}
+        </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ForgotPassword;
+export default ForgotPassword

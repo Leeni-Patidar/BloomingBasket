@@ -4,7 +4,6 @@ import { useState, useContext } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import { AuthContext } from "../context/AuthContext"
 
-
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -16,7 +15,6 @@ const Login = () => {
   const { login } = useContext(AuthContext)
   const navigate = useNavigate()
   const location = useLocation()
-
   const from = location.state?.from || "/"
 
   const handleChange = (e) => {
@@ -33,28 +31,29 @@ const Login = () => {
     setError(null)
 
     const { email, password } = formData
-
-    const result = await login(email, password) // Call the actual login function
-
+    const result = await login(email, password)
     setLoading(false)
 
     if (result.success) {
-      // alert("Login successful!") // AuthContext toast handles this
       navigate(from, { replace: true })
     } else {
-      setError(result.message || "Login failed. Please try again.") // Display error if AuthContext didn't toast
+      setError(result.message || "Login failed. Please try again.")
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FDF2F8] to-white flex items-center py-8">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-center">
-          <div className="w-full md:w-1/2 lg:w-2/5">
-            <div className="mt-16 bg-white rounded-2xl p-12 shadow-2xl backdrop-blur-md">
-              <div className="text-center mb-8">
-                <h2 className="text-gray-800 font-bold mb-2">Welcome Back</h2>
-                <p className="text-gray-600 m-0">Sign in to your account</p>
+   <div
+  className="min-h-screen w-screen flex items-center justify-center bg-cover bg-center bg-no-repeat bg-fixed"
+  style={{ backgroundImage: "url('/login1.jpg')" }}
+>
+
+  <div className="container mx-auto px-4">
+    <div className="flex justify-center">
+      <div className="w-full max-w-md">
+        <div className="mt-30 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl p-8 md:p-10 lg:p-12 shadow-xl">
+              <div className="text-center mb-2">
+                <h1 className="text-3xl md:text-[2 rem] font-bold mb-2 ">Welcome Back</h1>
+                <p className=" ">Sign in to your account</p>
               </div>
 
               {error && (
@@ -68,12 +67,12 @@ const Login = () => {
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                  <label htmlFor="email" className="block text-gray-700 text-sm font-medium mb-1">
+                  <label htmlFor="email" className="block  text-sm font-medium mb-1">
                     Email
                   </label>
                   <input
                     type="email"
-                    className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
+                    className="w-full border-2 border-black rounded-lg px-4 py-3 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
                     id="email"
                     name="email"
                     value={formData.email}
@@ -83,12 +82,12 @@ const Login = () => {
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="password" className="block text-gray-700 text-sm font-medium mb-1">
+                  <label htmlFor="password" className="block  text-sm font-medium mb-1">
                     Password
                   </label>
                   <input
                     type="password"
-                    className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
+                    className="w-full border-2 border-black rounded-lg px-4 py-3 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
                     id="password"
                     name="password"
                     value={formData.password}
@@ -108,19 +107,19 @@ const Login = () => {
 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-br from-[#da81a4] to-[#fecfef] border-none text-white px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:text-white disabled:opacity-70 disabled:transform-none"
+                  className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-300 button-bg:hover disabled:opacity-70"
                   disabled={loading}
                 >
                   {loading ? "Logging in..." : "Sign In"}
                 </button>
               </form>
 
-              <div className="text-center mt-8 pt-8 border-t border-gray-200">
-                <p className="text-gray-600">
-                  Don't have an account?{" "}
+              <div className="text-center mt-2  border-0 border-gray-200">
+                <p className="">
+                  Don't have an account?
                   <Link
                     to="/register"
-                    className="bg-transparent border-none text-[#ba54a9] font-semibold ml-2 cursor-pointer underline hover:text-[#da81a4]"
+                    className="text-[#ba54a9] font-semibold ml-2 underline hover:text-[#da81a4]"
                   >
                     Sign Up
                   </Link>

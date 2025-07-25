@@ -64,11 +64,11 @@ const FAQ = () => {
   }
 
   return (
-    <div className=" min-h-screen ">
+    <div className=" ">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-0.5 py-12 rounded-2xl text-black">
-          <h1 className="text-3xl md:text-[2.5rem] font-bold mb-4 text-shadow">Frequently Asked Questions</h1>
-          <p className="text-[1.1rem] text-shadow-sm">
+        <div className="text-center mb-0.5  rounded-2xl text-black">
+          <h1 className="text-3xl md:text-[2rem] font-bold mb-4 ">Frequently Asked Questions</h1>
+          <p className="text-[1rem] mb-4">
             Find answers to common questions about our flowers and services
           </p>
         </div>
@@ -103,15 +103,16 @@ const FAQ = () => {
             </div>
           </div>
         </div>
+        
 
-        <div className="text-center p-12 bg-[#ede8eb] rounded-2xl">
+        {/* <div className="text-center p-12 bg-[#ede8eb] rounded-2xl">
           <h3 className="text-gray-800 mb-4 font-semibold">Still have questions?</h3>
           <p className="text-gray-600 mb-8">
             Can't find what you're looking for? Our customer service team is here to help!
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-4 p-6 bg-white rounded-xl shadow-md text-center md:text-left">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center text-xl text-white">
+              <div className="w-12 h-12 button-bg rounded-full flex items-center justify-center text-xl ">
                 <i className="fas fa-phone"></i>
               </div>
               <div>
@@ -120,7 +121,7 @@ const FAQ = () => {
               </div>
             </div>
             <div className="flex flex-col md:flex-row items-center md:items-start gap-4 p-6 bg-white rounded-xl shadow-md text-center md:text-left">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center text-xl text-white">
+              <div className="w-12 h-12 button-bg rounded-full flex items-center justify-center text-xl ">
                 <i className="fas fa-envelope"></i>
               </div>
               <div>
@@ -129,7 +130,7 @@ const FAQ = () => {
               </div>
             </div>
             <div className="flex flex-col md:flex-row items-center md:items-start gap-4 p-6 bg-white rounded-xl shadow-md text-center md:text-left">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center text-xl text-white">
+              <div className="w-12 h-12 button-bg rounded-full flex items-center justify-center text-xl ">
                 <i className="fas fa-comments"></i>
               </div>
               <div>
@@ -137,8 +138,8 @@ const FAQ = () => {
                 <p className="text-gray-600 m-0 text-sm">Available 9 AM - 6 PM EST</p>
               </div>
             </div>
-          </div>
-        </div>
+           </div> 
+        </div>*/}
       </div>
     </div>
   )

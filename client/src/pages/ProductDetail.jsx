@@ -85,7 +85,7 @@ const ProductDetail = () => {
       <div className="flex justify-center items-center min-h-[50vh] flex-col gap-4">
         <h2 className="text-2xl font-semibold">Product not found</h2>
         <button
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          className="bg-blue-600  px-4 py-2 rounded-md hover:bg-blue-700"
           onClick={() => navigate("/shop")}
         >
           Back to Shop
@@ -172,14 +172,14 @@ const ProductDetail = () => {
               <button
                 onClick={handleAddToCart}
                 disabled={product.stock <= 0}
-                className="flex-1 bg-pink-600 text-white px-6 py-3 rounded hover:bg-pink-700 disabled:opacity-50"
+                className="flex-1 bg-pink-600  px-6 py-3 rounded hover:bg-pink-700 disabled:opacity-50"
               >
                 {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
               </button>
               <button
                 onClick={handleWishlistToggle}
                 className={`w-12 h-12 rounded-full border-2 ${
-                  isInWishlist(product._id) ? "bg-pink-500 text-white" : "text-pink-600"
+                  isInWishlist(product._id) ? "bg-pink-500 " : "text-pink-600"
                 }`}
               >
                 <i className="fas fa-heart"></i>
@@ -196,7 +196,7 @@ const ProductDetail = () => {
             <div className="mb-6">
               <button
                 onClick={() => setShowReviewForm((prev) => !prev)}
-                className="bg-pink-600 text-white px-6 py-2 rounded"
+                className="bg-pink-600  px-6 py-2 rounded"
               >
                 {showReviewForm ? "Cancel Review" : "Write a Review"}
               </button>
@@ -229,7 +229,7 @@ const ProductDetail = () => {
                   onChange={(e) => setReviewData((r) => ({ ...r, comment: e.target.value }))}
                 ></textarea>
               </div>
-              <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded">
+              <button type="submit" className="bg-blue-600  px-6 py-2 rounded">
                 Submit Review
               </button>
             </form>

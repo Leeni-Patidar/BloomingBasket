@@ -3,17 +3,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const categories = [
-  "roses",
-  "tulips",
-  "sunflowers",
-  "lilies",
-  "orchids",
-  "carnations",
-  "mixed",
-  "wedding",
-  "birthday",
-  "anniversary",
-  "sympathy",
+  "roses", "tulips", "sunflowers", "lilies", "orchids", "carnations",
+  "mixed", "wedding", "birthday", "anniversary", "sympathy",
 ];
 
 const ProductManagement = () => {
@@ -25,12 +16,10 @@ const ProductManagement = () => {
     description: "",
     category: "",
     price: "",
-    offerPrice: "",
     stock: "",
     images: [],
   });
 
-  // Fetch products
   const fetchProducts = async () => {
     try {
       const res = await axios.get("/api/products");
@@ -70,7 +59,7 @@ const ProductManagement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, description, category, price, offerPrice, stock, images } = formData;
+    const { name, description, category, price, stock, images } = formData;
 
     if (!name || !category || !price || !stock || images.length === 0) {
       toast.error("Please fill all required fields.");
@@ -83,14 +72,13 @@ const ProductManagement = () => {
         description,
         category,
         price: parseFloat(price),
-        offerPrice: parseFloat(offerPrice || price),
         stock: parseInt(stock),
         images: images.filter(Boolean),
       };
 
       const res = await axios.post("/api/products", payload);
       toast.success("Product added!");
-      setFormData({ name: "", description: "", category: "", price: "", offerPrice: "", stock: "", images: [] });
+      setFormData({ name: "", description: "", category: "", price: "", stock: "", images: [] });
       setShowForm(false);
       fetchProducts();
     } catch (err) {
@@ -103,7 +91,7 @@ const ProductManagement = () => {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-3xl font-bold text-[var(--text-color-default)]">All Products</h2>
         <button
-          className="px-6 py-2.5 rounded shadow-md text-white font-medium"
+          className="px-6 py-2.5 rounded shadow-md  font-medium"
           style={{ background: "var(--button-bg)" }}
           onClick={() => setShowForm(!showForm)}
         >
@@ -186,16 +174,7 @@ const ProductManagement = () => {
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
               />
             </div>
-            <div className="flex-1 min-w-[120px] flex flex-col gap-1">
-              <label className="font-medium text-base">Offer Price</label>
-              <input
-                type="number"
-                className="px-3 py-2 rounded border border-gray-300"
-                placeholder="0"
-                value={formData.offerPrice}
-                onChange={(e) => setFormData({ ...formData, offerPrice: e.target.value })}
-              />
-            </div>
+
             <div className="flex-1 min-w-[120px] flex flex-col gap-1">
               <label className="font-medium text-base">Stock</label>
               <input
@@ -210,7 +189,7 @@ const ProductManagement = () => {
 
           <button
             type="submit"
-            className="px-6 py-2.5 rounded text-white font-medium shadow-md"
+            className="px-6 py-2.5 rounded  font-medium shadow-md"
             style={{ background: "var(--button-bg)" }}
           >
             ADD

@@ -57,9 +57,9 @@ const Profile = () => {
     <div className="min-h-screen">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-12 py-12 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-2xl text-white">
-          <h1 className="text-3xl md:text-[2.5rem] font-bold mb-4 text-shadow">My Profile</h1>
-          <p className="text-[1.1rem] text-shadow-sm">Manage your account information and preferences</p>
+        <div className="text-center mb-12  button-bg rounded-2xl ">
+          <h1 className="text-3xl md:text-[2rem] font-bold mb-4 ">My Profile</h1>
+          <p className="text-[1.1rem] ">Manage your account information and preferences</p>
         </div>
 
         {/* Layout */}
@@ -68,7 +68,7 @@ const Profile = () => {
           <div className="w-full md:w-1/3 lg:w-1/4 px-4 mb-4">
             <div className="bg-white rounded-xl p-8 shadow-lg h-fit static md:sticky top-8">
               <div className="text-center mb-8 pb-8 border-b border-gray-200">
-                <div className="w-20 h-20 bg-gradient-to-br from-[#da81a4] to-[#fecfef] rounded-full flex items-center justify-center mx-auto mb-4 text-3xl text-white">
+                <div className="w-20 h-20 button-bg rounded-full flex items-center justify-center mx-auto mb-4 text-3xl ">
                   <i className="fas fa-user" />
                 </div>
                 <h5 className="text-gray-800 mb-2 font-semibold">{user?.name}</h5>
@@ -79,7 +79,7 @@ const Profile = () => {
                 <button
                   className={`p-4 rounded-lg transition-all text-left font-medium ${
                     activeTab === "profile"
-                      ? "bg-gradient-to-br from-[#da81a4] to-[#fecfef] text-white"
+                      ? "button-bg "
                       : "text-gray-600 hover:bg-gray-50"
                   }`}
                   onClick={() => setActiveTab("profile")}
@@ -90,7 +90,7 @@ const Profile = () => {
                 <button
                   className={`p-4 rounded-lg transition-all text-left font-medium ${
                     activeTab === "security"
-                      ? "bg-gradient-to-br from-[#da81a4] to-[#fecfef] text-white"
+                      ? "button-bg "
                       : "text-gray-600 hover:bg-gray-50"
                   }`}
                   onClick={() => setActiveTab("security")}
@@ -196,7 +196,7 @@ const Profile = () => {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="bg-gradient-to-br from-[#da81a4] to-[#fecfef] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:-translate-y-0.5 transition"
+                        className="button-bg  px-6 py-3 rounded-lg font-semibold shadow-md button-bg:hover transition"
                       >
                         {loading ? "Saving..." : "Save Changes"}
                       </button>
