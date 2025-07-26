@@ -1,4 +1,4 @@
-"use client"
+
 
 import { useState, useContext } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
@@ -96,14 +96,22 @@ const Login = () => {
                   />
                 </div>
 
-                <div className="mb-4 text-right">
-                  <Link
-                    to="/forgot-password"
-                    className="text-[#ba54a9] no-underline text-sm hover:text-[#da81a4] hover:underline"
-                  >
-                    Forgot Password?
-                  </Link>
-                </div>
+<div className="mb-4 flex justify-between items-center text-sm">
+  <Link
+    to="/"
+    className="text-[#ba54a9] no-underline hover:text-[#da81a4] hover:underline"
+  >
+    Back to Home
+  </Link>
+
+  <Link
+    to="/forgot-password"
+    className="text-[#ba54a9] no-underline hover:text-[#da81a4] hover:underline"
+  >
+    Forgot Password?
+  </Link>
+</div>
+
 
                 <button
                   type="submit"

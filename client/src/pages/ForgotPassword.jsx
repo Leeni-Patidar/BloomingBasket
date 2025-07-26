@@ -1,4 +1,4 @@
-"use client"
+
 
 import { useState } from "react"
 import { Link } from "react-router-dom"
@@ -56,14 +56,21 @@ const ForgotPassword = () => {
                   />
                 </div>
 
-                <div className="text-right mb-4">
-                  <Link
-                    to="/login"
-                    className="text-[#ba54a9] text-sm font-semibold underline hover:text-[#da81a4]"
-                  >
-                    Back to Login
-                  </Link>
-                </div>
+                <div className="mb-4 flex justify-between items-center text-sm">
+  <Link
+    to="/"
+    className="text-[#ba54a9] no-underline hover:text-[#da81a4] hover:underline"
+  >
+    Back to Home
+  </Link>
+
+  <Link
+    to="/forgot-password"
+    className="text-[#ba54a9] no-underline hover:text-[#da81a4] hover:underline"
+  >
+    Back To Login
+  </Link>
+</div>
 
                 <button
                   type="submit"

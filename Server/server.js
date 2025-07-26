@@ -4,6 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
 
+// Routes (CommonJS-style)
 const authRoute = require("./routes/auth");
 const productRoute = require("./routes/product");
 const orderRoute = require("./routes/order");
@@ -14,6 +15,7 @@ const userRoute = require("./routes/user");
 const wishlistRoute = require("./routes/wishlistRoute");
 
 dotenv.config();
+
 const app = express();
 
 // ✅ Middleware

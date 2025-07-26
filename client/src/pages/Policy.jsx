@@ -1,4 +1,4 @@
-// import styles from "./Policy.module.css"
+
 
 const Policy = () => {
   return (

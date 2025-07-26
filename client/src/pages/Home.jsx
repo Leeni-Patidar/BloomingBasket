@@ -1,11 +1,13 @@
-"use client"
+
 
 import { useState, useEffect } from "react"
 import axios from "axios"
 import HeroSection from "../components/HeroSection"
 import FeaturedProducts from "../components/FeaturedProducts"
 import Categories from "../components/Categories"
-import Testimonials from "../components/Testimonials"
+import OccasionCategories from "../components/OccasionCategories"
+import BouquetHero from "../components/BouquetHero"
+
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([])
@@ -30,8 +32,10 @@ const Home = () => {
     <div className="min-h-screen">
       <HeroSection />
       <Categories />
+      <OccasionCategories/>
       <FeaturedProducts products={featuredProducts} loading={loading} />
-      <Testimonials />
+      <BouquetHero/>
+    
     </div>
   )
 }

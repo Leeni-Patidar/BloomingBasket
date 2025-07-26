@@ -1,10 +1,8 @@
-"use client"
-
-import { useState, useContext } from "react"
-import { AuthContext } from "../context/AuthContext"
+import { useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const Profile = () => {
-  const { user, updateProfile } = useContext(AuthContext)
+  const { user, updateProfile } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     name: user?.name || "",
@@ -15,51 +13,51 @@ const Profile = () => {
       city: user?.address?.city || "",
       state: user?.address?.state || "",
       zipCode: user?.address?.zipCode || "",
-      country: user?.address?.country || "USA",
+      country: user?.address?.country || " ",
     },
-  })
+  });
 
-  const [loading, setLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState("profile")
+  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("profile");
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     if (name.includes(".")) {
-      const [parent, child] = name.split(".")
+      const [parent, child] = name.split(".");
       setFormData((prev) => ({
         ...prev,
         [parent]: {
           ...prev[parent],
           [child]: value,
         },
-      }))
+      }));
     } else {
       setFormData((prev) => ({
         ...prev,
         [name]: value,
-      }))
+      }));
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
     try {
-      await updateProfile(formData)
+      await updateProfile(formData);
     } catch (error) {
-      console.error("Profile update error:", error)
+      console.error("Profile update error:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-12  button-bg rounded-2xl ">
-          <h1 className="text-3xl md:text-[2rem] font-bold mb-4 ">My Profile</h1>
-          <p className="text-[1.1rem] ">Manage your account information and preferences</p>
+        <div className="text-center mb-12 rounded-2xl">
+          <h1 className="text-3xl md:text-[2rem] font-bold mb-4">My Profile</h1>
+          <p className="text-[1.1rem]">Manage your account information and preferences</p>
         </div>
 
         {/* Layout */}
@@ -68,7 +66,7 @@ const Profile = () => {
           <div className="w-full md:w-1/3 lg:w-1/4 px-4 mb-4">
             <div className="bg-white rounded-xl p-8 shadow-lg h-fit static md:sticky top-8">
               <div className="text-center mb-8 pb-8 border-b border-gray-200">
-                <div className="w-20 h-20 button-bg rounded-full flex items-center justify-center mx-auto mb-4 text-3xl ">
+                <div className="w-20 h-20 button-bg rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
                   <i className="fas fa-user" />
                 </div>
                 <h5 className="text-gray-800 mb-2 font-semibold">{user?.name}</h5>
@@ -79,7 +77,7 @@ const Profile = () => {
                 <button
                   className={`p-4 rounded-lg transition-all text-left font-medium ${
                     activeTab === "profile"
-                      ? "button-bg "
+                      ? "button-bg"
                       : "text-gray-600 hover:bg-gray-50"
                   }`}
                   onClick={() => setActiveTab("profile")}
@@ -90,7 +88,7 @@ const Profile = () => {
                 <button
                   className={`p-4 rounded-lg transition-all text-left font-medium ${
                     activeTab === "security"
-                      ? "button-bg "
+                      ? "button-bg"
                       : "text-gray-600 hover:bg-gray-50"
                   }`}
                   onClick={() => setActiveTab("security")}
@@ -106,7 +104,7 @@ const Profile = () => {
             <div className="bg-white rounded-xl p-6 md:p-10 shadow-lg">
               {activeTab === "profile" && (
                 <form onSubmit={handleSubmit}>
-                  <h3 className="text-gray-800 mb-8 font-semibold">Profile Information</h3>
+                  <h3 className="text-gray-800 mb-8 font-semibold text-lg">Profile Information</h3>
                   <div className="flex flex-wrap -mx-2">
                     {/* Name */}
                     <div className="w-full md:w-1/2 px-2 mb-4">
@@ -146,7 +144,7 @@ const Profile = () => {
                       />
                     </div>
 
-                    {/* Address */}
+                    {/* Address Fields */}
                     <div className="w-full px-2 mb-4">
                       <label className="block text-sm font-medium mb-1">Street Address</label>
                       <input
@@ -191,12 +189,12 @@ const Profile = () => {
                       />
                     </div>
 
-                    {/* Submit */}
+                    {/* Submit Button */}
                     <div className="w-full px-2">
                       <button
                         type="submit"
                         disabled={loading}
-                        className="button-bg  px-6 py-3 rounded-lg font-semibold shadow-md button-bg:hover transition"
+                        className="button-bg px-6 py-3 rounded-lg font-semibold shadow-md button-bg:hover transition"
                       >
                         {loading ? "Saving..." : "Save Changes"}
                       </button>
@@ -205,10 +203,45 @@ const Profile = () => {
                 </form>
               )}
 
+              {/* Security Tab */}
               {activeTab === "security" && (
                 <div>
-                  <h3 className="text-gray-800 mb-8 font-semibold">Security Settings</h3>
-                  <p className="text-gray-500">Password change functionality coming soon.</p>
+                  <h3 className="text-gray-800 mb-8 font-semibold text-lg">Security Settings</h3>
+                  <div>
+                    <h5 className="text-md font-semibold mb-1">Change Password</h5>
+                    <p className="text-sm text-gray-500 mb-6">
+                      Update your password to keep your account secure.
+                    </p>
+                    <form>
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium mb-1">Current Password</label>
+                        <input
+                          type="password"
+                          className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-100"
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium mb-1">New Password</label>
+                        <input
+                          type="password"
+                          className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-100"
+                        />
+                      </div>
+                      <div className="mb-6">
+                        <label className="block text-sm font-medium mb-1">Confirm New Password</label>
+                        <input
+                          type="password"
+                          className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-100"
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="button-bg px-6 py-3 rounded-lg font-semibold shadow-md button-bg:hover transition"
+                      >
+                        Update Password
+                      </button>
+                    </form>
+                  </div>
                 </div>
               )}
             </div>
@@ -216,7 +249,7 @@ const Profile = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

@@ -1,41 +1,90 @@
-"use client"
-
-import { useState, useContext } from "react"
-import { Link, useNavigate, useLocation } from "react-router-dom"
-import { AuthContext } from "../context/AuthContext"
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const API = "http://localhost:5001/api/auth";
+
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    otp: "",
     password: "",
-  })
-  const [loading, setLoading] = useState(false)
-  const { register } = useContext(AuthContext)
-  const navigate = useNavigate()
-  const location = useLocation()
-  const from = location.state?.from || "/"
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [timer, setTimer] = useState(30);
+  const [resendDisabled, setResendDisabled] = useState(true);
+
+  useEffect(() => {
+    if (step === 2 && resendDisabled && timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+
+    if (timer === 0) {
+      setResendDisabled(false);
+    }
+  }, [step, timer, resendDisabled]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-
+  const sendOTP = async () => {
+    setLoading(true);
     try {
-      const result = await register(formData.name, formData.email, formData.password)
-
-      if (result.success) {
-        navigate(from, { replace: true })
-      }
-    } catch (error) {
-      console.error("Register error:", error)
+      const res = await axios.post(`${API}/send-otp`, {
+        name: formData.name,
+        email: formData.email,
+      });
+      alert(res.data.message);
+      setStep(2);
+      setTimer(30);
+      setResendDisabled(true);
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to send OTP");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+
+  const verifyOTP = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post(`${API}/verify-otp`, {
+        email: formData.email,
+        otp: formData.otp,
+      });
+      alert(res.data.message);
+      setStep(3);
+    } catch (err) {
+      alert(err.response?.data?.message || "OTP verification failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const registerUser = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post(`${API}/register`, {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+      alert("Registration successful!");
+      navigate("/login");
+    } catch (err) {
+      alert(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
@@ -45,81 +94,131 @@ const Register = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-center">
           <div className="w-full max-w-md">
-            <div className=" mt-10 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl p-8 md:p-10 lg:p-12 shadow-xl">
-              <div className="text-center mb-2">
-                <h1 className="text-3xl md:text-[2rem] font-bold mb-2 ">Create Account</h1>
-                <p className="">Join Blooming Basket today</p>
+            <div className="mt-10 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl p-8 md:p-10 lg:p-12 shadow-xl">
+              <div className="text-center mb-6">
+                <h1 className="text-3xl font-bold mb-2">Create Account</h1>
+                <p>Join Blooming Basket today</p>
               </div>
 
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label htmlFor="name" className="block  text-sm font-medium mb-1">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    className="w-full border-2 border-black rounded-lg px-4 py-3 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                  />
+              {/* STEP 1: Name & Email */}
+              {step === 1 && (
+                <>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">Full Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      className="w-full border-2 border-black rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-200"
+                    />
+                  </div>
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium mb-1">Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full border-2 border-black rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-200"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={sendOTP}
+                    disabled={loading}
+                    className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg button-bg:hover disabled:opacity-60"
+                  >
+                    {loading ? "Sending OTP..." : "Send OTP"}
+                  </button>
+                </>
+              )}
+
+              {/* STEP 2: OTP */}
+              {step === 2 && (
+                <>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">OTP</label>
+                    <input
+                      type="text"
+                      name="otp"
+                      value={formData.otp}
+                      onChange={handleChange}
+                      className="w-full border-2 border-black rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-200"
+                    />
+                  </div>
+
+                  <p className="text-sm text-gray-100 mb-2">
+                    {resendDisabled
+                      ? `Resend OTP in ${timer}s`
+                      : "Didn't receive OTP?"}
+                  </p>
+
+                  <button
+                    type="button"
+                    onClick={sendOTP}
+                    disabled={resendDisabled || loading}
+                    className={`text-sm font-medium text-[#ba54a9] mb-4 ${
+                      resendDisabled ? "opacity-50 cursor-not-allowed" : "hover:underline"
+                    }`}
+                  >
+                    Resend OTP
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={verifyOTP}
+                    disabled={loading}
+                    className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg button-bg:hover disabled:opacity-60"
+                  >
+                    {loading ? "Verifying..." : "Verify OTP"}
+                  </button>
+                </>
+              )}
+
+              {/* STEP 3: Password */}
+              {step === 3 && (
+                <>
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium mb-1">Password</label>
+                    <input
+                      type="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="w-full border-2 border-black rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-200"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={registerUser}
+                    disabled={loading}
+                    className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg button-bg:hover disabled:opacity-60"
+                  >
+                    {loading ? "Registering..." : "Register"}
+                  </button>
+                </>
+              )}
+
+              {/* Navigation Links */}
+              <div className="text-center mt-6">
+                <div className="flex justify-between text-sm">
+                  <a href="/" className="text-[#ba54a9] hover:text-[#da81a4] hover:underline">
+                    Back to Home
+                  </a>
+                  <a href="/login" className="text-[#ba54a9] hover:text-[#da81a4] hover:underline">
+                    Already have an account? Sign In
+                  </a>
                 </div>
-
-                <div className="mb-4">
-                  <label htmlFor="email" className="block  text-sm font-medium mb-1">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    className="w-full border-2 border-black rounded-lg px-4 py-3 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="mb-6">
-                  <label htmlFor="password" className="block text-sm font-medium mb-1">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    className="w-full border-2 border-black rounded-lg px-4 py-3 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg transition-all duration-300 button-bg:hover disabled:opacity-70"
-                >
-                  {loading ? "Please wait..." : "Create Account"}
-                </button>
-              </form>
-
-              <div className="text-center mt-2  border-0 border-gray-200">
-                <span className="">
-                  Already have an account?{" "}
-                  <Link to="/login" className="text-[#ba54a9] font-semibold underline hover:text-[#da81a4]">
-                    Sign In
-                  </Link>
-                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;

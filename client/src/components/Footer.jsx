@@ -8,7 +8,7 @@ const Footer = () => {
   const isAdmin = user?.isAdmin;
 
   return (
-    <footer className="bg-gradient-to-br from-[#2c3e50] to-[#34495e]  py-12 px-0 mt-auto">
+    <footer className="bg-gradient-to-br from-[#2c3e50] to-[#34495e]  py-12 px-5 mt-auto">
       <div className="container mx-auto px-4">
         <div className="flex flex-wrap -mx-4">
           {/* Brand Info */}
