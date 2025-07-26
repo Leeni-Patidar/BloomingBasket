@@ -4,7 +4,6 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
 
-// Routes (CommonJS-style)
 const authRoute = require("./routes/auth");
 const productRoute = require("./routes/product");
 const orderRoute = require("./routes/order");
@@ -31,22 +30,15 @@ app.use(
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// ✅ Serve uploaded files (optional)
+// ✅ Static File Serving
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ✅ Connect MongoDB
+// ✅ MongoDB Connection
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("✅ MongoDB connected successfully");
     console.log(`🗃️ Using database: ${mongoose.connection.db.databaseName}`);
-    console.log(
-      `🔌 Connected to: ${
-        process.env.MONGODB_URI.includes("127.0.0.1")
-          ? "MongoDB Compass (Local)"
-          : "MongoDB Atlas (Cloud)"
-      }`
-    );
   })
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err);
@@ -57,13 +49,13 @@ mongoose
 app.use("/api/auth", authRoute);
 app.use("/api/products", productRoute);
 app.use("/api/orders", orderRoute);
-app.use("/api/cart", cartRoute);
+app.use("/api/users/cart", cartRoute);         // 👈 Updated prefix
+app.use("/api/users/wishlist", wishlistRoute); // 👈 Updated prefix
 app.use("/api/upload", uploadRoute);
 app.use("/api/address", addressRoute);
 app.use("/api/users", userRoute);
-app.use("/api/wishlist", wishlistRoute);
 
-// ✅ Health Check
+// ✅ Health Check Route
 app.get("/api/health", (req, res) => {
   res.json({
     status: "OK",
@@ -73,7 +65,7 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// ✅ Error Handler
+// ✅ Error Handling
 app.use((err, req, res, next) => {
   console.error("🔥 Error:", err.stack);
   res.status(500).json({
@@ -82,7 +74,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ✅ 404 Handler
+// ✅ 404 Fallback
 app.use("*", (req, res) => {
   res.status(404).json({ message: "Route not found" });
 });

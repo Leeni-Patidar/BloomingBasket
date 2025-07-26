@@ -1,24 +1,24 @@
-const express = require('express');
-const { auth } = require('../middleware/auth.js');
+const express = require("express");
+const { auth } = require("../middleware/auth.js");
 const {
   addAddress,
   getAddress,
   editAddress,
   deleteAddress,
-} = require('../controllers/addressController.js');
+} = require("../controllers/addressController.js");
 
 const addressRouter = express.Router();
 
-// ✅ Add Address
-addressRouter.post('/add', auth, addAddress);
+// GET /api/addresses - Fetch all addresses for the logged-in user
+addressRouter.get("/", auth, getAddress);
 
-// ✅ Get Address (was POST with body for filtering)
-addressRouter.post('/get', auth, getAddress);
+// POST /api/addresses - Add a new address
+addressRouter.post("/", auth, addAddress);
 
-// ✅ Edit Address
-addressRouter.put('/edit', auth, editAddress);
+// PUT /api/addresses/:id - Update a specific address
+addressRouter.put("/:id", auth, editAddress);
 
-// ✅ Delete Address
-addressRouter.delete('/delete/:id', auth, deleteAddress);
+// DELETE /api/addresses/:id - Delete a specific address
+addressRouter.delete("/:id", auth, deleteAddress);
 
 module.exports = addressRouter;

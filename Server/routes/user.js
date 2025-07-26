@@ -1,10 +1,8 @@
-
-
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const { auth: verifyToken } = require("../middleware/auth");
-
+const { updateUserProfile } = require("../controllers/userAdminController.js");
 
 // ✅ Get all users (admin-only logic can be added)
 router.get("/", verifyToken, async (req, res) => {
@@ -27,14 +25,12 @@ router.get("/:id", verifyToken, async (req, res) => {
   }
 });
 
-// ✅ Update user profile
+// ✅ Update user profile by ID (admin use)
 router.put("/:id", verifyToken, async (req, res) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      {
-        $set: req.body, // name, email, etc.
-      },
+      { $set: req.body },
       { new: true }
     ).select("-password");
 
@@ -53,5 +49,8 @@ router.delete("/:id", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Failed to delete user", error: err });
   }
 });
+
+// ✅ Update authenticated user's own profile
+router.put("/profile", verifyToken, updateUserProfile);
 
 module.exports = router;

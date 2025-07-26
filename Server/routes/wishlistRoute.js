@@ -3,12 +3,11 @@ const router = express.Router();
 const Wishlist = require("../models/Wishlist");
 const { auth: verifyToken } = require("../middleware/auth");
 
-
 // ✅ Get wishlist items for user
 router.get("/", verifyToken, async (req, res) => {
   try {
     const wishlist = await Wishlist.find({ userId: req.user.id }).populate("productId");
-    res.status(200).json(wishlist);
+    res.status(200).json(wishlist.map(item => item.productId));
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch wishlist", error: err });
   }

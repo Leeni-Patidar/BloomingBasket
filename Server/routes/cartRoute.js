@@ -1,11 +1,9 @@
-
 const express = require("express");
 const router = express.Router();
 const Cart = require("../models/Cart");
 const { auth: verifyToken } = require("../middleware/auth");
 
-
-// Get user's cart
+// ✅ Get user's cart
 router.get("/", verifyToken, async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId");
@@ -15,7 +13,7 @@ router.get("/", verifyToken, async (req, res) => {
   }
 });
 
-// Add/update item in cart
+// ✅ Add or update item in cart
 router.post("/", verifyToken, async (req, res) => {
   const { productId, quantity } = req.body;
 
@@ -43,7 +41,7 @@ router.post("/", verifyToken, async (req, res) => {
   }
 });
 
-// Update quantity
+// ✅ Update item quantity
 router.put("/", verifyToken, async (req, res) => {
   const { productId, quantity } = req.body;
 
@@ -63,7 +61,7 @@ router.put("/", verifyToken, async (req, res) => {
   }
 });
 
-// Delete product from cart
+// ✅ Remove item from cart
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId: req.user.id });
