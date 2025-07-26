@@ -1,10 +1,20 @@
+// ✅ ProductManagement.jsx (Frontend)
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const categories = [
-  "roses", "tulips", "sunflowers", "lilies", "orchids", "carnations",
-  "mixed", "wedding", "birthday", "anniversary", "sympathy",
+const bouquetCategories = [
+  { name: "Flower Bouquet", value: "flower" },
+  { name: "Chocolate Bouquet", value: "chocolate" },
+  { name: "Soft Toy Bouquet", value: "soft-toy" },
+  { name: "Pipecleaner Bouquet", value: "pipecleaner" },
+  { name: "Butterfly Bouquet", value: "butterfly" },
+  { name: "Fairy Light Bouquet", value: "fairy-light" },
+  { name: "Crochet Bouquet", value: "crochet" },
+  { name: "Origami Bouquet", value: "origami" },
+  { name: "Fruit Bouquet", value: "fruit" },
+  { name: "Skincare Bouquet", value: "skincare" },
 ];
 
 const ProductManagement = () => {
@@ -61,7 +71,7 @@ const ProductManagement = () => {
     e.preventDefault();
     const { name, description, category, price, stock, images } = formData;
 
-    if (!name || !category || !price || !stock || images.length === 0) {
+    if (!name || !description || !category || !price || !stock || images.length === 0) {
       toast.error("Please fill all required fields.");
       return;
     }
@@ -82,7 +92,12 @@ const ProductManagement = () => {
       setShowForm(false);
       fetchProducts();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to add product.");
+      const backendErrors = err.response?.data?.errors;
+      if (backendErrors?.length) {
+        toast.error(backendErrors[0].msg);
+      } else {
+        toast.error(err.response?.data?.message || "Failed to add product.");
+      }
     }
   };
 
@@ -91,8 +106,8 @@ const ProductManagement = () => {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-3xl font-bold text-[var(--text-color-default)]">All Products</h2>
         <button
-          className="px-6 py-2.5 rounded shadow-md  font-medium"
-          style={{ background: "var(--button-bg)" }}
+          className="px-6 py-2.5 rounded shadow-md font-medium button-bg"
+          
           onClick={() => setShowForm(!showForm)}
         >
           {showForm ? "Close" : "Add Product"}
@@ -142,6 +157,8 @@ const ProductManagement = () => {
             <label className="font-medium text-base">Product Description</label>
             <textarea
               rows={4}
+              required
+              minLength={10}
               className="px-3 py-2 rounded border border-gray-300 resize-none"
               placeholder="Type here"
               value={formData.description}
@@ -155,10 +172,11 @@ const ProductManagement = () => {
               className="px-3 py-2 rounded border border-gray-300"
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              required
             >
               <option value="">Select Category</option>
-              {categories.map((cat, idx) => (
-                <option key={idx} value={cat}>{cat}</option>
+              {bouquetCategories.map((cat) => (
+                <option key={cat.value} value={cat.value}>{cat.name}</option>
               ))}
             </select>
           </div>
@@ -172,6 +190,7 @@ const ProductManagement = () => {
                 placeholder="0"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                required
               />
             </div>
 
@@ -183,14 +202,15 @@ const ProductManagement = () => {
                 placeholder="0"
                 value={formData.stock}
                 onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                required
               />
             </div>
           </div>
 
           <button
             type="submit"
-            className="px-6 py-2.5 rounded  font-medium shadow-md"
-            style={{ background: "var(--button-bg)" }}
+            className="px-6 py-2.5 rounded font-medium shadow-md button-bg"
+            
           >
             ADD
           </button>
@@ -201,7 +221,7 @@ const ProductManagement = () => {
         <p>Loading products...</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 text-left rounded overflow-hidden">
+          <table className="min-w-full bg-white border border-gray-200 text-left rounded overflow-hidden rounded-2xl">
             <thead className="bg-gray-100">
               <tr>
                 <th className="py-3 px-4 border">Product</th>

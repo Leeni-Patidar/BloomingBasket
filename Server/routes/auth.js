@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const Otp = require("../models/Otp");
+const Otp = require("../models/Otp"); 
 const { auth } = require("../middleware/auth");
 const nodemailer = require("nodemailer");
 
@@ -26,23 +26,23 @@ router.post("/send-otp", async (req, res) => {
 
   const code = Math.floor(100000 + Math.random() * 900000).toString();
 
-  await Otp.findOneAndUpdate(
-    { email },
-    { code, createdAt: new Date() },
-    { upsert: true }
-  );
-
   try {
+    await Otp.findOneAndUpdate(
+      { email },
+      { otp: code, createdAt: new Date() }, // ✅ FIXED FIELD NAME
+      { upsert: true }
+    );
+
     const transporter = nodemailer.createTransport({
-      service: "Gmail",
+      service: "gmail",
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
     await transporter.sendMail({
-      from: `"Blooming Basket" <${process.env.SMTP_USER}>`,
+      from: `"Blooming Basket" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Your OTP Code",
       html: `<p>Hi ${name},</p><p>Your OTP is <strong>${code}</strong>. It will expire in 5 minutes.</p>`,
@@ -56,21 +56,30 @@ router.post("/send-otp", async (req, res) => {
 });
 
 // ✅ Verify OTP
-router.post("/verify-otp", async (req, res) => {
+router.post("/forgot-password", async (req, res) => {
   const { email, otp } = req.body;
-  const record = await Otp.findOne({ email });
 
-  if (!record) {
-    return res.status(400).json({ message: "OTP expired or not found." });
+  if (!email || !otp) {
+    return res.status(400).json({ message: "Email and OTP are required" });
   }
 
-  if (record.code !== otp) {
+  const existingOtp = await Otp.findOne({ email }).sort({ createdAt: -1 });
+  if (!existingOtp) {
+    return res.status(400).json({ message: "OTP not found" });
+  }
+
+  const isMatch = otp === existingOtp.otp;
+  if (!isMatch) {
     return res.status(400).json({ message: "Invalid OTP" });
   }
 
-  await Otp.deleteOne({ email }); // Clean up
-  return res.status(200).json({ message: "OTP verified" });
+  // Optional: delete the OTP after use
+  await Otp.deleteMany({ email });
+
+  return res.status(200).json({ message: "OTP verified successfully" });
 });
+
+
 
 // ✅ Register
 router.post("/register", async (req, res) => {

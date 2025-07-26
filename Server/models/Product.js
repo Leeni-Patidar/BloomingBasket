@@ -20,17 +20,16 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: [
-        "roses",
-        "tulips",
-        "sunflowers",
-        "lilies",
-        "orchids",
-        "carnations",
-        "mixed",
-        "wedding",
-        "birthday",
-        "anniversary",
-        "sympathy",
+        "flower",
+        "chocolate",
+        "soft-toy",
+        "pipecleaner",
+        "butterfly",
+        "fairy-light",
+        "crochet",
+        "origami",
+        "fruit",
+        "skincare"
       ],
     },
     images: [
@@ -102,10 +101,8 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-// Text search index
 productSchema.index({ name: "text", description: "text", tags: "text" });
 
-// Calculate average rating
 productSchema.methods.calculateAverageRating = function () {
   if (this.reviews.length === 0) {
     this.rating.average = 0;
@@ -118,3 +115,5 @@ productSchema.methods.calculateAverageRating = function () {
 };
 
 module.exports = mongoose.model("Product", productSchema);
+
+

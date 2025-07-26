@@ -56,14 +56,20 @@ const Register = () => {
   const verifyOTP = async () => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API}/verify-otp`, {
+      const response = await axios.post(`${API}/forgot-password`, {
         email: formData.email,
         otp: formData.otp,
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }
       });
-      alert(res.data.message);
+
+      alert(response.data.message || "OTP verified!");
       setStep(3);
-    } catch (err) {
-      alert(err.response?.data?.message || "OTP verification failed");
+    } catch (error) {
+      console.error("OTP verification failed:", error.response?.data || error.message);
+      alert(error.response?.data?.message || "OTP verification failed");
     } finally {
       setLoading(false);
     }
@@ -78,7 +84,7 @@ const Register = () => {
         password: formData.password,
       });
       alert("Registration successful!");
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed");
     } finally {
@@ -150,7 +156,7 @@ const Register = () => {
                     />
                   </div>
 
-                  <p className="text-sm text-gray-100 mb-2">
+                  <p className="text-sm mb-2">
                     {resendDisabled
                       ? `Resend OTP in ${timer}s`
                       : "Didn't receive OTP?"}

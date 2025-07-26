@@ -1,9 +1,8 @@
-// ✅ Full Product Controller (productController.js)
+// ✅ controllers/productController.js (Converted to CommonJS)
 
-import Product from "../models/Product.js";
+const Product = require("../models/Product");
 
-// ✅ Get Products with Filters, Pagination, Sorting
-export const getProducts = async (req, res) => {
+const getProducts = async (req, res) => {
   try {
     const {
       page = 1,
@@ -51,8 +50,7 @@ export const getProducts = async (req, res) => {
   }
 };
 
-// ✅ Get Single Product by ID
-export const getProductById = async (req, res) => {
+const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).populate("reviews.user", "name");
     if (!product) return res.status(404).json({ message: "Product not found" });
@@ -63,8 +61,7 @@ export const getProductById = async (req, res) => {
   }
 };
 
-// ✅ Create Product (Admin Only)
-export const createProduct = async (req, res) => {
+const createProduct = async (req, res) => {
   try {
     const product = new Product(req.body);
     await product.save();
@@ -75,8 +72,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// ✅ Update Product (Admin Only)
-export const updateProduct = async (req, res) => {
+const updateProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -90,8 +86,7 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// ✅ Soft Delete Product (Admin Only)
-export const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, { isActive: false }, { new: true });
     if (!product) return res.status(404).json({ message: "Product not found" });
@@ -102,8 +97,7 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
-// ✅ Add Product Review
-export const addReview = async (req, res) => {
+const addReview = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ message: "Product not found" });
@@ -134,8 +128,7 @@ export const addReview = async (req, res) => {
   }
 };
 
-// ✅ Get All Categories
-export const getCategories = async (req, res) => {
+const getCategories = async (req, res) => {
   try {
     const categories = await Product.distinct("category", { isActive: true });
     res.json(categories);
@@ -143,4 +136,14 @@ export const getCategories = async (req, res) => {
     console.error("Get Categories Error:", error);
     res.status(500).json({ message: "Server error" });
   }
+};
+
+module.exports = {
+  getProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  addReview,
+  getCategories,
 };

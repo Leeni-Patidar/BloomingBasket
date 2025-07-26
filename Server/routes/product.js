@@ -28,8 +28,9 @@ router.post(
     body("description").trim().isLength({ min: 10 }).withMessage("Description must be at least 10 characters"),
     body("price").isFloat({ min: 0 }).withMessage("Price must be a positive number"),
     body("category").isIn([
-      "roses", "tulips", "sunflowers", "lilies", "orchids", "carnations",
-      "mixed", "wedding", "birthday", "anniversary", "sympathy"
+      "flower", "chocolate", "soft-toy", "pipecleaner",
+      "butterfly", "fairy-light", "crochet", "origami",
+      "fruit", "skincare"
     ]).withMessage("Invalid category"),
     body("stock").isInt({ min: 0 }).withMessage("Stock must be a non-negative integer")
   ],
