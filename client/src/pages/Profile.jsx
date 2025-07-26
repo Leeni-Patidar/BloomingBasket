@@ -1,253 +1,134 @@
-import { useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
+import { Eye, EyeOff } from "lucide-react";
 
 const Profile = () => {
-  const { user, updateProfile } = useContext(AuthContext);
-
+  const { user } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: user?.name || "",
-    email: user?.email || "",
     phone: user?.phone || "",
-    address: {
-      street: user?.address?.street || "",
-      city: user?.address?.city || "",
-      state: user?.address?.state || "",
-      zipCode: user?.address?.zipCode || "",
-      country: user?.address?.country || " ",
-    },
+    address: user?.address || {},
   });
-
-  const [loading, setLoading] = useState(false);
+  const [addresses, setAddresses] = useState([]);
+  const [form, setForm] = useState({});
+  const [editingId, setEditingId] = useState(null);
   const [activeTab, setActiveTab] = useState("profile");
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (name.includes(".")) {
-      const [parent, child] = name.split(".");
-      setFormData((prev) => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent],
-          [child]: value,
-        },
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+  const fetchAddresses = async () => {
+    const res = await axios.get("/api/addresses", {
+      headers: { Authorization: `Bearer ${user.token}` },
+    });
+    setAddresses(res.data);
   };
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    fetchAddresses();
+  }, []);
+
+  const handleProfileSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      await updateProfile(formData);
-    } catch (error) {
-      console.error("Profile update error:", error);
-    } finally {
-      setLoading(false);
+    await axios.put(`/api/users/profile`, formData, {
+      headers: { Authorization: `Bearer ${user.token}` },
+    });
+  };
+
+  const handleAddressSave = async (e) => {
+    e.preventDefault();
+    if (editingId) {
+      await axios.put(`/api/addresses/${editingId}`, form, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+    } else {
+      await axios.post(`/api/addresses`, form, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
     }
+    setForm({});
+    setEditingId(null);
+    fetchAddresses();
+  };
+
+  const handleDelete = async (id) => {
+    await axios.delete(`/api/addresses/${id}`, {
+      headers: { Authorization: `Bearer ${user.token}` },
+    });
+    fetchAddresses();
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12 rounded-2xl">
-          <h1 className="text-3xl md:text-[2rem] font-bold mb-4">My Profile</h1>
-          <p className="text-[1.1rem]">Manage your account information and preferences</p>
-        </div>
-
-        {/* Layout */}
-        <div className="flex flex-wrap -mx-4">
-          {/* Sidebar */}
-          <div className="w-full md:w-1/3 lg:w-1/4 px-4 mb-4">
-            <div className="bg-white rounded-xl p-8 shadow-lg h-fit static md:sticky top-8">
-              <div className="text-center mb-8 pb-8 border-b border-gray-200">
-                <div className="w-20 h-20 button-bg rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
-                  <i className="fas fa-user" />
-                </div>
-                <h5 className="text-gray-800 mb-2 font-semibold">{user?.name}</h5>
-                <p className="text-gray-600 m-0 text-sm">{user?.email}</p>
-              </div>
-
-              <nav className="flex flex-col gap-2">
-                <button
-                  className={`p-4 rounded-lg transition-all text-left font-medium ${
-                    activeTab === "profile"
-                      ? "button-bg"
-                      : "text-gray-600 hover:bg-gray-50"
-                  }`}
-                  onClick={() => setActiveTab("profile")}
-                >
-                  <i className="fas fa-user mr-2"></i> Profile Information
-                </button>
-
-                <button
-                  className={`p-4 rounded-lg transition-all text-left font-medium ${
-                    activeTab === "security"
-                      ? "button-bg"
-                      : "text-gray-600 hover:bg-gray-50"
-                  }`}
-                  onClick={() => setActiveTab("security")}
-                >
-                  <i className="fas fa-lock mr-2"></i> Security
-                </button>
-              </nav>
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="w-full md:w-2/3 lg:w-3/4 px-4">
-            <div className="bg-white rounded-xl p-6 md:p-10 shadow-lg">
-              {activeTab === "profile" && (
-                <form onSubmit={handleSubmit}>
-                  <h3 className="text-gray-800 mb-8 font-semibold text-lg">Profile Information</h3>
-                  <div className="flex flex-wrap -mx-2">
-                    {/* Name */}
-                    <div className="w-full md:w-1/2 px-2 mb-4">
-                      <label className="block text-sm font-medium mb-1">Full Name</label>
-                      <input
-                        name="name"
-                        type="text"
-                        className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-pink-200 focus:ring-4"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-
-                    {/* Email (readonly) */}
-                    <div className="w-full md:w-1/2 px-2 mb-4">
-                      <label className="block text-sm font-medium mb-1">Email Address</label>
-                      <input
-                        type="email"
-                        name="email"
-                        className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 bg-gray-50 opacity-80 cursor-not-allowed"
-                        value={formData.email}
-                        disabled
-                      />
-                      <small className="text-gray-500">Email cannot be changed</small>
-                    </div>
-
-                    {/* Phone */}
-                    <div className="w-full md:w-1/2 px-2 mb-4">
-                      <label className="block text-sm font-medium mb-1">Phone Number</label>
-                      <input
-                        name="phone"
-                        type="tel"
-                        className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-pink-200 focus:ring-4"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    {/* Address Fields */}
-                    <div className="w-full px-2 mb-4">
-                      <label className="block text-sm font-medium mb-1">Street Address</label>
-                      <input
-                        name="address.street"
-                        type="text"
-                        className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-pink-200 focus:ring-4"
-                        value={formData.address.street}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    <div className="w-full md:w-1/3 px-2 mb-4">
-                      <label className="block text-sm font-medium mb-1">City</label>
-                      <input
-                        name="address.city"
-                        type="text"
-                        className="w-full border-2 border-gray-200 rounded-lg px-4 py-3"
-                        value={formData.address.city}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    <div className="w-full md:w-1/3 px-2 mb-4">
-                      <label className="block text-sm font-medium mb-1">State</label>
-                      <input
-                        name="address.state"
-                        type="text"
-                        className="w-full border-2 border-gray-200 rounded-lg px-4 py-3"
-                        value={formData.address.state}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    <div className="w-full md:w-1/3 px-2 mb-4">
-                      <label className="block text-sm font-medium mb-1">Zip Code</label>
-                      <input
-                        name="address.zipCode"
-                        type="text"
-                        className="w-full border-2 border-gray-200 rounded-lg px-4 py-3"
-                        value={formData.address.zipCode}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    {/* Submit Button */}
-                    <div className="w-full px-2">
-                      <button
-                        type="submit"
-                        disabled={loading}
-                        className="button-bg px-6 py-3 rounded-lg font-semibold shadow-md button-bg:hover transition"
-                      >
-                        {loading ? "Saving..." : "Save Changes"}
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              )}
-
-              {/* Security Tab */}
-              {activeTab === "security" && (
-                <div>
-                  <h3 className="text-gray-800 mb-8 font-semibold text-lg">Security Settings</h3>
-                  <div>
-                    <h5 className="text-md font-semibold mb-1">Change Password</h5>
-                    <p className="text-sm text-gray-500 mb-6">
-                      Update your password to keep your account secure.
-                    </p>
-                    <form>
-                      <div className="mb-4">
-                        <label className="block text-sm font-medium mb-1">Current Password</label>
-                        <input
-                          type="password"
-                          className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-100"
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <label className="block text-sm font-medium mb-1">New Password</label>
-                        <input
-                          type="password"
-                          className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-100"
-                        />
-                      </div>
-                      <div className="mb-6">
-                        <label className="block text-sm font-medium mb-1">Confirm New Password</label>
-                        <input
-                          type="password"
-                          className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-100"
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        className="button-bg px-6 py-3 rounded-lg font-semibold shadow-md button-bg:hover transition"
-                      >
-                        Update Password
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">My Profile</h2>
+        <nav className="flex gap-4">
+          <button onClick={() => setActiveTab("profile")} className={activeTab === "profile" ? "font-bold" : "text-gray-500"}>Profile Info</button>
+          <button onClick={() => setActiveTab("addresses")} className={activeTab === "addresses" ? "font-bold" : "text-gray-500"}>Addresses</button>
+        </nav>
       </div>
+
+      {activeTab === "profile" && (
+        <form onSubmit={handleProfileSubmit} className="max-w-md grid gap-4">
+          <div>
+            <label className="block mb-2 font-medium">Full Name</label>
+            <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="border rounded p-2 w-full" required />
+          </div>
+          <div>
+            <label className="block mb-2 font-medium">Phone Number</label>
+            <input type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="border rounded p-2 w-full" required />
+          </div>
+          <button type="submit" className="bg-pink-600 text-white px-4 py-2 rounded">Update</button>
+        </form>
+      )}
+
+      {activeTab === "addresses" && (
+        <div>
+          <form onSubmit={handleAddressSave} className="grid grid-cols-2 gap-4 max-w-3xl mb-6">
+            {[
+              ["firstName", "First Name"],
+              ["lastName", "Last Name"],
+              ["email", "Email"],
+              ["phone", "Phone"],
+              ["street", "Street"],
+              ["city", "City"],
+              ["state", "State"],
+              ["zipcode", "Zipcode"],
+              ["country", "Country"],
+            ].map(([key, label]) => (
+              <div key={key} className="col-span-1">
+                <label className="block mb-1 font-medium">{label}</label>
+                <input
+                  type="text"
+                  value={form[key] || ""}
+                  onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+                  required
+                  className="border rounded p-2 w-full"
+                />
+              </div>
+            ))}
+            <div className="col-span-2">
+              <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
+                {editingId ? "Update Address" : "Add Address"}
+              </button>
+            </div>
+          </form>
+
+          <div className="space-y-4">
+            {addresses.map((addr) => (
+              <div key={addr._id} className="border p-4 rounded flex justify-between items-center">
+                <div>
+                  <p className="font-semibold">{addr.firstName} {addr.lastName}</p>
+                  <p>{addr.street}, {addr.city}, {addr.state} {addr.zipcode}</p>
+                  <p>{addr.country} - {addr.phone}</p>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => { setForm(addr); setEditingId(addr._id); }} className="bg-blue-500 text-white px-3 py-1 rounded">Edit</button>
+                  <button onClick={() => handleDelete(addr._id)} className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

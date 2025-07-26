@@ -1,260 +1,186 @@
-;
-
-import { useState, useEffect, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { CartContext } from "../context/CartContext";
-import { WishlistContext } from "../context/WishlistContext";
 import ProductCard from "../components/ProductCard";
+import { AuthContext } from "../context/AuthContext";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
+const bouquetTypes = [
+  "Flower Bouquet",
+  "Chocolate Bouquet",
+  "Soft Toy Bouquet",
+  "Pipecleaner Bouquet",
+  "Butterfly Bouquet",
+  "Fairy Light Bouquet",
+  "Crochet Bouquet",
+  "Origami Bouquet",
+  "Fruit Bouquet",
+  "Skincare Bouquet",
+];
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [wishlist, setWishlist] = useState([]);
   const [filters, setFilters] = useState({
     category: "all",
-    search: "",
-    minPrice: "",
-    maxPrice: "",
-    sortBy: "createdAt",
-    sortOrder: "desc",
+    sort: "latest",
+    price: "",
+    page: 1,
   });
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPages: 1,
-    total: 0,
-  });
-
-  const { addToCart } = useContext(CartContext);
-  const { addToWishlist, isInWishlist } = useContext(WishlistContext);
-
-  const categories = [
-    { value: "all", label: "All Flowers" },
-    { value: "roses", label: "Roses" },
-    { value: "tulips", label: "Tulips" },
-    { value: "sunflowers", label: "Sunflowers" },
-    { value: "lilies", label: "Lilies" },
-    { value: "orchids", label: "Orchids" },
-    { value: "carnations", label: "Carnations" },
-    { value: "wedding", label: "Wedding" },
-    { value: "birthday", label: "Birthday" },
-    { value: "anniversary", label: "Anniversary" },
-  ];
+  const [totalPages, setTotalPages] = useState(1);
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
-  }, [filters, pagination.currentPage]);
+    if (user) fetchWishlist();
+  }, [filters, user]);
 
   const fetchProducts = async () => {
-    setLoading(true);
     try {
-      const params = new URLSearchParams({
-        page: pagination.currentPage,
-        limit: 12,
-        ...filters,
-      });
-
-      const response = await axios.get(`/api/products?${params}`);
-      setProducts(response.data.products);
-      setPagination({
-        currentPage: response.data.currentPage,
-        totalPages: response.data.totalPages,
-        total: response.data.total,
-      });
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    } finally {
-      setLoading(false);
+      const { category, sort, price, page } = filters;
+      const query = `?category=${category}&sort=${sort}&price=${price}&page=${page}`;
+      const res = await axios.get(`/api/products${query}`);
+      setProducts(res.data.products);
+      setTotalPages(res.data.totalPages);
+    } catch (err) {
+      toast.error("Failed to load products");
     }
   };
 
-  const handleFilterChange = (key, value) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+  const fetchWishlist = async () => {
+    try {
+      const res = await axios.get("/api/users/wishlist");
+      setWishlist(res.data.map((item) => item.productId?._id || item._id));
+    } catch (err) {
+      toast.error("Failed to load wishlist");
+    }
   };
 
-  const handlePageChange = (page) => {
-    setPagination((prev) => ({ ...prev, currentPage: page }));
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const handleFilterChange = (type, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [type]: value,
+      page: 1,
+    }));
+  };
+
+  const redirectToLogin = () => {
+    const isRegistered = localStorage.getItem("isRegistered") === "true";
+    navigate(isRegistered ? "/login" : "/register");
+  };
+
+  const handleAddToCart = async (product) => {
+    if (!user) return redirectToLogin();
+    try {
+      await axios.post("/api/users/cart", { productId: product._id, quantity: 1 });
+      toast.success("Added to cart");
+    } catch (err) {
+      toast.error("Failed to add to cart");
+    }
+  };
+
+  const handleAddToWishlist = async (productId) => {
+    if (!user) return redirectToLogin();
+
+    try {
+      const isWished = wishlist.includes(productId);
+      if (isWished) {
+        await axios.delete(`/api/users/wishlist/${productId}`);
+        setWishlist((prev) => prev.filter((id) => id !== productId));
+        toast.info("Removed from wishlist");
+      } else {
+        await axios.post("/api/users/wishlist", { productId });
+        setWishlist((prev) => [...prev, productId]);
+        toast.success("Added to wishlist");
+      }
+    } catch (err) {
+      toast.error("Wishlist update failed");
+    }
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12 pt-10">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4 ">Shop Flowers</h1>
-          <p className="text-lg text-gray-600">Discover our beautiful collection of fresh flowers and arrangements</p>
+    <div className="min-h-screen ">
+      <div className="container mx-auto px-4 py-10">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-bold mb-2 ">Shop Flowers</h1>
+          <p className=" text-lg">
+            Browse our beautiful selection of fresh floral arrangements.
+          </p>
         </div>
 
-        <div className="flex flex-wrap -mx-4">
-          {/* Sidebar */}
-          <div className="w-full md:w-1/3 lg:w-1/4 px-4 mb-6">
-            <div className="bg-white rounded-lg p-5 shadow-md">
-              {/* Search */}
-              <div className="mb-6">
-                <h5 className="text-lg font-semibold mb-2">Search</h5>
-                <input
-                  type="text"
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  placeholder="Search flowers..."
-                  value={filters.search}
-                  onChange={(e) => handleFilterChange("search", e.target.value)}
-                />
-              </div>
-
-              {/* Categories */}
-              <div className="mb-6">
-                <h5 className="text-lg font-semibold mb-2">Categories</h5>
-                <div className="flex flex-col gap-2">
-                  {categories.map((category) => (
-                    <button
-                      key={category.value}
-                      className={`px-3 py-1.5 border border-gray-300 rounded text-left bg-white transition-all duration-200 hover:bg-gray-100 ${
-                        filters.category === category.value ? "bg-pink-600  border-pink-600" : ""
-                      }`}
-                      onClick={() => handleFilterChange("category", category.value)}
-                    >
-                      {category.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Price Range */}
-              <div className="mb-6">
-                <h5 className="text-lg font-semibold mb-2">Price Range</h5>
-                <div className="flex flex-wrap -mx-2">
-                  <div className="w-1/2 px-2">
-                    <input
-                      type="number"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      placeholder="Min"
-                      value={filters.minPrice}
-                      onChange={(e) => handleFilterChange("minPrice", e.target.value)}
-                    />
-                  </div>
-                  <div className="w-1/2 px-2">
-                    <input
-                      type="number"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      placeholder="Max"
-                      value={filters.maxPrice}
-                      onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Sort By */}
-              <div className="mb-6">
-                <h5 className="text-lg font-semibold mb-2">Sort By</h5>
-                <select
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  value={`${filters.sortBy}-${filters.sortOrder}`}
-                  onChange={(e) => {
-                    const [sortBy, sortOrder] = e.target.value.split("-");
-                    handleFilterChange("sortBy", sortBy);
-                    handleFilterChange("sortOrder", sortOrder);
-                  }}
-                >
-                  <option value="createdAt-desc">Newest First</option>
-                  <option value="createdAt-asc">Oldest First</option>
-                  <option value="name-asc">Name A-Z</option>
-                  <option value="name-desc">Name Z-A</option>
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
-                  <option value="rating.average-desc">Highest Rated</option>
-                </select>
-              </div>
-            </div>
+        <div className=" items-center grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8 ">
+          <div>
+            <label className="block font-semibold mb-1">Bouquet Type</label>
+            <select
+              value={filters.category}
+              onChange={(e) => handleFilterChange("category", e.target.value)}
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-pink-400"
+            >
+              <option value="all">All Bouquets</option>
+              {bouquetTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
           </div>
 
-          {/* Product Grid */}
-          <div className="w-full md:w-2/3 lg:w-3/4 px-4">
-            <div className="mb-4 text-gray-700">
-              {loading ? "Loading..." : `${pagination.total} products found`}
-            </div>
-
-            {loading ? (
-              <div className="text-center mt-12">
-                <svg className="animate-spin h-10 w-10 text-pink-600 mx-auto" viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v8H4z"
-                  />
-                </svg>
-              </div>
-            ) : (
-              <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {products.map((product) => (
-                    <ProductCard
-                      key={product._id}
-                      product={product}
-                      onAddToCart={() => addToCart(product)}
-                      onAddToWishlist={() => addToWishlist(product)}
-                      isInWishlist={isInWishlist(product._id)}
-                    />
-                  ))}
-                </div>
-
-                {products.length === 0 && (
-                  <div className="text-center mt-10">
-                    <i className="fas fa-search fa-3x mb-3 text-gray-400"></i>
-                    <h4 className="text-xl font-semibold mb-2">No products found</h4>
-                    <p className="text-gray-600">Try adjusting your search or filter criteria.</p>
-                  </div>
-                )}
-
-                {pagination.totalPages > 1 && (
-                  <nav className="mt-10">
-                    <ul className="flex justify-center space-x-1">
-                      <li>
-                        <button
-                          onClick={() => handlePageChange(pagination.currentPage - 1)}
-                          disabled={pagination.currentPage === 1}
-                          className={`px-4 py-2 border rounded ${
-                            pagination.currentPage === 1
-                              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                              : "hover:bg-gray-100"
-                          }`}
-                        >
-                          Previous
-                        </button>
-                      </li>
-                      {[...Array(pagination.totalPages)].map((_, i) => (
-                        <li key={i + 1}>
-                          <button
-                            onClick={() => handlePageChange(i + 1)}
-                            className={`px-4 py-2 border rounded ${
-                              pagination.currentPage === i + 1
-                                ? "bg-pink-600 "
-                                : "bg-white hover:bg-gray-100"
-                            }`}
-                          >
-                            {i + 1}
-                          </button>
-                        </li>
-                      ))}
-                      <li>
-                        <button
-                          onClick={() => handlePageChange(pagination.currentPage + 1)}
-                          disabled={pagination.currentPage === pagination.totalPages}
-                          className={`px-4 py-2 border rounded ${
-                            pagination.currentPage === pagination.totalPages
-                              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                              : "hover:bg-gray-100"
-                          }`}
-                        >
-                          Next
-                        </button>
-                      </li>
-                    </ul>
-                  </nav>
-                )}
-              </>
-            )}
+          <div>
+            <label className="block font-semibold mb-1">Sort By</label>
+            <select
+              value={filters.sort}
+              onChange={(e) => handleFilterChange("sort", e.target.value)}
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-pink-400"
+            >
+              <option value="latest">Latest</option>
+              <option value="price_low_high">Price: Low to High</option>
+              <option value="price_high_low">Price: High to Low</option>
+            </select>
           </div>
+
+          <div>
+            <label className="block font-semibold mb-1">Max Price</label>
+            <input
+              type="number"
+              value={filters.price}
+              onChange={(e) => handleFilterChange("price", e.target.value)}
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-pink-400"
+              placeholder="Enter max price"
+            />
+          </div>
+        </div>
+
+        {products.length === 0 ? (
+          <div className="text-gray-600">No products found.</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                onAddToCart={() => handleAddToCart(product)}
+                onAddToWishlist={() => handleAddToWishlist(product._id)}
+                isInWishlist={wishlist.includes(product._id)}
+              />
+            ))}
+          </div>
+        )}
+
+        <div className="mt-10 flex justify-center items-center gap-2">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => setFilters((prev) => ({ ...prev, page: i + 1 }))}
+              className={`px-4 py-2 rounded ${
+                filters.page === i + 1
+                  ? "button-bg "
+                  : "bg-gray-100 hover:bg-gray-200"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
         </div>
       </div>
     </div>

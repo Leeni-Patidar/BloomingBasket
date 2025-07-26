@@ -119,7 +119,7 @@ const ProductManagement = () => {
           <div>
             <p className="font-medium text-base">Product Image</p>
             <div className="flex flex-wrap items-center gap-3 mt-2">
-              {Array(4).fill("").map((_, index) => (
+              {Array(1).fill("").map((_, index) => (
                 <label key={index} htmlFor={`image${index}`}>
                   <input
                     accept="image/*"
@@ -221,7 +221,7 @@ const ProductManagement = () => {
         <p>Loading products...</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 text-left rounded overflow-hidden rounded-2xl">
+          <table className="min-w-full bg-white border border-gray-200 text-left overflow-hidden rounded-2xl">
             <thead className="bg-gray-100">
               <tr>
                 <th className="py-3 px-4 border">Product</th>

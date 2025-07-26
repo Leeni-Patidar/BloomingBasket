@@ -1,57 +1,87 @@
+import React, { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { WishlistContext } from "../context/WishlistContext";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
+const ProductCard = ({ product, onAddToCart }) => {
+  const { user } = useContext(AuthContext);
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useContext(WishlistContext);
+  const navigate = useNavigate();
 
-import { Link } from "react-router-dom"
-// import styles from "./ProductCard.module.css"
+  const inWishlist = isInWishlist(product._id);
 
-const ProductCard = ({ product, onAddToCart, onAddToWishlist, isInWishlist }) => {
+  // 🛒 Add to Cart
+  const handleAddToCart = () => {
+    if (!user) {
+      toast.warn("Please login to add items to cart");
+      navigate(`/login?redirect=/product/${product._id}`);
+      return;
+    }
+
+    if (user.role === "admin") return;
+    onAddToCart();
+  };
+
+  // ❤️ Wishlist toggle
+  const handleToggleWishlist = () => {
+    if (!user) {
+      toast.warn("Please login to add items to wishlist");
+      navigate(`/login?redirect=/product/${product._id}`);
+      return;
+    }
+
+    if (user.role === "admin") return;
+
+    if (inWishlist) {
+      removeFromWishlist(product._id);
+    } else {
+      addToWishlist(product._id);
+    }
+  };
+
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 ease-in-out h-full hover:-translate-y-1 hover:shadow-lg">
-      <div className="relative h-64 overflow-hidden">
-        <img
-          src={product.images?.[0] || "/placeholder.svg?height=300&width=300"}
-          alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-300 ease-in-out hover:scale-110"
-        />
-        <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
-          <button
-            className={`w-10 h-10 rounded-full border-none bg-white text-gray-600 flex items-center justify-center shadow-md transition-all duration-300 ease-in-out  hover: hover:scale-110 ${isInWishlist ? "bg-red-500 " : ""}`}
-            onClick={onAddToWishlist}
-            title="Add to Wishlist"
-          >
-            <i className="fas fa-heart"></i>
-          </button>
-          <Link
-            to={`/product/${product._id}`}
-            className="w-10 h-10 rounded-full border-none bg-white text-gray-600 flex items-center justify-center shadow-md transition-all duration-300 ease-in-out  hover: hover:scale-110"
-            title="View Details"
-          >
-            <i className="fas fa-eye"></i>
-          </Link>
-        </div>
-      </div>
-      <div className="p-6 text-center">
-        <h5 className="text-lg font-semibold mb-2 text-gray-800">{product.name}</h5>
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <div className="flex gap-0.5">
-            {[...Array(5)].map((_, i) => (
-              <i
-                key={i}
-                className={`fas fa-star text-sm ${i < Math.floor(product.rating?.average || 0) ? "text-yellow-400" : "text-gray-300"}`}
-              ></i>
-            ))}
-          </div>
-          <span className="text-sm text-gray-600">({product.rating?.count || 0})</span>
-        </div>
-        <div className="text-xl font-bold text-red-500 mb-4">${product.price}</div>
+    <div className="relative bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-200 overflow-hidden">
+      {/* ❤️ Wishlist Icon */}
+      {user?.role !== "admin" && (
         <button
-          className="bg-gradient-to-br from-[#ff9a9e] to-[#fecfef] border-none  px-6 py-3 rounded-full font-semibold transition-all duration-300 ease-in-out w-full button-bg:hover hover:shadow-lg"
-          onClick={onAddToCart}
+          onClick={handleToggleWishlist}
+          className={`absolute top-3 right-3 text-xl z-10 transition ${
+            inWishlist ? "text-pink-600" : "text-gray-400 hover:text-pink-500"
+          }`}
         >
-          Add to Cart
+          <i className={`fas ${inWishlist ? "fa-heart" : "fa-heart-circle-plus"}`} />
         </button>
+      )}
+
+      {/* 🖼️ Product Image */}
+      <Link to={`/product/${product._id}`}>
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-64 object-cover rounded-t-2xl"
+        />
+      </Link>
+
+      {/* 📝 Product Info */}
+      <div className="p-4">
+        <h3 className="text-lg font-semibold text-gray-800 truncate">
+          {product.name}
+        </h3>
+        <p className="text-pink-600 font-bold mt-2 text-md">₹{product.price}</p>
+
+        {/* 🛒 Add to Cart Button */}
+        {user?.role !== "admin" && (
+          <button
+            onClick={handleAddToCart}
+            className="mt-4 w-full button-bg button-bg:hover py-2 rounded-2xl transition"
+          >
+            Add to Cart
+          </button>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProductCard
+export default ProductCard;

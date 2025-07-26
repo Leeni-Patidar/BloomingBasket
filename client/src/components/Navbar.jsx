@@ -1,61 +1,57 @@
-
-
-import { useState, useContext, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { AuthContext } from "../context/AuthContext.jsx"
-import { CartContext } from "../context/CartContext.jsx"
-import { WishlistContext } from "../context/WishlistContext.jsx"
-import { HiOutlineMenu, HiX } from "react-icons/hi"
+import { useState, useContext, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext.jsx";
+import { CartContext } from "../context/CartContext.jsx";
+import { WishlistContext } from "../context/WishlistContext.jsx";
+import { HiOutlineMenu, HiX } from "react-icons/hi";
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [isUserRegistered, setIsUserRegistered] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isUserRegistered, setIsUserRegistered] = useState(false);
 
-  const { user, logout } = useContext(AuthContext)
-  const { getCartItemsCount } = useContext(CartContext)
-  const { wishlistItems } = useContext(WishlistContext)
+  const { user, logout } = useContext(AuthContext);
+  const { getCartItemsCount } = useContext(CartContext);
+  const { wishlistItems: wishlist } = useContext(WishlistContext); // ✅ fixed here
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const registered = localStorage.getItem("isRegistered") === "true"
-    setIsUserRegistered(registered)
-  }, [])
+    const registered = localStorage.getItem("isRegistered") === "true";
+    setIsUserRegistered(registered);
+  }, []);
 
   const handleProtectedRoute = (path) => {
     if (!user) {
-      navigate(isUserRegistered ? "/login" : "/register", { state: { from: path } })
+      navigate(isUserRegistered ? "/login" : "/register", { state: { from: path } });
     } else {
-      navigate(path)
+      navigate(path);
     }
-  }
+  };
 
   const handleLogout = () => {
-    logout()
-    navigate("/")
-  }
+    logout();
+    navigate("/");
+  };
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
-      setSearchQuery("")
-      setIsSearchOpen(false)
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+      setIsSearchOpen(false);
     }
-  }
+  };
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between">
-        {/* Logo */}
         <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-pink-700 font-['Playfair_Display']">
           <img src="logo.jpg" alt="Blooming Basket" className="w-11 h-11 rounded-full shadow" />
           Blooming Basket
         </Link>
 
-        {/* Hamburger Menu */}
         <button
           className="md:hidden text-gray-800 bg-transparent focus:outline-none"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -63,7 +59,6 @@ const Navbar = () => {
           {isMenuOpen ? <HiX className="h-6 w-6" /> : <HiOutlineMenu className="h-6 w-6" />}
         </button>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8">
           {user?.role === "admin" ? (
             <>
@@ -79,27 +74,29 @@ const Navbar = () => {
               <Link to="/about" className="text-gray-700 hover:text-pink-600 font-medium">About</Link>
               <Link to="/shop" className="text-gray-700 hover:text-pink-600 font-medium">Shop</Link>
               <Link to="/customize" className="text-gray-700 hover:text-pink-600 font-medium">Customize</Link>
+
               <Link to="/wishlist" className="relative text-gray-700 hover:text-pink-600 transition">
                 <i className="fas fa-heart"></i>
-                {wishlistItems.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500  rounded-full text-xs px-1">
-                    {wishlistItems.length}
+                {Array.isArray(wishlist) && wishlist.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 rounded-full text-xs px-1 text-white">
+                    {wishlist.length}
                   </span>
                 )}
               </Link>
+
               <Link to="/cart" className="relative text-gray-700 hover:text-pink-600 transition">
                 <i className="fas fa-shopping-cart"></i>
                 {getCartItemsCount() > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500  rounded-full text-xs px-1">
+                  <span className="absolute -top-2 -right-2 bg-red-500 rounded-full text-xs px-1 text-white">
                     {getCartItemsCount()}
                   </span>
                 )}
               </Link>
+
               <Link to="/my-orders" className="text-gray-700 hover:text-pink-600 font-medium">My Orders</Link>
             </>
           )}
 
-          {/* Auth Desktop */}
           {user ? (
             <div className="relative group">
               <button className="text-gray-700 hover:text-pink-600 flex items-center gap-1">
@@ -107,13 +104,6 @@ const Navbar = () => {
               </button>
               <div className="absolute right-0 top-10 w-48 bg-white border border-gray-200 shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-40">
                 <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100">Profile</Link>
-                {/* <Link to="/my-orders" className="block px-4 py-2 hover:bg-gray-100">My Orders</Link> */}
-                {/* {user.role === "admin" && (
-                  <>
-                    <Link to="/admin/products" className="block px-4 py-2 hover:bg-gray-100">Manage Products</Link>
-                    <Link to="/admin/orders" className="block px-4 py-2 hover:bg-gray-100">Manage Orders</Link>
-                  </>
-                )} */}
                 <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-gray-100 bg-transparent">Logout</button>
               </div>
             </div>
@@ -125,10 +115,8 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Pink Border */}
       <div className="h-1 w-full bg-gradient-to-r from-pink-400 via-pink-500 to-pink-400"></div>
 
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-gray-100 shadow-md px-4 py-4 space-y-2">
           {user?.role === "admin" ? (
@@ -151,7 +139,6 @@ const Navbar = () => {
             </>
           )}
 
-          {/* Mobile Auth Info */}
           <div className="flex items-center gap-2 border-t pt-3 mt-3 border-gray-300">
             <i className="fas fa-user text-gray-600"></i>
             {user ? (
@@ -177,7 +164,7 @@ const Navbar = () => {
         </div>
       )}
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

@@ -1,74 +1,95 @@
-;
-
-import { createContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { AuthContext } from "./AuthContext";
 import { toast } from "react-toastify";
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+  const { user } = useContext(AuthContext);
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      setCartItems(JSON.parse(savedCart));
+    if (user) {
+      fetchCart();
+    } else {
+      setCartItems([]);
     }
-  }, []);
+  }, [user]);
 
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  const addToCart = (product, quantity = 1, customization = {}) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item._id === product._id);
-      if (existingItem) {
-        toast.info(`${product.name} quantity updated in cart!`);
-        return prevItems.map((item) =>
-          item._id === product._id ? { ...item, quantity: item.quantity + quantity } : item
-        );
-      }
-      toast.success(`${product.name} added to cart!`);
-      return [...prevItems, { ...product, quantity, customization }];
-    });
+  const fetchCart = async () => {
+    try {
+      const res = await axios.get("/api/users/cart");
+      setCartItems(res.data.items || []);
+    } catch (err) {
+      toast.error("Failed to fetch cart");
+    }
   };
 
-  const removeFromCart = (productId) => {
-    const item = cartItems.find((item) => item._id === productId);
-    if (item) toast.info(`${item.name} removed from cart`);
-    setCartItems((prevItems) => prevItems.filter((item) => item._id !== productId));
+  const addToCart = async (productId, quantity = 1) => {
+    try {
+      const res = await axios.post("/api/users/cart", { productId, quantity });
+      setCartItems(res.data.items || []);
+      toast.success("Added to cart");
+    } catch (err) {
+      toast.error("Failed to add to cart");
+    }
   };
 
-  const updateQuantity = (productId, quantity) => {
-    if (quantity <= 0) {
-      removeFromCart(productId);
-      return;
+  const updateQuantity = async (productId, quantity) => {
+    try {
+      const res = await axios.put("/api/users/cart", { productId, quantity });
+      setCartItems(res.data.items || []);
+      toast.success("Cart updated");
+    } catch (err) {
+      toast.error("Failed to update cart");
     }
-    setCartItems((prevItems) =>
-      prevItems.map((item) => (item._id === productId ? { ...item, quantity } : item))
+  };
+
+  const removeFromCart = async (productId) => {
+    try {
+      const res = await axios.delete(`/api/users/cart/${productId}`);
+      setCartItems(res.data.cart?.items || []);
+      toast.info("Removed from cart");
+    } catch (err) {
+      toast.error("Failed to remove from cart");
+    }
+  };
+
+  const clearCart = async () => {
+    try {
+      await axios.delete("/api/users/cart/clear");
+      setCartItems([]);
+      toast.success("Cart cleared");
+    } catch (err) {
+      toast.error("Failed to clear cart");
+    }
+  };
+
+  const getCartItemsCount = () => {
+    return cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  };
+
+  const getCartTotal = () => {
+    return cartItems.reduce(
+      (acc, item) => acc + item.quantity * (item.price || 0),
+      0
     );
   };
 
-  const clearCart = () => {
-    setCartItems([]);
-    toast.info("Cart cleared");
-  };
-
-  const getCartTotal = () =>
-    cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-
-  const getCartItemsCount = () =>
-    cartItems.reduce((total, item) => total + item.quantity, 0);
-
-  const value = {
-    cartItems,
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-    clearCart,
-    getCartTotal,
-    getCartItemsCount,
-  };
-
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  return (
+    <CartContext.Provider
+      value={{
+        cartItems,
+        addToCart,
+        updateQuantity,
+        removeFromCart,
+        clearCart,
+        getCartItemsCount,
+        getCartTotal,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
 };

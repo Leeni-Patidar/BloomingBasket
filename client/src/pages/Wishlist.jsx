@@ -1,4 +1,3 @@
-;
 
 import { useContext } from "react";
 import { Link } from "react-router-dom";
@@ -18,13 +17,14 @@ const Wishlist = () => {
     removeFromWishlist(productId);
   };
 
-  if (wishlistItems.length === 0) {
+ if (!wishlistItems || wishlistItems.length === 0) {
+
     return (
       <div className="flex items-center min-h-screen">
         <div className="container mx-auto px-4">
           <div className="flex justify-center">
             <div className="w-full md:w-1/2 text-center">
-              <i className="fas fa-heart fa-5x mb-4 text-gray-400"></i>
+              <i className="fas fa-heart fa-5x mb-4 "></i>
               <h2 className="text-2xl font-semibold mb-2">Your wishlist is empty</h2>
               <p className="text-gray-600 mb-4">
                 Save your favorite flowers to your wishlist for easy access later.
@@ -45,9 +45,9 @@ const Wishlist = () => {
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12  rounded-2xl  button-bg">
+        <div className="text-center mb-12  rounded-2xl ">
           <h1 className="text-3xl md:text-[2rem] font-bold mb-4">My Wishlist</h1>
-          <p className="text-[1.1rem]">
+          <p className="text-[1rem]">
             Your saved favorite flowers ({wishlistItems.length} item{wishlistItems.length > 1 ? "s" : ""})
           </p>
         </div>

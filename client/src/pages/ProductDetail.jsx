@@ -126,10 +126,10 @@ const ProductDetail = () => {
           {/* Product Info */}
           <div className="w-full lg:w-1/2 px-4">
             <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
-            <p className="text-lg text-gray-600 mb-2">{product.category}</p>
-            <p className="text-3xl text-pink-600 font-semibold mb-6">₹{product.price}</p>
+            <p className="text-lg  mb-2">{product.category}</p>
+            <p className="text-3xl  font-semibold mb-6">₹{product.price}</p>
 
-            <div className="flex items-center mb-6">
+            {/* <div className="flex items-center mb-6">
               {[...Array(5)].map((_, i) => (
                 <i
                   key={i}
@@ -141,7 +141,7 @@ const ProductDetail = () => {
               <span className="ml-2 text-gray-500 text-sm">
                 ({product.rating?.count || 0} reviews)
               </span>
-            </div>
+            </div> */}
 
             <p className="text-gray-700 mb-6">{product.description}</p>
 
@@ -152,7 +152,7 @@ const ProductDetail = () => {
               </div>
             )}
 
-            <div className="flex items-center gap-3 mb-6">
+            {/* <div className="flex items-center gap-3 mb-6">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 className="px-4 py-2 border rounded hover:bg-gray-100"
@@ -166,13 +166,13 @@ const ProductDetail = () => {
               >
                 +
               </button>
-            </div>
+            </div> */}
 
             <div className="flex gap-4 mb-6">
               <button
                 onClick={handleAddToCart}
                 disabled={product.stock <= 0}
-                className="flex-1 bg-pink-600  px-6 py-3 rounded hover:bg-pink-700 disabled:opacity-50"
+                className="flex-1 button-bg button-bg:hover  px-6 py-3 rounded disabled:opacity-50"
               >
                 {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
               </button>

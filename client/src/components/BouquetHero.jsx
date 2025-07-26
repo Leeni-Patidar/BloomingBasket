@@ -10,10 +10,10 @@ const BouquetHero = () => {
           
           {/* Left Section */}
           <div className="md:w-1/2 text-center md:text-left">
-            <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-4">
+            <h2 className="text-3xl md:text-4xl font-semibold  mb-4">
               Create Your Perfect Bouquet
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className=" mb-6">
               Design your own unique arrangement with our custom bouquet
               builder. Choose your favorite flowers, colors, and style.
             </p>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+// import { Eye, EyeOff } from "lucide-react"; // Optional if using icon library
 
 const Register = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [timer, setTimer] = useState(30);
   const [resendDisabled, setResendDisabled] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (step === 2 && resendDisabled && timer > 0) {
@@ -56,14 +58,18 @@ const Register = () => {
   const verifyOTP = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${API}/forgot-password`, {
-        email: formData.email,
-        otp: formData.otp,
-      }, {
-        headers: {
-          "Content-Type": "application/json"
+      const response = await axios.post(
+        `${API}/verify-otp`,
+        {
+          email: formData.email,
+          otp: formData.otp,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      });
+      );
 
       alert(response.data.message || "OTP verified!");
       setStep(3);
@@ -84,7 +90,7 @@ const Register = () => {
         password: formData.password,
       });
       alert("Registration successful!");
-      navigate("/");
+      navigate("/login");
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed");
     } finally {
@@ -157,9 +163,7 @@ const Register = () => {
                   </div>
 
                   <p className="text-sm mb-2">
-                    {resendDisabled
-                      ? `Resend OTP in ${timer}s`
-                      : "Didn't receive OTP?"}
+                    {resendDisabled ? `Resend OTP in ${timer}s` : "Didn't receive OTP?"}
                   </p>
 
                   <button
@@ -187,15 +191,23 @@ const Register = () => {
               {/* STEP 3: Password */}
               {step === 3 && (
                 <>
-                  <div className="mb-6">
+                  <div className="mb-6 relative">
                     <label className="block text-sm font-medium mb-1">Password</label>
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
-                      className="w-full border-2 border-black rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-200"
+                      className="w-full border-2 border-black rounded-lg px-4 py-3 pr-12 focus:border-pink-400 focus:ring-4 focus:ring-pink-200"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 "
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      
+                    </button>
                   </div>
                   <button
                     type="button"
