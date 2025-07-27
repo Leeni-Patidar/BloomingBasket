@@ -1,3 +1,4 @@
+// ✅ Shop.jsx
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import ProductCard from "../components/ProductCard";
@@ -6,16 +7,9 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const bouquetTypes = [
-  "Flower Bouquet",
-  "Chocolate Bouquet",
-  "Soft Toy Bouquet",
-  "Pipecleaner Bouquet",
-  "Butterfly Bouquet",
-  "Fairy Light Bouquet",
-  "Crochet Bouquet",
-  "Origami Bouquet",
-  "Fruit Bouquet",
-  "Skincare Bouquet",
+  "Flower Bouquet", "Chocolate Bouquet", "Soft Toy Bouquet",
+  "Pipecleaner Bouquet", "Butterfly Bouquet", "Fairy Light Bouquet",
+  "Crochet Bouquet", "Origami Bouquet", "Fruit Bouquet", "Skincare Bouquet",
 ];
 
 const Shop = () => {
@@ -44,15 +38,29 @@ const Shop = () => {
       setProducts(res.data.products);
       setTotalPages(res.data.totalPages);
     } catch (err) {
+      console.error("Product fetch error:", err);
       toast.error("Failed to load products");
     }
   };
 
   const fetchWishlist = async () => {
     try {
-      const res = await axios.get("/api/users/wishlist");
-      setWishlist(res.data.map((item) => item.productId?._id || item._id));
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const res = await axios.get("/api/users/wishlist", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Ensure consistent IDs
+      const ids = res.data.map((item) =>
+        typeof item.productId === "object" ? item.productId._id : item.productId
+      );
+      setWishlist(ids);
     } catch (err) {
+      console.error("fetchWishlist error:", err);
       toast.error("Failed to load wishlist");
     }
   };
@@ -67,49 +75,72 @@ const Shop = () => {
 
   const redirectToLogin = () => {
     const isRegistered = localStorage.getItem("isRegistered") === "true";
-    navigate(isRegistered ? "/login" : "/register");
+    navigate(isRegistered ? "/login?redirect=/shop" : "/register?redirect=/shop");
   };
 
   const handleAddToCart = async (product) => {
     if (!user) return redirectToLogin();
+    if (user.role === "admin") return;
+
     try {
-      await axios.post("/api/users/cart", { productId: product._id, quantity: 1 });
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "/api/users/cart",
+        { productId: product._id, quantity: 1 },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       toast.success("Added to cart");
     } catch (err) {
+      console.error("Add to cart error:", err);
       toast.error("Failed to add to cart");
     }
   };
 
   const handleAddToWishlist = async (productId) => {
     if (!user) return redirectToLogin();
+    if (user.role === "admin") return;
 
     try {
+      const token = localStorage.getItem("token");
       const isWished = wishlist.includes(productId);
+
       if (isWished) {
-        await axios.delete(`/api/users/wishlist/${productId}`);
+        await axios.delete(`/api/users/wishlist/${productId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setWishlist((prev) => prev.filter((id) => id !== productId));
         toast.info("Removed from wishlist");
       } else {
-        await axios.post("/api/users/wishlist", { productId });
+        await axios.post(
+          "/api/users/wishlist",
+          { productId },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         setWishlist((prev) => [...prev, productId]);
         toast.success("Added to wishlist");
       }
     } catch (err) {
+      console.error("Wishlist update error:", err);
       toast.error("Wishlist update failed");
     }
   };
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-10">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold mb-2 ">Shop Flowers</h1>
-          <p className=" text-lg">
+          <h1 className="text-4xl font-bold mb-2">Shop Flowers</h1>
+          <p className="text-lg">
             Browse our beautiful selection of fresh floral arrangements.
           </p>
         </div>
 
-        <div className=" items-center grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8 ">
+        {/* Filters */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
           <div>
             <label className="block font-semibold mb-1">Bouquet Type</label>
             <select
@@ -151,6 +182,7 @@ const Shop = () => {
           </div>
         </div>
 
+        {/* Product List */}
         {products.length === 0 ? (
           <div className="text-gray-600">No products found.</div>
         ) : (
@@ -167,6 +199,7 @@ const Shop = () => {
           </div>
         )}
 
+        {/* Pagination */}
         <div className="mt-10 flex justify-center items-center gap-2">
           {Array.from({ length: totalPages }, (_, i) => (
             <button
@@ -174,7 +207,7 @@ const Shop = () => {
               onClick={() => setFilters((prev) => ({ ...prev, page: i + 1 }))}
               className={`px-4 py-2 rounded ${
                 filters.page === i + 1
-                  ? "button-bg "
+                  ? "button-bg"
                   : "bg-gray-100 hover:bg-gray-200"
               }`}
             >

@@ -10,9 +10,11 @@ const auth = async (req, res, next) => {
     }
 
     const token = authHeader.split(" ")[1];
+
+    // Verify JWT token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // 🔐 Handle ENV-based Admin (non-database)
+    // 🔐 Allow environment-based Admin login (not stored in DB)
     if (decoded.id === "admin") {
       req.user = {
         id: "admin",
@@ -23,12 +25,14 @@ const auth = async (req, res, next) => {
       return next();
     }
 
-    // 🔐 Fetch DB User
+    // 🔐 Fetch user from DB
     const user = await User.findById(decoded.id).select("-password");
+
     if (!user) {
       return res.status(401).json({ message: "User not found" });
     }
 
+    // Attach user info to request
     req.user = {
       id: user._id.toString(),
       name: user.name,
@@ -46,12 +50,17 @@ const auth = async (req, res, next) => {
 
 // 🔒 Admin-only middleware
 const adminAuth = async (req, res, next) => {
-  await auth(req, res, () => {
-    if (!req.user || req.user.role !== "admin") {
-      return res.status(403).json({ message: "Access denied. Admins only." });
-    }
-    next();
-  });
+  try {
+    await auth(req, res, async () => {
+      if (!req.user || req.user.role !== "admin") {
+        return res.status(403).json({ message: "Access denied. Admins only." });
+      }
+      next();
+    });
+  } catch (error) {
+    console.error("🔐 AdminAuth Error:", error.message);
+    return res.status(403).json({ message: "Admin authorization failed" });
+  }
 };
 
 module.exports = { auth, adminAuth };

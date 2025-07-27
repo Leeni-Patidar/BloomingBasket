@@ -11,24 +11,23 @@ const ProductCard = ({ product, onAddToCart }) => {
 
   const inWishlist = isInWishlist(product._id);
 
-  // 🛒 Add to Cart
+  // 🛒 Add to Cart Handler
   const handleAddToCart = () => {
     if (!user) {
       toast.warn("Please login to add items to cart");
-      navigate(`/login?redirect=/product/${product._id}`);
-      return;
+      return navigate(`/login?redirect=/shop`);
     }
 
     if (user.role === "admin") return;
+
     onAddToCart();
   };
 
-  // ❤️ Wishlist toggle
+  // ❤️ Wishlist Toggle Handler
   const handleToggleWishlist = () => {
     if (!user) {
       toast.warn("Please login to add items to wishlist");
-      navigate(`/login?redirect=/product/${product._id}`);
-      return;
+      return navigate(`/login?redirect=/shop`);
     }
 
     if (user.role === "admin") return;
@@ -42,7 +41,7 @@ const ProductCard = ({ product, onAddToCart }) => {
 
   return (
     <div className="relative bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-200 overflow-hidden">
-      {/* ❤️ Wishlist Icon */}
+      {/* ❤️ Wishlist Button */}
       {user?.role !== "admin" && (
         <button
           onClick={handleToggleWishlist}
@@ -54,7 +53,7 @@ const ProductCard = ({ product, onAddToCart }) => {
         </button>
       )}
 
-      {/* 🖼️ Product Image */}
+      {/* 📷 Product Image */}
       <Link to={`/product/${product._id}`}>
         <img
           src={product.image}
@@ -70,7 +69,7 @@ const ProductCard = ({ product, onAddToCart }) => {
         </h3>
         <p className="text-pink-600 font-bold mt-2 text-md">₹{product.price}</p>
 
-        {/* 🛒 Add to Cart Button */}
+        {/* 🛒 Add to Cart */}
         {user?.role !== "admin" && (
           <button
             onClick={handleAddToCart}

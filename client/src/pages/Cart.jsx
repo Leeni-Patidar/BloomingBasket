@@ -1,8 +1,7 @@
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import { AuthContext } from "../context/AuthContext";
-import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Cart = () => {
@@ -11,98 +10,37 @@ const Cart = () => {
     updateQuantity,
     removeFromCart,
     getCartTotal,
-    clearCart,
   } = useContext(CartContext);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [showCheckout, setShowCheckout] = useState(false);
-  const [orderData, setOrderData] = useState({
-    shippingAddress: {
-      name: user?.name || "",
-      street: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      country: "",
-      phone: "",
-    },
-    paymentInfo: {
-      method: "credit_card",
-    },
-    deliveryDate: "",
-    specialInstructions: "",
-  });
-
-  const subtotal = getCartTotal();
-  const tax = subtotal * 0.08;
-  const shipping = subtotal > 50 ? 0 : 10;
-  const total = subtotal + tax + shipping;
 
   const handleQuantityChange = (productId, newQuantity) => {
+    if (!user) {
+      toast.warn("Please login to update cart");
+      navigate("/login");
+      return;
+    }
     if (newQuantity < 1) return;
     updateQuantity(productId, newQuantity);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (name.includes(".")) {
-      const [parent, child] = name.split(".");
-      setOrderData((prev) => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent],
-          [child]: value,
-        },
-      }));
-    } else {
-      setOrderData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-  };
-
-  const handleCheckout = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const orderPayload = {
-        items: cartItems.map((item) => ({
-          product: item._id,
-          quantity: item.quantity,
-          customization: item.customization || {},
-        })),
-        ...orderData,
-      };
-
-      const response = await axios.post("/api/orders", orderPayload);
-      toast.success("Order placed successfully!");
-      clearCart();
-      navigate(`/order/${response.data.order._id}`);
-    } catch (error) {
-      const message = error.response?.data?.message || "Failed to place order";
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (cartItems.length === 0) {
+  if (!cartItems || cartItems.length === 0) {
     return (
-      <div className="flex items-center">
+      <div className="flex items-center min-h-screen">
         <div className="container mx-auto px-4">
           <div className="flex justify-center">
             <div className="w-full md:w-1/2 text-center">
-              <i className="fas fa-shopping-cart fa-5x mb-4 text-gray-400"></i>
+              <i className="fas fa-shopping-cart fa-5x mb-4"></i>
               <h2 className="text-2xl font-semibold mb-2">Your cart is empty</h2>
-              <p className="text-gray-600 mb-4">Looks like you haven't added any items to your cart yet.</p>
-              <button
-                className="inline-block bg-gradient-to-br from-[#ba54a9] to-[#fecfef] px-6 py-3 rounded-full text-lg font-semibold transition-all duration-300 hover:shadow-lg"
-                onClick={() => navigate("/shop")}
+              <p className="text-gray-600 mb-4">
+                Looks like you haven’t added anything to your cart yet.
+              </p>
+              <Link
+                to="/shop"
+                className="inline-block bg-gradient-to-br from-[#ba54a9] to-[#fecfef] px-6 py-3 rounded-full text-lg font-semibold transition-all duration-300 button-bg:hover hover:shadow-lg"
               >
-                Continue Shopping
-              </button>
+                Start Shopping
+              </Link>
             </div>
           </div>
         </div>
@@ -111,94 +49,82 @@ const Cart = () => {
   }
 
   return (
-    <div className="container mx-auto px-4">
-      <div className="flex flex-wrap -mx-4">
-        <div className="w-full px-4 mb-6">
-          <h1 className="text-3xl md:text-[2rem] font-bold text-gray-800">Shopping Cart</h1>
+    <div className="min-h-screen">
+      <div className="container mx-auto px-4 py-10">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-bold mb-2">My Cart</h1>
+          <p className="text-lg">You have {cartItems.length} items in your cart</p>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border">
+            <thead>
+              <tr className="bg-pink-100">
+                <th className="px-4 py-2">Product</th>
+                <th className="px-4 py-2">Price</th>
+                <th className="px-4 py-2">Quantity</th>
+                <th className="px-4 py-2">Total</th>
+                <th className="px-4 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cartItems.map((item) => (
+                <tr key={item.productId?._id || item._id} className="text-center border-t">
+                  <td className="px-4 py-2">
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={item.productId?.image}
+                        alt={item.productId?.name}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <span>{item.productId?.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-2">₹{item.productId?.price}</td>
+                  <td className="px-4 py-2">
+                    <input
+                      type="number"
+                      min="1"
+                      value={item.quantity}
+                      onChange={(e) =>
+                        handleQuantityChange(item.productId._id, parseInt(e.target.value))
+                      }
+                      className="w-16 px-2 py-1 border rounded"
+                    />
+                  </td>
+                  <td className="px-4 py-2">₹{item.productId?.price * item.quantity}</td>
+                  <td className="px-4 py-2">
+                    <button
+                      className="text-red-600 text-xl hover:text-red-700"
+                      onClick={() => {
+                        if (!user) {
+                          toast.warn("Please login to update cart");
+                          navigate("/login");
+                          return;
+                        }
+                        removeFromCart(item.productId._id);
+                        toast.info(`${item.productId?.name} removed from cart`);
+                      }}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="text-right mt-8">
+          <h2 className="text-2xl font-bold">Total: ₹{getCartTotal()}</h2>
+          <Link
+            to="/checkout"
+            className="mt-4 inline-block bg-gradient-to-br from-[#ba54a9] to-[#fecfef] px-6 py-3 rounded-full text-lg font-semibold transition-all duration-300 button-bg:hover hover:shadow-lg"
+          >
+            Proceed to Checkout
+          </Link>
         </div>
       </div>
-
-      {!showCheckout ? (
-        <div className="flex flex-wrap -mx-4">
-          <div className="w-full lg:w-2/3 px-4">
-            <div className="flex flex-col gap-6">
-              {cartItems.map((item) => (
-                <div key={item._id} className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white rounded-lg shadow-sm">
-                  <div className="flex-shrink-0">
-                    <img
-                      src={item.images?.[0] || "/placeholder.svg?height=100&width=100"}
-                      alt={item.name}
-                      className="w-20 h-20 object-cover rounded-lg"
-                    />
-                  </div>
-                  <div className="flex-1 text-center sm:text-left">
-                    <h5 className="text-gray-800 font-semibold">{item.name}</h5>
-                    <p className="text-gray-600 font-medium">${item.price}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      className="w-8 h-8 bg-gray-200 rounded-md font-bold hover:bg-gray-300"
-                      onClick={() => handleQuantityChange(item._id, item.quantity - 1)}
-                    >
-                      -
-                    </button>
-                    <span className="min-w-[24px] text-center font-semibold">{item.quantity}</span>
-                    <button
-                      className="w-8 h-8 bg-gray-200 rounded-md font-bold hover:bg-gray-300"
-                      onClick={() => handleQuantityChange(item._id, item.quantity + 1)}
-                    >
-                      +
-                    </button>
-                  </div>
-                  <div className="w-20 text-right font-bold text-gray-800">
-                    ${(item.price * item.quantity).toFixed(2)}
-                  </div>
-                  <button
-                    className="text-red-600 text-xl hover:text-red-700"
-                    onClick={() => {
-                      removeFromCart(item._id);
-                      toast.info(`${item.name} removed from cart`);
-                    }}
-                  >
-                    <i className="fas fa-trash"></i>
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="w-full lg:w-1/3 px-4 mt-8 lg:mt-0">
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <h4 className="text-gray-800 font-semibold mb-4">Order Summary</h4>
-              <div className="flex justify-between mb-3"><span>Subtotal:</span><span>${subtotal.toFixed(2)}</span></div>
-              <div className="flex justify-between mb-3"><span>Tax:</span><span>${tax.toFixed(2)}</span></div>
-              <div className="flex justify-between mb-3"><span>Shipping:</span><span>{shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`}</span></div>
-              <hr className="my-4" />
-              <div className="flex justify-between text-lg font-bold text-gray-800"><strong>Total:</strong><strong>${total.toFixed(2)}</strong></div>
-              <button
-                className="w-full bg-gradient-to-br from-[#ba54a9] to-[#fecfef] px-6 py-3 rounded-lg font-semibold mt-6 hover:shadow-lg transition-all duration-300"
-                onClick={() => setShowCheckout(true)}
-              >
-                Proceed to Checkout
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : (
-        // CHECKOUT FORM (already complete in your code)
-        <CheckoutForm
-          orderData={orderData}
-          handleInputChange={handleInputChange}
-          handleCheckout={handleCheckout}
-          cartItems={cartItems}
-          subtotal={subtotal}
-          tax={tax}
-          shipping={shipping}
-          total={total}
-          loading={loading}
-          setShowCheckout={setShowCheckout}
-        />
-      )}
     </div>
   );
 };

@@ -115,5 +115,3 @@ productSchema.methods.calculateAverageRating = function () {
 };
 
 module.exports = mongoose.model("Product", productSchema);
-
-
