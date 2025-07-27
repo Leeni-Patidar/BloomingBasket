@@ -9,7 +9,7 @@ const productRoute = require("./routes/product");
 const orderRoute = require("./routes/order");
 const cartRoute = require("./routes/cartRoute");
 const uploadRoute = require("./routes/uploadRoute");
-const addressRoute = require("./routes/addressRoute"); // ✅ address routes
+const addressRoute = require("./routes/addressRoute"); 
 const userRoute = require("./routes/user");
 const wishlistRoute = require("./routes/wishlistRoute");
 
@@ -53,7 +53,7 @@ app.use("/api/orders", orderRoute);
 app.use("/api/users/cart", cartRoute);         
 app.use("/api/users/wishlist", wishlistRoute); 
 app.use("/api/upload", uploadRoute);
-app.use("/api/addresses", addressRoute); // ✅ FIXED: was /api/address before
+app.use("/api/addresses", addressRoute); 
 app.use("/api/users", userRoute);
 
 // ✅ Health Check Route

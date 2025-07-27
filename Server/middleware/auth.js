@@ -6,13 +6,13 @@ const auth = async (req, res, next) => {
     const authHeader = req.header("Authorization");
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "No token, authorization denied" });
+      return res.status(401).json({ message: "No token provided" });
     }
 
-    const token = authHeader.replace("Bearer ", "");
+    const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // ✅ Handle ENV-based Admin (non-database)
+    // 🔐 Handle ENV-based Admin (non-database)
     if (decoded.id === "admin") {
       req.user = {
         id: "admin",
@@ -23,10 +23,10 @@ const auth = async (req, res, next) => {
       return next();
     }
 
-    // ✅ DB user
+    // 🔐 Fetch DB User
     const user = await User.findById(decoded.id).select("-password");
     if (!user) {
-      return res.status(401).json({ message: "Token is not valid - user not found" });
+      return res.status(401).json({ message: "User not found" });
     }
 
     req.user = {
@@ -39,23 +39,19 @@ const auth = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error("🔐 Auth Middleware Error:", error.message);
-    return res.status(401).json({ message: "Token is not valid or expired" });
+    console.error("🔐 Auth Error:", error.message);
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 
+// 🔒 Admin-only middleware
 const adminAuth = async (req, res, next) => {
-  try {
-    await auth(req, res, async () => {
-      if (!req.user || req.user.role !== "admin") {
-        return res.status(403).json({ message: "Access denied. Admins only." });
-      }
-      next();
-    });
-  } catch (error) {
-    console.error("🔐 Admin Auth Error:", error.message);
-    return res.status(401).json({ message: "Authorization failed" });
-  }
+  await auth(req, res, () => {
+    if (!req.user || req.user.role !== "admin") {
+      return res.status(403).json({ message: "Access denied. Admins only." });
+    }
+    next();
+  });
 };
 
 module.exports = { auth, adminAuth };

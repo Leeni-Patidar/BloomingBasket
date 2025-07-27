@@ -1,24 +1,19 @@
 const express = require("express");
-const { auth } = require("../middleware/auth.js");
+const { auth } = require("../middleware/auth");
 const {
   addAddress,
   getAddress,
   editAddress,
   deleteAddress,
+  setDefaultAddress,
 } = require("../controllers/addressController.js");
 
-const addressRouter = express.Router();
+const router = express.Router();
 
-// GET /api/addresses - Fetch all addresses for the logged-in user
-addressRouter.get("/", auth, getAddress);
+router.get("/", auth, getAddress);
+router.post("/", auth, addAddress);
+router.put("/:id", auth, editAddress);
+router.delete("/:id", auth, deleteAddress);
+router.put("/default/:id", auth, setDefaultAddress); // optional default setter route
 
-// POST /api/addresses - Add a new address
-addressRouter.post("/", auth, addAddress);
-
-// PUT /api/addresses/:id - Update a specific address
-addressRouter.put("/:id", auth, editAddress);
-
-// DELETE /api/addresses/:id - Delete a specific address
-addressRouter.delete("/:id", auth, deleteAddress);
-
-module.exports = addressRouter;
+module.exports = router;
