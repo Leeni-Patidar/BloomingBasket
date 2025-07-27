@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-// import { Eye, EyeOff } from "lucide-react"; // Optional if using icon library
 
 const Register = () => {
   const navigate = useNavigate();
@@ -11,6 +10,7 @@ const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     otp: "",
     password: "",
   });
@@ -27,7 +27,6 @@ const Register = () => {
       }, 1000);
       return () => clearInterval(interval);
     }
-
     if (timer === 0) {
       setResendDisabled(false);
     }
@@ -40,11 +39,10 @@ const Register = () => {
   const sendOTP = async () => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API}/send-otp`, {
-        name: formData.name,
+      const res = await axios.post(`${API}/send-registration-otp`, {
         email: formData.email,
       });
-      alert(res.data.message);
+      alert(res.data.message || "OTP sent to your email.");
       setStep(2);
       setTimer(30);
       setResendDisabled(true);
@@ -58,23 +56,13 @@ const Register = () => {
   const verifyOTP = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${API}/verify-otp`,
-        {
-          email: formData.email,
-          otp: formData.otp,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
+      const response = await axios.post(`${API}/verify-otp`, {
+        email: formData.email,
+        otp: formData.otp,
+      });
       alert(response.data.message || "OTP verified!");
       setStep(3);
     } catch (error) {
-      console.error("OTP verification failed:", error.response?.data || error.message);
       alert(error.response?.data?.message || "OTP verification failed");
     } finally {
       setLoading(false);
@@ -84,9 +72,10 @@ const Register = () => {
   const registerUser = async () => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API}/register`, {
+      await axios.post(`${API}/register`, {
         name: formData.name,
         email: formData.email,
+        phone: formData.phone,
         password: formData.password,
       });
       alert("Registration successful!");
@@ -106,13 +95,13 @@ const Register = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-center">
           <div className="w-full max-w-md">
-            <div className="mt-10 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl p-8 md:p-10 lg:p-12 shadow-xl">
+            <div className="mt-10 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl p-8 shadow-xl">
               <div className="text-center mb-6">
                 <h1 className="text-3xl font-bold mb-2">Create Account</h1>
                 <p>Join Blooming Basket today</p>
               </div>
 
-              {/* STEP 1: Name & Email */}
+              {/* STEP 1: DETAILS + SEND OTP */}
               {step === 1 && (
                 <>
                   <div className="mb-4">
@@ -123,10 +112,11 @@ const Register = () => {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full border-2 border-black rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-200"
+                      className="w-full border-2 border-black rounded-lg px-4 py-3"
                     />
                   </div>
-                  <div className="mb-6">
+
+                  <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">Email</label>
                     <input
                       type="email"
@@ -134,21 +124,34 @@ const Register = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full border-2 border-black rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-200"
+                      className="w-full border-2 border-black rounded-lg px-4 py-3"
                     />
                   </div>
+
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium mb-1">Phone</label>
+                    <input
+                      type="text"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="10-digit phone number"
+                      className="w-full border-2 border-black rounded-lg px-4 py-3"
+                    />
+                  </div>
+
                   <button
                     type="button"
                     onClick={sendOTP}
                     disabled={loading}
-                    className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg button-bg:hover disabled:opacity-60"
+                    className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg disabled:opacity-60"
                   >
                     {loading ? "Sending OTP..." : "Send OTP"}
                   </button>
                 </>
               )}
 
-              {/* STEP 2: OTP */}
+              {/* STEP 2: VERIFY OTP */}
               {step === 2 && (
                 <>
                   <div className="mb-4">
@@ -158,7 +161,7 @@ const Register = () => {
                       name="otp"
                       value={formData.otp}
                       onChange={handleChange}
-                      className="w-full border-2 border-black rounded-lg px-4 py-3 focus:border-pink-400 focus:ring-4 focus:ring-pink-200"
+                      className="w-full border-2 border-black rounded-lg px-4 py-3"
                     />
                   </div>
 
@@ -170,9 +173,7 @@ const Register = () => {
                     type="button"
                     onClick={sendOTP}
                     disabled={resendDisabled || loading}
-                    className={`text-sm font-medium text-[#ba54a9] mb-4 ${
-                      resendDisabled ? "opacity-50 cursor-not-allowed" : "hover:underline"
-                    }`}
+                    className="text-sm font-medium text-[#ba54a9] mb-4"
                   >
                     Resend OTP
                   </button>
@@ -181,14 +182,14 @@ const Register = () => {
                     type="button"
                     onClick={verifyOTP}
                     disabled={loading}
-                    className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg button-bg:hover disabled:opacity-60"
+                    className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg"
                   >
                     {loading ? "Verifying..." : "Verify OTP"}
                   </button>
                 </>
               )}
 
-              {/* STEP 3: Password */}
+              {/* STEP 3: SET PASSWORD */}
               {step === 3 && (
                 <>
                   <div className="mb-6 relative">
@@ -198,22 +199,21 @@ const Register = () => {
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
-                      className="w-full border-2 border-black rounded-lg px-4 py-3 pr-12 focus:border-pink-400 focus:ring-4 focus:ring-pink-200"
+                      className="w-full border-2 border-black rounded-lg px-4 py-3 pr-12"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 "
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
                     >
-                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                      
+                      {showPassword ? "Hide" : "Show"}
                     </button>
                   </div>
                   <button
                     type="button"
                     onClick={registerUser}
                     disabled={loading}
-                    className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg button-bg:hover disabled:opacity-60"
+                    className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg"
                   >
                     {loading ? "Registering..." : "Register"}
                   </button>

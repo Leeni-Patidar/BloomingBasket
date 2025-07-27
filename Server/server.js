@@ -9,7 +9,7 @@ const productRoute = require("./routes/product");
 const orderRoute = require("./routes/order");
 const cartRoute = require("./routes/cartRoute");
 const uploadRoute = require("./routes/uploadRoute");
-const addressRoute = require("./routes/addressRoute");
+const addressRoute = require("./routes/addressRoute"); // ✅ address routes
 const userRoute = require("./routes/user");
 const wishlistRoute = require("./routes/wishlistRoute");
 
@@ -47,12 +47,13 @@ mongoose
 
 // ✅ API Routes
 app.use("/api/auth", authRoute);
+app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/orders", orderRoute);
-app.use("/api/users/cart", cartRoute);         // 👈 Updated prefix
-app.use("/api/users/wishlist", wishlistRoute); // 👈 Updated prefix
+app.use("/api/users/cart", cartRoute);         
+app.use("/api/users/wishlist", wishlistRoute); 
 app.use("/api/upload", uploadRoute);
-app.use("/api/address", addressRoute);
+app.use("/api/addresses", addressRoute); // ✅ FIXED: was /api/address before
 app.use("/api/users", userRoute);
 
 // ✅ Health Check Route

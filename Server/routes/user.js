@@ -2,12 +2,21 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const { auth: verifyToken } = require("../middleware/auth");
-const { updateUserProfile } = require("../controllers/userAdminController.js");
+const {
+  updateUserProfile,
+  changePassword,
+} = require("../controllers/userAdminController.js");
 
-// ✅ Get all users (admin-only logic can be added)
+// ✅ Update authenticated user's own profile
+router.put("/profile", verifyToken, updateUserProfile);
+
+// ✅ Change authenticated user's password
+router.put("/change-password", verifyToken, changePassword);
+
+// ✅ Get all users
 router.get("/", verifyToken, async (req, res) => {
   try {
-    const users = await User.find().select("-password"); // exclude password
+    const users = await User.find().select("-password");
     res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch users", error: err });
@@ -49,8 +58,5 @@ router.delete("/:id", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Failed to delete user", error: err });
   }
 });
-
-// ✅ Update authenticated user's own profile
-router.put("/profile", verifyToken, updateUserProfile);
 
 module.exports = router;

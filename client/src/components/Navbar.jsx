@@ -93,7 +93,7 @@ const Navbar = () => {
                 )}
               </Link>
 
-              <Link to="/my-orders" className="text-gray-700 hover:text-pink-600 font-medium">My Orders</Link>
+              {/* <Link to="/my-orders" className="text-gray-700 hover:text-pink-600 font-medium">My Orders</Link> */}
             </>
           )}
 
@@ -135,7 +135,7 @@ const Navbar = () => {
               <Link to="/customize" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Customize</Link>
               <Link to="/wishlist" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Wishlist</Link>
               <Link to="/cart" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Cart</Link>
-              <Link to="/my-orders" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">My Orders</Link>
+              {/* <Link to="/my-orders" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">My Orders</Link> */}
             </>
           )}
 

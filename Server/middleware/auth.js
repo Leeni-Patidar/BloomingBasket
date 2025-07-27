@@ -12,7 +12,7 @@ const auth = async (req, res, next) => {
     const token = authHeader.replace("Bearer ", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // 🔐 Handle ENV-based Admin (non-database)
+    // ✅ Handle ENV-based Admin (non-database)
     if (decoded.id === "admin") {
       req.user = {
         id: "admin",
@@ -23,23 +23,24 @@ const auth = async (req, res, next) => {
       return next();
     }
 
-    // 👤 Authenticated user from DB
+    // ✅ DB user
     const user = await User.findById(decoded.id).select("-password");
     if (!user) {
-      return res.status(401).json({ message: "Token is not valid" });
+      return res.status(401).json({ message: "Token is not valid - user not found" });
     }
 
     req.user = {
       id: user._id.toString(),
       name: user.name,
       email: user.email,
-      role: user.role,
+      phone: user.phone || null,
+      role: user.role || "user",
     };
 
     next();
   } catch (error) {
-    console.error("Auth error:", error.message);
-    return res.status(401).json({ message: "Token is not valid" });
+    console.error("🔐 Auth Middleware Error:", error.message);
+    return res.status(401).json({ message: "Token is not valid or expired" });
   }
 };
 
@@ -47,12 +48,12 @@ const adminAuth = async (req, res, next) => {
   try {
     await auth(req, res, async () => {
       if (!req.user || req.user.role !== "admin") {
-        return res.status(403).json({ message: "Access denied. Admin only." });
+        return res.status(403).json({ message: "Access denied. Admins only." });
       }
       next();
     });
   } catch (error) {
-    console.error("Admin auth error:", error.message);
+    console.error("🔐 Admin Auth Error:", error.message);
     return res.status(401).json({ message: "Authorization failed" });
   }
 };
