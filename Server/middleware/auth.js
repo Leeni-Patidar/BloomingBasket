@@ -41,7 +41,7 @@ const auth = async (req, res, next) => {
       role: user.role || "user",
     };
 
-    next();
+    next()
   } catch (error) {
     console.error("🔐 Auth Error:", error.message);
     return res.status(401).json({ message: "Invalid or expired token" });

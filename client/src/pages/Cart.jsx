@@ -1,132 +1,256 @@
-import React, { useContext } from "react";
-import { CartContext } from "../context/CartContext";
-import { AuthContext } from "../context/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
-import { toast } from "react-toastify";
+"use client"
+
+import { useContext } from "react"
+import { CartContext } from "../context/CartContext"
+import { AuthContext } from "../context/AuthContext"
+import { Link, useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
 const Cart = () => {
-  const {
-    cartItems,
-    updateQuantity,
-    removeFromCart,
-    getCartTotal,
-  } = useContext(CartContext);
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { cartItems, updateQuantity, removeFromCart, clearCart, getCartTotal, getCartItemsCount } =
+    useContext(CartContext)
+  const { user } = useContext(AuthContext)
+  const navigate = useNavigate()
 
-  const handleQuantityChange = (productId, newQuantity) => {
+  const handleQuantityChange = async (productId, newQuantity) => {
     if (!user) {
-      toast.warn("Please login to update cart");
-      navigate("/login");
-      return;
+      toast.warn("Please login to update cart")
+      navigate("/login")
+      return
     }
-    if (newQuantity < 1) return;
-    updateQuantity(productId, newQuantity);
-  };
+    if (newQuantity < 1) return
+    await updateQuantity(productId, newQuantity)
+  }
+
+  const handleRemoveItem = async (item) => {
+    if (!user) {
+      toast.warn("Please login to update cart")
+      navigate("/login")
+      return
+    }
+    await removeFromCart(item.productId._id)
+    toast.success(`${item.productId?.name} removed from cart`)
+  }
+
+  const handleClearCart = async () => {
+    if (!user) {
+      toast.warn("Please login to clear cart")
+      navigate("/login")
+      return
+    }
+    if (window.confirm("Are you sure you want to clear your entire cart?")) {
+      await clearCart()
+    }
+  }
 
   if (!cartItems || cartItems.length === 0) {
     return (
-      <div className="flex items-center min-h-screen">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-center">
-            <div className="w-full md:w-1/2 text-center">
-              <i className="fas fa-shopping-cart fa-5x mb-4"></i>
-              <h2 className="text-2xl font-semibold mb-2">Your cart is empty</h2>
-              <p className="text-gray-600 mb-4">
-                Looks like you haven’t added anything to your cart yet.
-              </p>
-              <Link
-                to="/shop"
-                className="inline-block bg-gradient-to-br from-[#ba54a9] to-[#fecfef] px-6 py-3 rounded-full text-lg font-semibold transition-all duration-300 button-bg:hover hover:shadow-lg"
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="mb-8">
+            <i className="fas fa-shopping-cart text-6xl text-gray-300 mb-4"></i>
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">Your cart is empty</h2>
+            <p className="text-gray-600 mb-6">Looks like you haven't added anything to your cart yet.</p>
+            <Link
+              to="/shop"
+              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 hover:shadow-lg transform hover:scale-105"
+            >
+              <i className="fas fa-shopping-bag mr-2"></i>
+              Start Shopping
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const totalItems = getCartItemsCount()
+  const totalAmount = getCartTotal()
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="container mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">Shopping Cart</h1>
+          <p className="text-lg text-gray-600">
+            You have {totalItems} item{totalItems !== 1 ? "s" : ""} in your cart
+          </p>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Cart Items */}
+          <div className="lg:w-2/3">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              {/* Desktop Table Header */}
+              <div className="hidden md:block bg-gray-50 px-6 py-4">
+                <div className="grid grid-cols-12 gap-4 font-semibold text-gray-700">
+                  <div className="col-span-6">Product</div>
+                  <div className="col-span-2 text-center">Price</div>
+                  <div className="col-span-2 text-center">Quantity</div>
+                  <div className="col-span-2 text-center">Total</div>
+                </div>
+              </div>
+
+              {/* Cart Items */}
+              <div className="divide-y divide-gray-200">
+                {cartItems.map((item) => (
+                  <div key={item.productId?._id} className="p-6">
+                    {/* Mobile Layout */}
+                    <div className="md:hidden">
+                      <div className="flex items-start space-x-4">
+                        <img
+                          src={item.productId?.image || "/placeholder.svg?height=80&width=80"}
+                          alt={item.productId?.name}
+                          className="w-20 h-20 object-cover rounded-lg"
+                        />
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-800 mb-1">{item.productId?.name}</h3>
+                          <p className="text-pink-600 font-bold text-lg mb-2">₹{item.productId?.price}</p>
+
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() => handleQuantityChange(item.productId._id, item.quantity - 1)}
+                                className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
+                                disabled={item.quantity <= 1}
+                              >
+                                <i className="fas fa-minus text-xs"></i>
+                              </button>
+                              <span className="w-12 text-center font-semibold">{item.quantity}</span>
+                              <button
+                                onClick={() => handleQuantityChange(item.productId._id, item.quantity + 1)}
+                                className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
+                              >
+                                <i className="fas fa-plus text-xs"></i>
+                              </button>
+                            </div>
+
+                            <div className="text-right">
+                              <p className="font-bold text-lg">₹{(item.productId?.price || 0) * item.quantity}</p>
+                              <button
+                                onClick={() => handleRemoveItem(item)}
+                                className="text-red-500 hover:text-red-700 transition mt-1"
+                              >
+                                <i className="fas fa-trash"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Desktop Layout */}
+                    <div className="hidden md:block">
+                      <div className="grid grid-cols-12 gap-4 items-center">
+                        <div className="col-span-6 flex items-center space-x-4">
+                          <img
+                            src={item.productId?.image || "/placeholder.svg?height=64&width=64"}
+                            alt={item.productId?.name}
+                            className="w-16 h-16 object-cover rounded-lg"
+                          />
+                          <div>
+                            <h3 className="font-semibold text-gray-800">{item.productId?.name}</h3>
+                            <button
+                              onClick={() => handleRemoveItem(item)}
+                              className="text-red-500 hover:text-red-700 transition text-sm mt-1"
+                            >
+                              <i className="fas fa-trash mr-1"></i>
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="col-span-2 text-center">
+                          <span className="font-semibold text-pink-600">₹{item.productId?.price}</span>
+                        </div>
+
+                        <div className="col-span-2 text-center">
+                          <div className="flex items-center justify-center space-x-2">
+                            <button
+                              onClick={() => handleQuantityChange(item.productId._id, item.quantity - 1)}
+                              className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
+                              disabled={item.quantity <= 1}
+                            >
+                              <i className="fas fa-minus text-xs"></i>
+                            </button>
+                            <span className="w-12 text-center font-semibold">{item.quantity}</span>
+                            <button
+                              onClick={() => handleQuantityChange(item.productId._id, item.quantity + 1)}
+                              className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
+                            >
+                              <i className="fas fa-plus text-xs"></i>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="col-span-2 text-center">
+                          <span className="font-bold text-lg">₹{(item.productId?.price || 0) * item.quantity}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Clear Cart Button */}
+            <div className="mt-4">
+              <button
+                onClick={handleClearCart}
+                className="px-6 py-2 border border-red-500 text-red-500 rounded-full hover:bg-red-50 transition"
               >
-                Start Shopping
-              </Link>
+                <i className="fas fa-trash mr-2"></i>
+                Clear Cart
+              </button>
+            </div>
+          </div>
+
+          {/* Order Summary */}
+          <div className="lg:w-1/3">
+            <div className="bg-white rounded-lg shadow-md p-6 sticky top-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">Order Summary</h2>
+
+              <div className="space-y-4 mb-6">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Items ({totalItems})</span>
+                  <span className="font-semibold">₹{totalAmount}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Shipping</span>
+                  <span className="font-semibold text-green-600">Free</span>
+                </div>
+                <div className="border-t pt-4">
+                  <div className="flex justify-between text-xl font-bold">
+                    <span>Total</span>
+                    <span className="text-pink-600">₹{totalAmount}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <Link
+                  to="/checkout"
+                  className="w-full block text-center py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 hover:shadow-lg transform hover:scale-105"
+                >
+                  <i className="fas fa-credit-card mr-2"></i>
+                  Proceed to Checkout
+                </Link>
+
+                <Link
+                  to="/shop"
+                  className="w-full block text-center py-3 border border-gray-300 text-gray-700 rounded-full font-semibold hover:bg-gray-50 transition"
+                >
+                  <i className="fas fa-arrow-left mr-2"></i>
+                  Continue Shopping
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-10">
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold mb-2">My Cart</h1>
-          <p className="text-lg">You have {cartItems.length} items in your cart</p>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="table-auto w-full border">
-            <thead>
-              <tr className="bg-pink-100">
-                <th className="px-4 py-2">Product</th>
-                <th className="px-4 py-2">Price</th>
-                <th className="px-4 py-2">Quantity</th>
-                <th className="px-4 py-2">Total</th>
-                <th className="px-4 py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cartItems.map((item) => (
-                <tr key={item.productId?._id || item._id} className="text-center border-t">
-                  <td className="px-4 py-2">
-                    <div className="flex items-center gap-4">
-                      <img
-                        src={item.productId?.image}
-                        alt={item.productId?.name}
-                        className="w-16 h-16 object-cover rounded"
-                      />
-                      <span>{item.productId?.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-2">₹{item.productId?.price}</td>
-                  <td className="px-4 py-2">
-                    <input
-                      type="number"
-                      min="1"
-                      value={item.quantity}
-                      onChange={(e) =>
-                        handleQuantityChange(item.productId._id, parseInt(e.target.value))
-                      }
-                      className="w-16 px-2 py-1 border rounded"
-                    />
-                  </td>
-                  <td className="px-4 py-2">₹{item.productId?.price * item.quantity}</td>
-                  <td className="px-4 py-2">
-                    <button
-                      className="text-red-600 text-xl hover:text-red-700"
-                      onClick={() => {
-                        if (!user) {
-                          toast.warn("Please login to update cart");
-                          navigate("/login");
-                          return;
-                        }
-                        removeFromCart(item.productId._id);
-                        toast.info(`${item.productId?.name} removed from cart`);
-                      }}
-                    >
-                      <i className="fas fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="text-right mt-8">
-          <h2 className="text-2xl font-bold">Total: ₹{getCartTotal()}</h2>
-          <Link
-            to="/checkout"
-            className="mt-4 inline-block bg-gradient-to-br from-[#ba54a9] to-[#fecfef] px-6 py-3 rounded-full text-lg font-semibold transition-all duration-300 button-bg:hover hover:shadow-lg"
-          >
-            Proceed to Checkout
-          </Link>
-        </div>
-      </div>
     </div>
-  );
-};
+  )
+}
 
-export default Cart;
+export default Cart

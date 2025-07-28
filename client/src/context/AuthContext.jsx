@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateProfile = async (profileData) => {
     try {
-      const { data } = await axios.put("/api/users/profile", profileData);
+      const { data } = await axios.put("/api/user/profile", profileData);
       setUser(data.user);
       toast.success("Profile updated.");
       return { success: true };
@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }) => {
 
   const changePassword = async (oldPassword, newPassword) => {
     try {
-      await axios.put("/api/users/change-password", {
+      await axios.put("/api/user/change-password", {
         currentPassword: oldPassword,
         newPassword,
       });

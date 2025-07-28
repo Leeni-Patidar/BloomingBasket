@@ -13,8 +13,7 @@ const Navbar = () => {
 
   const { user, logout } = useContext(AuthContext);
   const { getCartItemsCount } = useContext(CartContext);
-  const { wishlistItems: wishlist } = useContext(WishlistContext); // ✅ fixed here
-
+  const { wishlistItems: wishlist } = useContext(WishlistContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -75,6 +74,7 @@ const Navbar = () => {
               <Link to="/shop" className="text-gray-700 hover:text-pink-600 font-medium">Shop</Link>
               <Link to="/customize" className="text-gray-700 hover:text-pink-600 font-medium">Customize</Link>
 
+              {/* ❤️ Wishlist icon with badge */}
               <Link to="/wishlist" className="relative text-gray-700 hover:text-pink-600 transition">
                 <i className="fas fa-heart"></i>
                 {Array.isArray(wishlist) && wishlist.length > 0 && (
@@ -84,19 +84,19 @@ const Navbar = () => {
                 )}
               </Link>
 
+              {/* 🛒 Cart icon with total quantity badge */}
               <Link to="/cart" className="relative text-gray-700 hover:text-pink-600 transition">
                 <i className="fas fa-shopping-cart"></i>
-                {getCartItemsCount() > 0 && (
+                {typeof getCartItemsCount === "function" && getCartItemsCount() > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 rounded-full text-xs px-1 text-white">
                     {getCartItemsCount()}
                   </span>
                 )}
               </Link>
-
-              {/* <Link to="/my-orders" className="text-gray-700 hover:text-pink-600 font-medium">My Orders</Link> */}
             </>
           )}
 
+          {/* 🔐 Login/Profile */}
           {user ? (
             <div className="relative group">
               <button className="text-gray-700 hover:text-pink-600 flex items-center gap-1">
@@ -117,6 +117,7 @@ const Navbar = () => {
 
       <div className="h-1 w-full bg-gradient-to-r from-pink-400 via-pink-500 to-pink-400"></div>
 
+      {/* 📱 Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-gray-100 shadow-md px-4 py-4 space-y-2">
           {user?.role === "admin" ? (
@@ -135,7 +136,6 @@ const Navbar = () => {
               <Link to="/customize" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Customize</Link>
               <Link to="/wishlist" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Wishlist</Link>
               <Link to="/cart" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Cart</Link>
-              {/* <Link to="/my-orders" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">My Orders</Link> */}
             </>
           )}
 

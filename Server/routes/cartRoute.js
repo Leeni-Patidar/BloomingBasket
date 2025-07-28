@@ -1,92 +1,110 @@
-const express = require("express");
-const router = express.Router();
-const { auth } = require("../middleware/auth");
-const User = require("../models/User");
-const Product = require("../models/Product");
+// server/routes/cartRoute.js
+const express = require("express")
+const router = express.Router()
+const Cart = require("../models/Cart")
+const Product = require("../models/Product")
+const { auth } = require("../middleware/auth")
 
-// 🔹 GET cart items
-router.get("/cart", auth, async (req, res) => {
+// GET /api/user/cart
+router.get("/", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate("cart.productId");
-    res.json({ items: user.cart });
+    const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId")
+    res.json({ items: cart?.items || [] })
   } catch (err) {
-    console.error("Cart GET error:", err);
-    res.status(500).json({ message: "Failed to fetch cart" });
+    console.error("Cart GET error:", err)
+    res.status(500).json({ message: "Failed to fetch cart." })
   }
-});
+})
 
-// 🔹 ADD to cart
-router.post("/cart", auth, async (req, res) => {
+// POST /api/user/cart
+router.post("/", auth, async (req, res) => {
+  const { productId, quantity } = req.body
+  if (!productId || !quantity) {
+    return res.status(400).json({ message: "Product ID and quantity are required" })
+  }
+
   try {
-    const { productId, quantity = 1 } = req.body;
-    if (!productId) return res.status(400).json({ message: "Product ID required" });
-
-    const product = await Product.findById(productId);
-    if (!product) return res.status(404).json({ message: "Product not found" });
-
-    const user = await User.findById(req.user._id);
-    const itemIndex = user.cart.findIndex((item) => item.productId.equals(productId));
-
-    if (itemIndex >= 0) {
-      user.cart[itemIndex].quantity += quantity;
-    } else {
-      user.cart.push({ productId, quantity });
+    let cart = await Cart.findOne({ userId: req.user.id })
+    if (!cart) {
+      cart = new Cart({ userId: req.user.id, items: [] })
     }
 
-    await user.save();
-    res.json({ items: user.cart });
-  } catch (err) {
-    console.error("Cart POST error:", err);
-    res.status(500).json({ message: "Failed to add to cart" });
-  }
-});
+    const existingIndex = cart.items.findIndex((item) => item.productId.toString() === productId)
 
-// 🔹 UPDATE quantity
-router.put("/cart", auth, async (req, res) => {
+    if (existingIndex > -1) {
+      cart.items[existingIndex].quantity += quantity
+    } else {
+      cart.items.push({ productId, quantity })
+    }
+
+    await cart.save()
+    const populated = await cart.populate("items.productId")
+    res.json({ items: populated.items })
+  } catch (err) {
+    console.error("Cart POST error:", err)
+    res.status(500).json({ message: "Failed to add to cart." })
+  }
+})
+
+// PUT /api/user/cart/:productId
+router.put("/:productId", auth, async (req, res) => {
+  const { productId } = req.params
+  const { quantity } = req.body
+
+  if (!quantity || quantity < 1) {
+    return res.status(400).json({ message: "Quantity must be at least 1" })
+  }
+
   try {
-    const { productId, quantity } = req.body;
-    if (!productId || quantity === undefined)
-      return res.status(400).json({ message: "Product ID and quantity required" });
+    const cart = await Cart.findOne({ userId: req.user.id })
+    if (!cart) return res.status(404).json({ message: "Cart not found" })
 
-    const user = await User.findById(req.user._id);
-    const item = user.cart.find((item) => item.productId.equals(productId));
-    if (!item) return res.status(404).json({ message: "Item not in cart" });
+    const item = cart.items.find((item) => item.productId.toString() === productId)
 
-    item.quantity = quantity;
-    await user.save();
-    res.json({ items: user.cart });
+    if (!item) return res.status(404).json({ message: "Item not found in cart" })
+
+    item.quantity = quantity
+    await cart.save()
+    const populated = await cart.populate("items.productId")
+    res.json({ items: populated.items })
   } catch (err) {
-    console.error("Cart PUT error:", err);
-    res.status(500).json({ message: "Failed to update cart" });
+    console.error("Cart PUT error:", err)
+    res.status(500).json({ message: "Failed to update quantity" })
   }
-});
+})
 
-// 🔹 DELETE from cart
-router.delete("/cart/:productId", auth, async (req, res) => {
+// DELETE /api/user/cart/:productId
+router.delete("/:productId", auth, async (req, res) => {
+  const { productId } = req.params
+
   try {
-    const { productId } = req.params;
+    const cart = await Cart.findOne({ userId: req.user.id })
+    if (!cart) return res.status(404).json({ message: "Cart not found" })
 
-    const user = await User.findById(req.user._id);
-    user.cart = user.cart.filter((item) => !item.productId.equals(productId));
-    await user.save();
-    res.json({ items: user.cart });
+    cart.items = cart.items.filter((item) => item.productId.toString() !== productId)
+
+    await cart.save()
+    const populated = await cart.populate("items.productId")
+    res.json({ items: populated.items })
   } catch (err) {
-    console.error("Cart DELETE error:", err);
-    res.status(500).json({ message: "Failed to remove from cart" });
+    console.error("Cart DELETE error:", err)
+    res.status(500).json({ message: "Failed to remove item from cart" })
   }
-});
+})
 
-// 🔹 CLEAR cart
-router.delete("/cart/clear", auth, async (req, res) => {
+// DELETE /api/user/cart
+router.delete("/", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
-    user.cart = [];
-    await user.save();
-    res.json({ message: "Cart cleared" });
-  } catch (err) {
-    console.error("Cart CLEAR error:", err);
-    res.status(500).json({ message: "Failed to clear cart" });
-  }
-});
+    const cart = await Cart.findOne({ userId: req.user.id })
+    if (!cart) return res.status(404).json({ message: "Cart not found" })
 
-module.exports = router;
+    cart.items = []
+    await cart.save()
+    res.json({ message: "Cart cleared" })
+  } catch (err) {
+    console.error("Cart CLEAR error:", err)
+    res.status(500).json({ message: "Failed to clear cart" })
+  }
+})
+
+module.exports = router

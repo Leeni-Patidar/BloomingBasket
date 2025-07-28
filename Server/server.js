@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
 const dotenv = require("dotenv");
+const cors = require("cors");
 const path = require("path");
 
 const authRoute = require("./routes/auth");
@@ -37,8 +37,9 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
+    const dbName = mongoose.connection.db.databaseName;
     console.log("✅ MongoDB connected successfully");
-    console.log(`🗃️ Using database: ${mongoose.connection.db.databaseName}`);
+    console.log(`🗃️ Using database: \x1b[36m${dbName}\x1b[0m`);
   })
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err);
@@ -47,22 +48,20 @@ mongoose
 
 // ✅ API Routes
 app.use("/api/auth", authRoute);
-app.use("/api/users", userRoute);
+app.use("/api/user", userRoute);               // 🛒 Cart & user data
+app.use("/api/user/cart", cartRoute);          // 🛒 Cart routes
+app.use("/api/user/wishlist", wishlistRoute);  // ❤️ Wishlist routes
 app.use("/api/products", productRoute);
 app.use("/api/orders", orderRoute);
-app.use("/api/users/cart", cartRoute);         
-app.use("/api/users/wishlist", wishlistRoute); 
 app.use("/api/upload", uploadRoute);
 app.use("/api/addresses", addressRoute); 
-app.use("/api/users", userRoute);
 
 // ✅ Health Check Route
 app.get("/api/health", (req, res) => {
   res.json({
     status: "OK",
     timestamp: new Date().toISOString(),
-    database:
-      mongoose.connection.readyState === 1 ? "Connected" : "Disconnected",
+    database: mongoose.connection.readyState === 1 ? "Connected" : "Disconnected",
   });
 });
 
@@ -83,6 +82,6 @@ app.use("*", (req, res) => {
 // ✅ Start Server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`🌱 Environment: ${process.env.NODE_ENV}`);
+  console.log(`🚀 Server running on port \x1b[32m${PORT}\x1b[0m`);
+  console.log(`🌱 Environment: \x1b[33m${process.env.NODE_ENV}\x1b[0m`);
 });
