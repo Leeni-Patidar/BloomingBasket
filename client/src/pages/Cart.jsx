@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 const Cart = () => {
-  const { cartItems, updateQuantity, removeFromCart, clearCart, getCartTotal, getCartItemsCount } =
+  const { cartItems, updateQuantity, removeFromCart, clearCart, getCartTotal, getCartItemsCount, loading } =
     useContext(CartContext)
   const { user } = useContext(AuthContext)
   const navigate = useNavigate()
@@ -43,6 +43,14 @@ const Cart = () => {
     }
   }
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+      </div>
+    )
+  }
+
   if (!cartItems || cartItems.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -51,13 +59,22 @@ const Cart = () => {
             <i className="fas fa-shopping-cart text-6xl text-gray-300 mb-4"></i>
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Your cart is empty</h2>
             <p className="text-gray-600 mb-6">Looks like you haven't added anything to your cart yet.</p>
-            <Link
-              to="/shop"
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 hover:shadow-lg transform hover:scale-105"
-            >
-              <i className="fas fa-shopping-bag mr-2"></i>
-              Start Shopping
-            </Link>
+            <div className="space-x-4">
+              <Link
+                to="/shop"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 hover:shadow-lg transform hover:scale-105"
+              >
+                <i className="fas fa-shopping-bag mr-2"></i>
+                Shop Products
+              </Link>
+              <Link
+                to="/customize"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-full font-semibold hover:from-purple-600 hover:to-pink-700 transition-all duration-200 hover:shadow-lg transform hover:scale-105"
+              >
+                <i className="fas fa-palette mr-2"></i>
+                Customize Bouquet
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -95,17 +112,23 @@ const Cart = () => {
               {/* Cart Items */}
               <div className="divide-y divide-gray-200">
                 {cartItems.map((item) => (
-                  <div key={item.productId?._id} className="p-6">
+                  <div key={`cart-item-${item.productId?._id || item._id}`} className="p-6">
                     {/* Mobile Layout */}
                     <div className="md:hidden">
                       <div className="flex items-start space-x-4">
                         <img
                           src={item.productId?.image || "/placeholder.svg?height=80&width=80"}
-                          alt={item.productId?.name}
+                          alt={item.productId?.name || "Product"}
                           className="w-20 h-20 object-cover rounded-lg"
                         />
                         <div className="flex-1">
                           <h3 className="font-semibold text-gray-800 mb-1">{item.productId?.name}</h3>
+                          {item.productId?.isCustom && item.productId?.customization && (
+                            <div className="text-xs text-gray-500 mb-1">
+                              <p>Custom: {item.productId.customization.bouquetType}</p>
+                              <p>Size: {item.productId.customization.size}</p>
+                            </div>
+                          )}
                           <p className="text-pink-600 font-bold text-lg mb-2">₹{item.productId?.price}</p>
 
                           <div className="flex items-center justify-between">
@@ -113,7 +136,7 @@ const Cart = () => {
                               <button
                                 onClick={() => handleQuantityChange(item.productId._id, item.quantity - 1)}
                                 className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
-                                disabled={item.quantity <= 1}
+                                disabled={item.quantity <= 1 || loading}
                               >
                                 <i className="fas fa-minus text-xs"></i>
                               </button>
@@ -121,6 +144,7 @@ const Cart = () => {
                               <button
                                 onClick={() => handleQuantityChange(item.productId._id, item.quantity + 1)}
                                 className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
+                                disabled={loading}
                               >
                                 <i className="fas fa-plus text-xs"></i>
                               </button>
@@ -131,6 +155,7 @@ const Cart = () => {
                               <button
                                 onClick={() => handleRemoveItem(item)}
                                 className="text-red-500 hover:text-red-700 transition mt-1"
+                                disabled={loading}
                               >
                                 <i className="fas fa-trash"></i>
                               </button>
@@ -146,14 +171,21 @@ const Cart = () => {
                         <div className="col-span-6 flex items-center space-x-4">
                           <img
                             src={item.productId?.image || "/placeholder.svg?height=64&width=64"}
-                            alt={item.productId?.name}
+                            alt={item.productId?.name || "Product"}
                             className="w-16 h-16 object-cover rounded-lg"
                           />
                           <div>
                             <h3 className="font-semibold text-gray-800">{item.productId?.name}</h3>
+                            {item.productId?.isCustom && item.productId?.customization && (
+                              <div className="text-xs text-gray-500">
+                                <p>Custom: {item.productId.customization.bouquetType}</p>
+                                <p>Size: {item.productId.customization.size}</p>
+                              </div>
+                            )}
                             <button
                               onClick={() => handleRemoveItem(item)}
                               className="text-red-500 hover:text-red-700 transition text-sm mt-1"
+                              disabled={loading}
                             >
                               <i className="fas fa-trash mr-1"></i>
                               Remove
@@ -170,7 +202,7 @@ const Cart = () => {
                             <button
                               onClick={() => handleQuantityChange(item.productId._id, item.quantity - 1)}
                               className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
-                              disabled={item.quantity <= 1}
+                              disabled={item.quantity <= 1 || loading}
                             >
                               <i className="fas fa-minus text-xs"></i>
                             </button>
@@ -178,6 +210,7 @@ const Cart = () => {
                             <button
                               onClick={() => handleQuantityChange(item.productId._id, item.quantity + 1)}
                               className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
+                              disabled={loading}
                             >
                               <i className="fas fa-plus text-xs"></i>
                             </button>
@@ -199,6 +232,7 @@ const Cart = () => {
               <button
                 onClick={handleClearCart}
                 className="px-6 py-2 border border-red-500 text-red-500 rounded-full hover:bg-red-50 transition"
+                disabled={loading}
               >
                 <i className="fas fa-trash mr-2"></i>
                 Clear Cart

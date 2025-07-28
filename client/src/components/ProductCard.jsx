@@ -1,108 +1,207 @@
 "use client"
-
-import { useContext } from "react"
-import { AuthContext } from "../context/AuthContext"
-import { WishlistContext } from "../context/WishlistContext"
+import { useContext, useState } from "react"
+import { Link } from "react-router-dom"
 import { CartContext } from "../context/CartContext"
-import { Link, useNavigate } from "react-router-dom"
+import { WishlistContext } from "../context/WishlistContext"
+import { AuthContext } from "../context/AuthContext"
 import { toast } from "react-toastify"
 
 const ProductCard = ({ product }) => {
-  const { user } = useContext(AuthContext)
+  const { addToCart, isInCart, loading: cartLoading } = useContext(CartContext)
   const { addToWishlist, removeFromWishlist, isInWishlist } = useContext(WishlistContext)
-  const { addToCart, cartItems } = useContext(CartContext)
-  const navigate = useNavigate()
+  const { user } = useContext(AuthContext)
+  const [imageLoading, setImageLoading] = useState(true)
+  const [imageError, setImageError] = useState(false)
 
-  const inCart = cartItems?.some((item) => item.productId._id === product._id)
-  const inWishlist = isInWishlist(product._id)
+  // Check if product is in cart
+  const productInCart = isInCart(product._id)
 
-  // Add to Cart Handler
-  const handleAddToCart = async () => {
+  // Check if product is in wishlist
+  const productInWishlist = isInWishlist(product._id)
+
+  const handleAddToCart = async (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+
     if (!user) {
-      toast.warn("Please login to add items to cart")
-      return navigate("/login")
+      toast.error("Please login to add items to cart")
+      return
     }
-    if (user.role === "admin") return
 
-    if (!inCart) {
+    if (product.stock <= 0) {
+      toast.error("Product is out of stock")
+      return
+    }
+
+    try {
       await addToCart(product._id, 1)
+    } catch (error) {
+      console.error("Add to cart error:", error)
     }
   }
 
-  // Toggle Wishlist Handler
-  const handleToggleWishlist = async () => {
-    if (!user) {
-      toast.warn("Please login to modify wishlist")
-      return navigate("/login")
-    }
-    if (user.role === "admin") return
+  const handleWishlistToggle = async (e) => {
+    e.preventDefault()
+    e.stopPropagation()
 
-    if (inWishlist) {
-      await removeFromWishlist(product._id)
-    } else {
-      await addToWishlist(product._id)
+    if (!user) {
+      toast.error("Please login to manage wishlist")
+      return
     }
+
+    try {
+      if (productInWishlist) {
+        await removeFromWishlist(product._id)
+      } else {
+        await addToWishlist(product._id)
+      }
+    } catch (error) {
+      console.error("Wishlist error:", error)
+    }
+  }
+
+  const handleImageLoad = () => {
+    setImageLoading(false)
+  }
+
+  const handleImageError = () => {
+    setImageLoading(false)
+    setImageError(true)
   }
 
   return (
-    <div className="relative bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-200 overflow-hidden">
-      {/* Wishlist Heart Icon */}
-      {user?.role !== "admin" && (
-        <button
-          onClick={handleToggleWishlist}
-          className={`absolute top-3 right-3 text-2xl z-10 transition-all duration-200 ${
-            inWishlist ? "text-red-500 hover:text-red-600" : "text-gray-400 hover:text-red-400"
-          }`}
-          title={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
-        >
-          <i className={`fas fa-heart ${inWishlist ? "animate-pulse" : ""}`} />
-        </button>
-      )}
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+      <Link to={`/product/${product._id}`} className="block">
+        <div className="relative aspect-square overflow-hidden bg-gray-100">
+          {imageLoading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500"></div>
+            </div>
+          )}
 
-      {/* Product Image */}
-      <Link to={`/product/${product._id}`}>
-        <img
-          src={product.image || "/placeholder.svg?height=300&width=300"}
-          alt={product.name}
-          className="w-full h-64 object-cover rounded-t-2xl hover:scale-105 transition-transform duration-300"
-        />
-      </Link>
+          <img
+            src={
+              imageError
+                ? "/placeholder.svg?height=300&width=300"
+                : product.images?.[0] || "/placeholder.svg?height=300&width=300"
+            }
+            alt={product.name}
+            className={`w-full h-full object-cover transition-opacity duration-300 ${
+              imageLoading ? "opacity-0" : "opacity-100"
+            }`}
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+          />
 
-      {/* Product Info */}
-      <div className="p-4">
-        <Link to={`/product/${product._id}`}>
-          <h3 className="text-lg font-semibold text-gray-800 truncate hover:text-pink-600 transition">
+          {/* Wishlist Button */}
+          <button
+            onClick={handleWishlistToggle}
+            className={`absolute top-2 right-2 p-2 rounded-full transition-colors duration-200 ${
+              productInWishlist
+                ? "bg-pink-500 text-white hover:bg-pink-600"
+                : "bg-white text-gray-600 hover:bg-gray-100"
+            }`}
+            aria-label={productInWishlist ? "Remove from wishlist" : "Add to wishlist"}
+          >
+            <svg
+              className="w-4 h-4"
+              fill={productInWishlist ? "currentColor" : "none"}
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              />
+            </svg>
+          </button>
+
+          {/* Stock Badge */}
+          {product.stock <= 0 && (
+            <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold">
+              Out of Stock
+            </div>
+          )}
+
+          {/* Featured Badge */}
+          {product.featured && (
+            <div className="absolute top-2 left-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold">
+              Featured
+            </div>
+          )}
+        </div>
+
+        <div className="p-4">
+          <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2 hover:text-pink-600 transition-colors">
             {product.name}
           </h3>
-        </Link>
-        <p className="text-pink-600 font-bold mt-2 text-xl">₹{product.price}</p>
 
-        {product.description && <p className="text-gray-600 text-sm mt-1 line-clamp-2">{product.description}</p>}
+          <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
 
-        {/* Add to Cart Button */}
-        {user?.role !== "admin" && (
-          <button
-            onClick={handleAddToCart}
-            disabled={inCart}
-            className={`mt-4 w-full py-2 px-4 rounded-full font-semibold transition-all duration-200 ${
-              inCart
-                ? "bg-green-100 text-green-700 cursor-not-allowed border border-green-300"
-                : "bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:from-pink-600 hover:to-purple-700 hover:shadow-lg transform hover:scale-105"
-            }`}
-          >
-            {inCart ? (
-              <>
-                <i className="fas fa-check mr-2"></i>
-                Added to Cart
-              </>
-            ) : (
-              <>
-                <i className="fas fa-shopping-cart mr-2"></i>
-                Add to Cart
-              </>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-lg font-bold text-pink-600">₹{product.price}</span>
+
+            {product.rating?.count > 0 && (
+              <div className="flex items-center text-sm text-gray-500">
+                <svg className="w-4 h-4 text-yellow-400 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span>{product.rating.average.toFixed(1)}</span>
+                <span className="ml-1">({product.rating.count})</span>
+              </div>
             )}
-          </button>
-        )}
+          </div>
+
+          {/* Stock Info */}
+          <div className="text-xs text-gray-500 mb-3">
+            {product.stock > 0 ? (
+              <span className="text-green-600">In Stock ({product.stock} available)</span>
+            ) : (
+              <span className="text-red-600">Out of Stock</span>
+            )}
+          </div>
+        </div>
+      </Link>
+
+      {/* Add to Cart Button */}
+      <div className="px-4 pb-4">
+        <button
+          onClick={handleAddToCart}
+          disabled={cartLoading || product.stock <= 0 || productInCart}
+          className={`w-full py-2 px-4 rounded-lg font-semibold transition-all duration-200 ${
+            productInCart
+              ? "bg-green-100 text-green-700 cursor-default"
+              : product.stock <= 0
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : cartLoading
+                  ? "bg-pink-300 text-pink-700 cursor-not-allowed"
+                  : "bg-pink-500 text-white hover:bg-pink-600 active:transform active:scale-95"
+          }`}
+        >
+          {cartLoading ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+              Adding...
+            </div>
+          ) : productInCart ? (
+            <div className="flex items-center justify-center">
+              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Added to Cart
+            </div>
+          ) : product.stock <= 0 ? (
+            "Out of Stock"
+          ) : (
+            "Add to Cart"
+          )}
+        </button>
       </div>
     </div>
   )

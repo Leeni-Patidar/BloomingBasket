@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const productSchema = new mongoose.Schema(
   {
@@ -29,7 +29,8 @@ const productSchema = new mongoose.Schema(
         "crochet",
         "origami",
         "fruit",
-        "skincare"
+        "skincare",
+        "custom", // Added custom category
       ],
     },
     images: [
@@ -95,23 +96,40 @@ const productSchema = new mongoose.Schema(
     },
     weight: Number,
     careInstructions: String,
+    // New fields for custom products
+    isCustom: {
+      type: Boolean,
+      default: false,
+    },
+    customization: {
+      bouquetType: String,
+      size: String,
+      message: String,
+      deliveryDate: Date,
+      specialInstructions: String,
+      referenceImage: String,
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   {
     timestamps: true,
-  }
-);
+  },
+)
 
-productSchema.index({ name: "text", description: "text", tags: "text" });
+productSchema.index({ name: "text", description: "text", tags: "text" })
 
 productSchema.methods.calculateAverageRating = function () {
   if (this.reviews.length === 0) {
-    this.rating.average = 0;
-    this.rating.count = 0;
+    this.rating.average = 0
+    this.rating.count = 0
   } else {
-    const sum = this.reviews.reduce((acc, review) => acc + review.rating, 0);
-    this.rating.average = sum / this.reviews.length;
-    this.rating.count = this.reviews.length;
+    const sum = this.reviews.reduce((acc, review) => acc + review.rating, 0)
+    this.rating.average = sum / this.reviews.length
+    this.rating.count = this.reviews.length
   }
-};
+}
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.model("Product", productSchema)

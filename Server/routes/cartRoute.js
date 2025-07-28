@@ -1,4 +1,3 @@
-// server/routes/cartRoute.js
 const express = require("express")
 const router = express.Router()
 const Cart = require("../models/Cart")
@@ -24,6 +23,12 @@ router.post("/", auth, async (req, res) => {
   }
 
   try {
+    // Verify product exists
+    const product = await Product.findById(productId)
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" })
+    }
+
     let cart = await Cart.findOne({ userId: req.user.id })
     if (!cart) {
       cart = new Cart({ userId: req.user.id, items: [] })
@@ -92,7 +97,7 @@ router.delete("/:productId", auth, async (req, res) => {
   }
 })
 
-// DELETE /api/user/cart
+// DELETE /api/user/cart (Clear entire cart)
 router.delete("/", auth, async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId: req.user.id })
@@ -100,7 +105,7 @@ router.delete("/", auth, async (req, res) => {
 
     cart.items = []
     await cart.save()
-    res.json({ message: "Cart cleared" })
+    res.json({ message: "Cart cleared", items: [] })
   } catch (err) {
     console.error("Cart CLEAR error:", err)
     res.status(500).json({ message: "Failed to clear cart" })

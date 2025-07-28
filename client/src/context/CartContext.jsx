@@ -1,5 +1,4 @@
 "use client"
-
 import { createContext, useContext, useEffect, useState } from "react"
 import axios from "axios"
 import { AuthContext } from "./AuthContext"
@@ -8,29 +7,26 @@ import { toast } from "react-toastify"
 export const CartContext = createContext()
 
 export const CartProvider = ({ children }) => {
-  const { user } = useContext(AuthContext)
+  const { user, token } = useContext(AuthContext)
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(false)
 
-  // Fetch cart items on load or login
+  // Fetch cart items when user logs in
   useEffect(() => {
-    if (user) {
+    if (user && token) {
       fetchCart()
     } else {
       setCartItems([])
     }
-  }, [user])
+  }, [user, token])
 
   const fetchCart = async () => {
+    if (!token) return
     try {
       setLoading(true)
-      const token = localStorage.getItem("token")
-      if (!token) return
-
       const res = await axios.get("/api/user", {
         headers: { Authorization: `Bearer ${token}` },
       })
-      // Updated to handle the new backend response structure
       setCartItems(res.data.items || [])
     } catch (err) {
       console.error("Cart fetch error:", err)
@@ -42,16 +38,14 @@ export const CartProvider = ({ children }) => {
     }
   }
 
-  // Add to Cart
+  // Add product to cart (works for both regular and custom products)
   const addToCart = async (productId, quantity = 1) => {
+    if (!token) {
+      toast.warn("Please login to add items to cart")
+      return
+    }
     try {
       setLoading(true)
-      const token = localStorage.getItem("token")
-      if (!token) {
-        toast.warn("Please login to add items to cart")
-        return
-      }
-
       const res = await axios.post(
         "/api/user/cart",
         { productId, quantity },
@@ -64,6 +58,7 @@ export const CartProvider = ({ children }) => {
     } catch (err) {
       console.error("Add to cart error:", err)
       toast.error(err.response?.data?.message || "Failed to add item.")
+      throw err
     } finally {
       setLoading(false)
     }
@@ -71,11 +66,9 @@ export const CartProvider = ({ children }) => {
 
   // Remove from Cart
   const removeFromCart = async (productId) => {
+    if (!token) return
     try {
       setLoading(true)
-      const token = localStorage.getItem("token")
-      if (!token) return
-
       const res = await axios.delete(`/api/user/cart/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -91,12 +84,9 @@ export const CartProvider = ({ children }) => {
   // Update Quantity
   const updateQuantity = async (productId, quantity) => {
     if (quantity < 1) return
-
+    if (!token) return
     try {
       setLoading(true)
-      const token = localStorage.getItem("token")
-      if (!token) return
-
       const res = await axios.put(
         `/api/user/cart/${productId}`,
         { quantity },
@@ -115,11 +105,9 @@ export const CartProvider = ({ children }) => {
 
   // Clear All Items
   const clearCart = async () => {
+    if (!token) return
     try {
       setLoading(true)
-      const token = localStorage.getItem("token")
-      if (!token) return
-
       await axios.delete("/api/user/cart", {
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -143,9 +131,27 @@ export const CartProvider = ({ children }) => {
     return cartItems.reduce((total, item) => total + item.quantity * (item.productId?.price || 0), 0)
   }
 
-  // Check if product is in cart
+  // Check if product is in cart (with debugging)
   const isInCart = (productId) => {
-    return cartItems.some((item) => item.productId._id === productId)
+    if (!productId) {
+      console.log("isInCart: No productId provided")
+      return false
+    }
+
+    if (!cartItems || cartItems.length === 0) {
+      console.log("isInCart: No cart items")
+      return false
+    }
+
+    const found = cartItems.some((item) => {
+      const itemProductId = item.productId?._id || item.productId
+      const match = itemProductId === productId
+      console.log(`Checking: ${itemProductId} === ${productId} = ${match}`)
+      return match
+    })
+
+    console.log(`Product ${productId} in cart: ${found}`)
+    return found
   }
 
   return (
