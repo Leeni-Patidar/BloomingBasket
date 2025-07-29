@@ -104,6 +104,7 @@ const Navbar = () => {
               </button>
               <div className="absolute right-0 top-10 w-48 bg-white border border-gray-200 shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-40">
                 <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100">Profile</Link>
+                <Link to="/my-orders" className="block px-4 py-2 hover:bg-gray-100">My Order</Link>
                 <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-gray-100 bg-transparent">Logout</button>
               </div>
             </div>

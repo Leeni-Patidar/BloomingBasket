@@ -1,62 +1,106 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { useEffect, useState, useContext } from "react"
+import axios from "axios"
+import { AuthContext } from "../../context/AuthContext"
+import { toast } from "react-toastify"
 
 const OrderManagement = () => {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { token } = useContext(AuthContext)
+  const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const statusColors = {
+    pending: "text-yellow-600",
+    confirmed: "text-blue-600",
+    processing: "text-indigo-600",
+    shipped: "text-purple-600",
+    delivered: "text-green-600",
+    cancelled: "text-red-600",
+    returned: "text-orange-600",
+  }
+
+  useEffect(() => {
+    if (token) fetchOrders()
+  }, [token])
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("/api/orders");
-      setOrders(res.data.orders);
+      const res = await axios.get("/api/orders/admin/all", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      setOrders(res.data.orders || [])
     } catch (err) {
-      console.error("Error fetching orders:", err);
-      toast.error("Failed to fetch orders");
+      console.error("Admin order fetch error:", err)
+      toast.error("Failed to fetch orders")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
+  const handleStatusUpdate = async (orderId, newStatus) => {
+    try {
+      await axios.put(
+        `/api/orders/${orderId}/status`,
+        { status: newStatus },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      toast.success(`Order status updated to ${newStatus}`)
+      fetchOrders()
+    } catch (err) {
+      console.error("Status update error:", err)
+      toast.error("Failed to update status")
+    }
+  }
 
-  if (loading) return <p className="text-center mt-6">Loading orders...</p>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <div className="animate-spin h-10 w-10 rounded-full border-b-2 border-pink-500" />
+      </div>
+    )
+  }
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Order Management</h2>
-
+    <div className="min-h-screen bg-gray-50 p-6">
+      <h1 className="text-3xl font-bold mb-6 text-pink-600">Order Management</h1>
       {orders.length === 0 ? (
-        <p>No orders found.</p>
+        <p className="text-gray-600">No orders found.</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 text-sm">
+          <table className="min-w-full bg-white border">
             <thead>
-              <tr className="bg-gray-100 text-left">
-                <th className="py-2 px-4 border">Order #</th>
-                <th className="py-2 px-4 border">Customer</th>
-                <th className="py-2 px-4 border">Status</th>
-                <th className="py-2 px-4 border">Date</th>
-                <th className="py-2 px-4 border">Amount</th>
+              <tr className="bg-pink-100 text-pink-800">
+                <th className="p-3 text-left">Order #</th>
+                <th className="p-3 text-left">Customer</th>
+                <th className="p-3 text-left">Total</th>
+                <th className="p-3 text-left">Status</th>
+                <th className="p-3 text-left">Date</th>
+                <th className="p-3">Actions</th>
               </tr>
             </thead>
             <tbody>
               {orders.map((order) => (
-                <tr key={order._id} className="hover:bg-gray-50">
-                  <td className="py-2 px-4 border">{order.orderNumber || order._id}</td>
-                  <td className="py-2 px-4 border">
-                    {order.user?.email || "Guest"}
+                <tr key={order._id} className="border-b">
+                  <td className="p-3 font-medium">{order.orderNumber}</td>
+                  <td className="p-3">{order.shippingAddress.fullName}</td>
+                  <td className="p-3">₹{order.total.toFixed(2)}</td>
+                  <td className={`p-3 font-semibold ${statusColors[order.status]}`}>
+                    {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                   </td>
-                  <td className="py-2 px-4 border capitalize text-blue-600">
-                    {order.orderStatus}
-                  </td>
-                  <td className="py-2 px-4 border">
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="py-2 px-4 border font-semibold">
-                    ₹{order.pricing?.total?.toFixed(2) || "0.00"}
+                  <td className="p-3">{new Date(order.createdAt).toLocaleDateString()}</td>
+                  <td className="p-3">
+                    <select
+                      value={order.status}
+                      onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
+                      className="border px-2 py-1 rounded"
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="processing">Processing</option>
+                      <option value="shipped">Shipped</option>
+                      <option value="delivered">Delivered</option>
+                      <option value="cancelled">Cancelled</option>
+                      <option value="returned">Returned</option>
+                    </select>
                   </td>
                 </tr>
               ))}
@@ -65,7 +109,7 @@ const OrderManagement = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default OrderManagement;
+export default OrderManagement

@@ -101,7 +101,11 @@ router.delete("/:productId", auth, async (req, res) => {
 router.delete("/", auth, async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId: req.user.id })
-    if (!cart) return res.status(404).json({ message: "Cart not found" })
+
+    if (!cart) {
+      console.warn(`Cart not found for user: ${req.user.id}`)
+      return res.status(404).json({ message: "Cart not found" })
+    }
 
     cart.items = []
     await cart.save()
@@ -111,5 +115,6 @@ router.delete("/", auth, async (req, res) => {
     res.status(500).json({ message: "Failed to clear cart" })
   }
 })
+
 
 module.exports = router

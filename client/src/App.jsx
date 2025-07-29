@@ -24,6 +24,8 @@ import Register from "./pages/Register";
 import Shop from "./pages/Shop";
 import Terms from "./pages/Terms";
 import Wishlist from "./pages/Wishlist";
+import Checkout from "./pages/Checkout";
+import OrderConfirmation from "./pages/OrderConfirmation";
 import ForgotPassword from "./pages/ForgotPassword";
 
 // Admin Pages
@@ -54,6 +56,9 @@ function App() {
             <Route path="/wishlist" element={<Layout><Wishlist /></Layout>} />
             <Route path="/cart" element={<Layout><Cart /></Layout>} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/checkout" element={<Checkout />} />
+        <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
+        {/* <Route path="/my-orders" element={<MyOrders />} /> */}
 
             {/* ✅ Auth Routes */}
             <Route path="/login" element={<Login />} />
@@ -61,7 +66,7 @@ function App() {
 
             {/* ✅ User Routes */}
             <Route path="/my-orders" element={<Layout><MyOrders /></Layout>} />
-            <Route path="/order/:id" element={<Layout><OrderDetail /></Layout>} />
+            <Route path="/order/:id" element={<Layout><OrderDetail /></Layout>} /> 
             <Route path="/profile" element={<Layout><Profile /></Layout>} />
 
             {/* ✅ Admin Routes (open) */}

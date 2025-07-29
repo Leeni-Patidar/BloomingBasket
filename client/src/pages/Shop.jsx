@@ -159,11 +159,11 @@ const Shop = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-10">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold mb-2 text-gray-800">Shop Flowers</h1>
-          <p className="text-lg text-gray-600">Browse our beautiful selection of fresh floral arrangements.</p>
+          <h1 className="text-4xl font-bold mb-2 ">Shop Flowers</h1>
+          <p className="text-lg ">Browse our beautiful selection of fresh floral arrangements.</p>
         </div>
 
         {/* Filters */}

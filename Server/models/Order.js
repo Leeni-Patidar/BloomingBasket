@@ -1,95 +1,73 @@
 const mongoose = require("mongoose");
 
+// Helper function to generate a unique order number (e.g. BB202507290001)
+function generateOrderNumber() {
+  const now = new Date();
+  const yyyyMMdd = now.toISOString().split("T")[0].replace(/-/g, ""); // YYYYMMDD
+  const random = Math.floor(1000 + Math.random() * 9000); // 4-digit random
+  return `BB${yyyyMMdd}${random}`;
+}
+
+// Order Item Schema
+const orderItemSchema = new mongoose.Schema(
+  {
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+    },
+    quantity: { type: Number, required: true },
+    price: { type: Number, required: true },
+  },
+  { _id: false }
+);
+
+// Shipping Address Schema
+const addressSchema = new mongoose.Schema(
+  {
+    fullName: { type: String, required: true },
+    addressLine1: { type: String, required: true },
+    addressLine2: { type: String },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    pincode: { type: String, required: true },
+    phone: { type: String, required: true },
+  },
+  { _id: false }
+);
+
+// Main Order Schema
 const orderSchema = new mongoose.Schema(
   {
+    orderNumber: {
+      type: String,
+      default: generateOrderNumber,
+      unique: true,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    orderNumber: {
+    items: [orderItemSchema],
+    shippingAddress: addressSchema,
+    paymentMethod: {
       type: String,
-      unique: true,
+      enum: ["cod", "online"],
       required: true,
     },
-    items: [
-      {
-        product: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
-          required: true,
-        },
-        quantity: { type: Number, required: true, min: 1 },
-        price: { type: Number, required: true },
-        customization: {
-          message: String,
-          specialInstructions: String,
-          deliveryDate: Date,
-          customImage: String,
-        },
-      },
-    ],
-    shippingAddress: {
-      name: { type: String, required: true },
-      street: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      zipCode: { type: String, required: true },
-      country: { type: String, required: true },
-      phone: { type: String },
-    },
-    paymentInfo: {
-      method: {
-        type: String,
-        enum: ["credit_card", "debit_card", "paypal", "cash_on_delivery"],
-        required: true,
-      },
-      status: {
-        type: String,
-        enum: ["pending", "completed", "failed", "refunded"],
-        default: "pending",
-      },
-      transactionId: String,
-      paidAt: Date,
-    },
-    orderStatus: {
+    subtotal: { type: Number, required: true },
+    deliveryFee: { type: Number, default: 0 },
+    tax: { type: Number, default: 0 },
+    total: { type: Number, required: true },
+    status: {
       type: String,
-      enum: ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"],
+      enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
       default: "pending",
     },
-    pricing: {
-      subtotal: { type: Number, required: true },
-      tax: { type: Number, default: 0 },
-      shipping: { type: Number, default: 0 },
-      discount: { type: Number, default: 0 },
-      total: { type: Number, required: true },
-    },
-    deliveryDate: {
-      type: Date,
-      required: true,
-    },
-    specialInstructions: String,
-    trackingNumber: String,
-    statusHistory: [
-      {
-        status: String,
-        timestamp: { type: Date, default: Date.now },
-        note: String,
-      },
-    ],
+    orderNotes: { type: String },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
-
-// ✅ Auto-generate unique order number
-orderSchema.pre("save", async function (next) {
-  if (!this.orderNumber) {
-    const count = await mongoose.model("Order").countDocuments();
-    this.orderNumber = `BB${Date.now()}${count + 1}`;
-  }
-  next();
-});
 
 module.exports = mongoose.model("Order", orderSchema);

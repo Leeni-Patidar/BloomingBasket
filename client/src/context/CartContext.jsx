@@ -104,22 +104,25 @@ export const CartProvider = ({ children }) => {
   }
 
   // Clear All Items
-  const clearCart = async () => {
-    if (!token) return
-    try {
-      setLoading(true)
-      await axios.delete("/api/user/cart", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      setCartItems([])
-      toast.success("Cart cleared successfully")
-    } catch (err) {
-      console.error("Clear cart error:", err)
-      toast.error("Failed to clear cart.")
-    } finally {
-      setLoading(false)
+ const clearCart = async () => {
+  try {
+    if (!token) {
+      toast.error("You must be logged in to clear your cart")
+      return
     }
+
+    const res = await axios.delete("/api/user/cart", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+
+    console.log("Cart cleared response:", res.data)
+    setCartItems([]) // Clear local state
+    toast.success("Cart cleared")
+  } catch (err) {
+    console.error("Clear cart error:", err)
+    toast.error(err.response?.data?.message || "Failed to clear cart")
   }
+}
 
   // Total Quantity Badge
   const getCartItemsCount = () => {

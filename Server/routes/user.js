@@ -4,7 +4,14 @@ const User = require("../models/User")
 const Cart = require("../models/Cart")
 const Wishlist = require("../models/Wishlist")
 const { auth: verifyToken } = require("../middleware/auth")
-const { updateUserProfile, changePassword } = require("../controllers/userAdminController.js")
+const {
+  updateUserProfile,
+  changePassword,
+  isAuth, // ✅ import user profile handler
+} = require("../controllers/userAdminController.js")
+
+// ✅ Get full profile (used by /api/user/profile)
+router.get("/profile", verifyToken, isAuth)
 
 // ✅ Get user data with cart and wishlist (for frontend contexts)
 router.get("/", verifyToken, async (req, res) => {
@@ -16,18 +23,14 @@ router.get("/", verifyToken, async (req, res) => {
     }
 
     // Default behavior: Return current user data with cart and wishlist
-    // Fetch cart items
     const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId")
-
-    // Fetch wishlist items
     const wishlistItems = await Wishlist.find({ userId: req.user.id }).populate("productId")
     const wishlistProducts = wishlistItems.map((item) => item.productId).filter(Boolean)
 
-    // Return user data with cart and wishlist
     res.json({
       user: req.user,
-      items: cart?.items || [], // Cart items for CartContext
-      wishlist: wishlistProducts, // Wishlist items for WishlistContext
+      items: cart?.items || [],
+      wishlist: wishlistProducts,
     })
   } catch (err) {
     console.error("User GET error:", err)
@@ -56,7 +59,7 @@ router.get("/:id", verifyToken, async (req, res) => {
 router.put("/:id", verifyToken, async (req, res) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true }).select(
-      "-password",
+      "-password"
     )
     res.status(200).json(updatedUser)
   } catch (err) {

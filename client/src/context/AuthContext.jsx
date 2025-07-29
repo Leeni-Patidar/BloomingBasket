@@ -6,7 +6,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [loading, setLoading] = useState(true);
 
   const API = "http://localhost:5001";
@@ -24,9 +24,9 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const { data } = await axios.get("/api/auth/is-auth");
-      if (data?.user) {
-        setUser(data.user);
+      const res = await axios.get("/api/auth/is-auth");
+      if (res.data?.user) {
+        setUser(res.data.user);
       } else {
         logout();
       }
@@ -40,10 +40,10 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const res = await axios.post("/api/auth/login", { email, password });
-      const { token, user, message } = res.data;
-      localStorage.setItem("token", token);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      setToken(token);
+      const { token: receivedToken, user, message } = res.data;
+      localStorage.setItem("token", receivedToken);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${receivedToken}`;
+      setToken(receivedToken);
       setUser(user);
       toast.success(message || "Login successful!");
       return { success: true };
@@ -62,10 +62,10 @@ export const AuthProvider = ({ children }) => {
         phone,
         password,
       });
-      const { token, user, message } = res.data;
-      localStorage.setItem("token", token);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      setToken(token);
+      const { token: receivedToken, user, message } = res.data;
+      localStorage.setItem("token", receivedToken);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${receivedToken}`;
+      setToken(receivedToken);
       setUser(user);
       toast.success(message || "Registration successful!");
       return { success: true };
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
-    setToken(null);
+    setToken("");
     setUser(null);
     delete axios.defaults.headers.common["Authorization"];
     toast.info("Logged out successfully.");
@@ -121,6 +121,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         updateProfile,
         changePassword,
+        isAuthenticated: !!token,
       }}
     >
       {children}
