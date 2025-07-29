@@ -170,7 +170,7 @@ const Shop = () => {
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <div>
-              <label className="block font-semibold mb-2 text-gray-700">Bouquet Type</label>
+              <label className="block font-semibold mb-2 ">Bouquet Type</label>
               <select
                 value={filters.category}
                 onChange={(e) => handleFilterChange("category", e.target.value)}
@@ -186,7 +186,7 @@ const Shop = () => {
             </div>
 
             <div>
-              <label className="block font-semibold mb-2 text-gray-700">Sort By</label>
+              <label className="block font-semibold mb-2 ">Sort By</label>
               <select
                 value={filters.sort}
                 onChange={(e) => handleFilterChange("sort", e.target.value)}
@@ -199,7 +199,7 @@ const Shop = () => {
             </div>
 
             <div>
-              <label className="block font-semibold mb-2 text-gray-700">Max Price (₹)</label>
+              <label className="block font-semibold mb-2 ">Max Price (₹)</label>
               <input
                 type="number"
                 value={filters.price}
@@ -220,7 +220,7 @@ const Shop = () => {
                     page: 1,
                   })
                 }
-                className="w-full p-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-semibold"
+                className="w-full p-3 bg-gray-200  rounded-lg hover:bg-gray-300 transition-colors font-semibold"
               >
                 Clear Filters
               </button>
@@ -241,8 +241,8 @@ const Shop = () => {
             <div className="mb-4">
               <i className="fas fa-search text-6xl text-gray-300"></i>
             </div>
-            <h3 className="text-2xl font-semibold text-gray-600 mb-2">No products found</h3>
-            <p className="text-gray-500 mb-6">Try adjusting your filters or search criteria</p>
+            <h3 className="text-2xl font-semibold  mb-2">No products found</h3>
+            <p className=" mb-6">Try adjusting your filters or search criteria</p>
             <button
               onClick={() =>
                 setFilters({
@@ -281,8 +281,8 @@ const Shop = () => {
               disabled={filters.page === 1}
               className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                 filters.page === 1
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-300"
+                  ? "bg-gray-200  cursor-not-allowed"
+                  : "bg-white  hover:bg-gray-100 border border-gray-300"
               }`}
             >
               <i className="fas fa-chevron-left mr-2"></i>
@@ -309,7 +309,7 @@ const Shop = () => {
                     className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                       filters.page === pageNum
                         ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white"
-                        : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-300"
+                        : "bg-white  hover:bg-gray-100 border border-gray-300"
                     }`}
                   >
                     {pageNum}
@@ -323,8 +323,8 @@ const Shop = () => {
               disabled={filters.page === totalPages}
               className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                 filters.page === totalPages
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-300"
+                  ? "bg-gray-200  cursor-not-allowed"
+                  : "bg-white  hover:bg-gray-100 border border-gray-300"
               }`}
             >
               Next
@@ -335,7 +335,7 @@ const Shop = () => {
 
         {/* Results Info */}
         {!loading && products.length > 0 && (
-          <div className="text-center mt-8 text-gray-600">
+          <div className="text-center mt-8 ">
             <p>
               Showing page {filters.page} of {totalPages} ({products.length} products)
             </p>

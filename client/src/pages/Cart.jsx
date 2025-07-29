@@ -57,8 +57,8 @@ const Cart = () => {
         <div className="text-center">
           <div className="mb-8">
             <i className="fas fa-shopping-cart text-6xl text-gray-300 mb-4"></i>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Your cart is empty</h2>
-            <p className="text-gray-600 mb-6">Looks like you haven't added anything to your cart yet.</p>
+            <h2 className="text-3xl font-bold  mb-2">Your cart is empty</h2>
+            <p className=" mb-6">Looks like you haven't added anything to your cart yet.</p>
             <div className="space-x-4">
               <Link
                 to="/shop"
@@ -89,8 +89,8 @@ const Cart = () => {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">Shopping Cart</h1>
-          <p className="text-lg text-gray-600">
+          <h1 className="text-4xl font-bold  mb-2">Shopping Cart</h1>
+          <p className="text-lg ">
             You have {totalItems} item{totalItems !== 1 ? "s" : ""} in your cart
           </p>
         </div>
@@ -101,7 +101,7 @@ const Cart = () => {
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               {/* Desktop Table Header */}
               <div className="hidden md:block bg-gray-50 px-6 py-4">
-                <div className="grid grid-cols-12 gap-4 font-semibold text-gray-700">
+                <div className="grid grid-cols-12 gap-4 font-semibold ">
                   <div className="col-span-6">Product</div>
                   <div className="col-span-2 text-center">Price</div>
                   <div className="col-span-2 text-center">Quantity</div>
@@ -122,9 +122,9 @@ const Cart = () => {
                           className="w-20 h-20 object-cover rounded-lg"
                         />
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-800 mb-1">{item.productId?.name}</h3>
+                          <h3 className="font-semibold  mb-1">{item.productId?.name}</h3>
                           {item.productId?.isCustom && item.productId?.customization && (
-                            <div className="text-xs text-gray-500 mb-1">
+                            <div className="text-xs  mb-1">
                               <p>Custom: {item.productId.customization.bouquetType}</p>
                               <p>Size: {item.productId.customization.size}</p>
                             </div>
@@ -175,9 +175,9 @@ const Cart = () => {
                             className="w-16 h-16 object-cover rounded-lg"
                           />
                           <div>
-                            <h3 className="font-semibold text-gray-800">{item.productId?.name}</h3>
+                            <h3 className="font-semibold ">{item.productId?.name}</h3>
                             {item.productId?.isCustom && item.productId?.customization && (
-                              <div className="text-xs text-gray-500">
+                              <div className="text-xs ">
                                 <p>Custom: {item.productId.customization.bouquetType}</p>
                                 <p>Size: {item.productId.customization.size}</p>
                               </div>
@@ -243,15 +243,15 @@ const Cart = () => {
           {/* Order Summary */}
           <div className="lg:w-1/3">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Order Summary</h2>
+              <h2 className="text-2xl font-bold  mb-6">Order Summary</h2>
 
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Items ({totalItems})</span>
+                  <span className="">Items ({totalItems})</span>
                   <span className="font-semibold">₹{totalAmount}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Shipping</span>
+                  <span className="">Shipping</span>
                   <span className="font-semibold text-green-600">Free</span>
                 </div>
                 <div className="border-t pt-4">
@@ -273,7 +273,7 @@ const Cart = () => {
 
                 <Link
                   to="/shop"
-                  className="w-full block text-center py-3 border border-gray-300 text-gray-700 rounded-full font-semibold hover:bg-gray-50 transition"
+                  className="w-full block text-center py-3 border border-gray-300  rounded-full font-semibold hover:bg-gray-50 transition"
                 >
                   <i className="fas fa-arrow-left mr-2"></i>
                   Continue Shopping

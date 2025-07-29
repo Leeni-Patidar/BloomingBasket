@@ -23,7 +23,7 @@ const OccasionCategories = () => {
   return (
     <section className="bg-pink-50 py-12">
       <div className="max-w-6xl mx-auto text-center px-4">
-        <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-8">
+        <h2 className="text-2xl md:text-3xl font-semibold  mb-8">
           Shop by Occasion
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 justify-items-center">
@@ -35,7 +35,7 @@ const OccasionCategories = () => {
               <div className="bg-white rounded-full shadow-md w-16 h-16 flex items-center justify-center hover:scale-105 transition">
                 {category.icon}
               </div>
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium ">
                 {category.label}
               </span>
             </div>

@@ -138,17 +138,17 @@ const ProductDetail = () => {
                   }`}
                 ></i>
               ))}
-              <span className="ml-2 text-gray-500 text-sm">
+              <span className="ml-2  text-sm">
                 ({product.rating?.count || 0} reviews)
               </span>
             </div> */}
 
-            <p className="text-gray-700 mb-6">{product.description}</p>
+            <p className=" mb-6">{product.description}</p>
 
             {product.careInstructions && (
               <div className="bg-gray-100 p-4 rounded mb-6">
                 <h4 className="font-medium mb-2">Care Instructions</h4>
-                <p className="text-sm text-gray-700">{product.careInstructions}</p>
+                <p className="text-sm ">{product.careInstructions}</p>
               </div>
             )}
 
@@ -241,7 +241,7 @@ const ProductDetail = () => {
                 <div key={review._id} className="bg-white p-4 rounded shadow">
                   <div className="flex justify-between items-center mb-2">
                     <strong>{review.user?.name || "Anonymous"}</strong>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm ">
                       {new Date(review.createdAt).toLocaleDateString()}
                     </span>
                   </div>
@@ -255,11 +255,11 @@ const ProductDetail = () => {
                       ></i>
                     ))}
                   </div>
-                  <p className="text-gray-700">{review.comment}</p>
+                  <p className="">{review.comment}</p>
                 </div>
               ))
             ) : (
-              <p className="text-gray-600">No reviews yet. Be the first to review this product.</p>
+              <p className="">No reviews yet. Be the first to review this product.</p>
             )}
           </div>
         </div>

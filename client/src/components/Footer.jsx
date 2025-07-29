@@ -15,7 +15,7 @@ const Footer = () => {
           <div className="w-full lg:w-1/3 md:w-1/2 px-4 mb-4">
             <div className="mb-4">
               <h5 className="text-2xl font-bold mb-4 text-pink-100">Blooming Basket</h5>
-              <p className="text-gray-400 leading-relaxed mb-6">
+              <p className=" leading-relaxed mb-6">
                 Your trusted partner for beautiful flowers and memorable moments. We deliver fresh, stunning
                 arrangements right to your doorstep.
               </p>
@@ -43,21 +43,21 @@ const Footer = () => {
               <h6 className="text-lg font-semibold mb-4 text-gray-200">Quick Links</h6>
               <ul className="list-none p-0 m-0">
                 <li className="mb-2">
-                  <Link to="/" className="text-gray-400 hover:text-pink-100">Home</Link>
+                  <Link to="/" className=" hover:text-pink-100">Home</Link>
                 </li>
                 <li className="mb-2">
-                  <Link to="/about" className="text-gray-400 hover:text-pink-100">About</Link>
+                  <Link to="/about" className=" hover:text-pink-100">About</Link>
                 </li>
 
                 {isAdmin ? (
                   <>
                     <li className="mb-2">
-                      <Link to="/admin/products" className="text-gray-400 hover:text-pink-100">
+                      <Link to="/admin/products" className=" hover:text-pink-100">
                         Product Management
                       </Link>
                     </li>
                     <li className="mb-2">
-                      <Link to="/admin/orders" className="text-gray-400 hover:text-pink-100">
+                      <Link to="/admin/orders" className=" hover:text-pink-100">
                         Order Management
                       </Link>
                     </li>
@@ -65,10 +65,10 @@ const Footer = () => {
                 ) : (
                   <>
                     <li className="mb-2">
-                      <Link to="/shop" className="text-gray-400 hover:text-pink-100">Shop</Link>
+                      <Link to="/shop" className=" hover:text-pink-100">Shop</Link>
                     </li>
                     <li className="mb-2">
-                      <Link to="/customize" className="text-gray-400 hover:text-pink-100">Customize</Link>
+                      <Link to="/customize" className=" hover:text-pink-100">Customize</Link>
                     </li>
                   </>
                 )}
@@ -82,16 +82,16 @@ const Footer = () => {
               <h6 className="text-lg font-semibold mb-4 text-gray-200">Support</h6>
               <ul className="list-none p-0 m-0">
                 <li className="mb-2">
-                  <Link to="/faq" className="text-gray-400 hover:text-pink-100">FAQ</Link>
+                  <Link to="/faq" className=" hover:text-pink-100">FAQ</Link>
                 </li>
                 <li className="mb-2">
-                  <Link to="/contactUs" className="text-gray-400 hover:text-pink-100">Contact Us</Link>
+                  <Link to="/contactUs" className=" hover:text-pink-100">Contact Us</Link>
                 </li>
                 <li className="mb-2">
-                  <Link to="/policy" className="text-gray-400 hover:text-pink-100">Privacy Policy</Link>
+                  <Link to="/policy" className=" hover:text-pink-100">Privacy Policy</Link>
                 </li>
                 <li className="mb-2">
-                  <Link to="/terms" className="text-gray-400 hover:text-pink-100">Terms & Conditions</Link>
+                  <Link to="/terms" className=" hover:text-pink-100">Terms & Conditions</Link>
                 </li>
               </ul>
             </div>
@@ -101,7 +101,7 @@ const Footer = () => {
           <div className="w-full lg:w-1/3 md:w-1/2 px-4 mb-5">
             <div className="mb-8">
               <h6 className="text-lg font-semibold mb-4 text-gray-200">Contact Info</h6>
-              <div className="flex flex-col gap-4 text-gray-400">
+              <div className="flex flex-col gap-4 ">
                 <div className="flex items-center gap-3">
                   <i className="fas fa-map-marker-alt  w-5"></i>
                   <span>123 Flower Street, Garden City, GC 12345</span>
@@ -122,7 +122,7 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="flex flex-wrap -mx-4">
           <div className="w-full px-4 text-center">
-            <p className="text-gray-500 m-0 text-sm">
+            <p className=" m-0 text-sm">
               © Blooming Basket. All rights reserved. Made with ❤️ for flower lovers.
             </p>
           </div>

@@ -51,10 +51,10 @@ const MyOrders = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">My Orders</h1>
+        <h1 className="text-3xl font-bold  mb-6 text-center">My Orders</h1>
 
         {orders.length === 0 ? (
-          <div className="text-center text-gray-600">
+          <div className="text-center ">
             <p>You haven’t placed any orders yet.</p>
             <Link to="/shop" className="text-pink-500 font-semibold hover:underline">Shop Now</Link>
           </div>
@@ -64,8 +64,8 @@ const MyOrders = () => {
               <div key={order._id} className="bg-white p-5 rounded-lg shadow">
                 <div className="flex justify-between items-center mb-2">
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-800">Order #{order.orderNumber}</h2>
-                    <p className="text-gray-600 text-sm">Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
+                    <h2 className="text-lg font-semibold ">Order #{order.orderNumber}</h2>
+                    <p className=" text-sm">Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
                   </div>
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -85,7 +85,7 @@ const MyOrders = () => {
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <p className="text-gray-800 font-semibold">Total: ₹{order.total.toFixed(2)}</p>
+                  <p className=" font-semibold">Total: ₹{order.total.toFixed(2)}</p>
                   <div className="flex gap-3">
                     <Link
                       to={`/order-confirmation/${order._id}`}

@@ -140,7 +140,7 @@ const Checkout = () => {
   return (
     <div className="min-h-screen py-8 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Checkout</h1>
+        <h1 className="text-3xl font-bold  mb-6">Checkout</h1>
 
         {userProfile && (
           <div className="bg-white p-6 rounded shadow mb-6">
@@ -191,7 +191,7 @@ const Checkout = () => {
 
               <div className="space-y-3">
                 {addresses.length === 0 ? (
-                  <p className="text-gray-500">No addresses saved.</p>
+                  <p className="">No addresses saved.</p>
                 ) : (
                   addresses.map((addr) => (
                     <div key={addr._id} className={`p-4 border rounded-lg ${selectedAddress === addr._id ? "border-pink-500 bg-pink-50" : "border-gray-200"}`} onClick={() => setSelectedAddress(addr._id)}>
@@ -256,7 +256,7 @@ const Checkout = () => {
               {loading ? "Placing Order..." : `Place Order - ₹${total.toFixed(2)}`}
             </button>
 
-            {subtotal < 500 && <p className="text-xs text-gray-500 mt-2 text-center">Add ₹{(500 - subtotal).toFixed(2)} more for free delivery</p>}
+            {subtotal < 500 && <p className="text-xs  mt-2 text-center">Add ₹{(500 - subtotal).toFixed(2)} more for free delivery</p>}
           </div>
         </div>
       </div>

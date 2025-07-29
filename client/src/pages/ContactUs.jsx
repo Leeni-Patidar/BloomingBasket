@@ -58,11 +58,11 @@ const Contact = () => {
         <div className="flex flex-wrap -mx-4">
           <div className="w-full lg:w-2/3 px-4 mb-8 lg:mb-0">
             <div className="bg-white p-6 md:p-10 rounded-xl shadow-xl">
-              <h3 className="text-gray-800 mb-8 font-semibold">Send us a Message</h3>
+              <h3 className=" mb-8 font-semibold">Send us a Message</h3>
               <form onSubmit={handleSubmit}>
                 <div className="flex flex-wrap -mx-2">
                   <div className="w-full md:w-1/2 px-2 mb-4">
-                    <label htmlFor="name" className="block text-gray-700 text-sm font-medium mb-1">
+                    <label htmlFor="name" className="block  text-sm font-medium mb-1">
                       Full Name *
                     </label>
                     <input
@@ -76,7 +76,7 @@ const Contact = () => {
                     />
                   </div>
                   <div className="w-full md:w-1/2 px-2 mb-4">
-                    <label htmlFor="email" className="block text-gray-700 text-sm font-medium mb-1">
+                    <label htmlFor="email" className="block  text-sm font-medium mb-1">
                       Email Address *
                     </label>
                     <input
@@ -90,7 +90,7 @@ const Contact = () => {
                     />
                   </div>
                   <div className="w-full md:w-1/2 px-2 mb-4">
-                    <label htmlFor="phone" className="block text-gray-700 text-sm font-medium mb-1">
+                    <label htmlFor="phone" className="block  text-sm font-medium mb-1">
                       Phone Number
                     </label>
                     <input
@@ -103,7 +103,7 @@ const Contact = () => {
                     />
                   </div>
                   <div className="w-full md:w-1/2 px-2 mb-4">
-                    <label htmlFor="subject" className="block text-gray-700 text-sm font-medium mb-1">
+                    <label htmlFor="subject" className="block  text-sm font-medium mb-1">
                       Subject *
                     </label>
                     <select
@@ -124,7 +124,7 @@ const Contact = () => {
                     </select>
                   </div>
                   <div className="w-full px-2 mb-4">
-                    <label htmlFor="message" className="block text-gray-700 text-sm font-medium mb-1">
+                    <label htmlFor="message" className="block  text-sm font-medium mb-1">
                       Message *
                     </label>
                     <textarea
@@ -155,15 +155,15 @@ const Contact = () => {
           {/* Contact Info */}
           <div className="w-full lg:w-1/3 px-4">
            <div className="bg-white p-6 md:p-10 rounded-xl shadow-xl">
-              <h3 className="text-gray-800 mb-8 font-semibold">Get in Touch</h3>
+              <h3 className=" mb-8 font-semibold">Get in Touch</h3>
 
               <div className="flex items-start mb-8 gap-4">
                 <div className="w-12 h-12 button-bg rounded-full flex items-center justify-center text-xl flex-shrink-0">
                   <i className="fas fa-map-marker-alt"></i>
                 </div>
                 <div>
-                  <h5 className="text-gray-800 mb-2 font-semibold text-left">Address</h5>
-                  <p className="text-gray-600 m-0 leading-relaxed text-left">
+                  <h5 className=" mb-2 font-semibold text-left">Address</h5>
+                  <p className=" m-0 leading-relaxed text-left">
                     123 Flower Street,
                     <br />
                     Garden City, GC 12345, United States
@@ -176,8 +176,8 @@ const Contact = () => {
                   <i className="fas fa-phone"></i>
                 </div>
                 <div>
-                  <h5 className="text-gray-800 mb-2 font-semibold text-left">Phone</h5>
-                  <p className="text-gray-600 m-0 leading-relaxed text-left">+1 (555) 123-4567</p>
+                  <h5 className=" mb-2 font-semibold text-left">Phone</h5>
+                  <p className=" m-0 leading-relaxed text-left">+1 (555) 123-4567</p>
                 </div>
               </div>
 
@@ -186,35 +186,35 @@ const Contact = () => {
                   <i className="fas fa-envelope"></i>
                 </div>
                 <div>
-                  <h5 className="text-gray-800 mb-2 font-semibold text-left">Email</h5>
-                  <p className="text-gray-600 m-0 leading-relaxed text-left">info@bloomingbasket.com</p>
+                  <h5 className=" mb-2 font-semibold text-left">Email</h5>
+                  <p className=" m-0 leading-relaxed text-left">info@bloomingbasket.com</p>
                 </div>
               </div>
 
               <div className="mt-8 pt-8 border-t border-gray-200">
-                <h5 className="text-gray-800 mb-4 font-semibold">Follow Us</h5>
+                <h5 className=" mb-4 font-semibold">Follow Us</h5>
                 <div className="flex gap-4 justify-center md:justify-start">
                   <a
                     href="#"
-                    className="w-11 h-11 button-bg rounded-full flex items-center justify-center text-gray-800 no-underline transition-all duration-300 ease-in-out  button-bg:hover"
+                    className="w-11 h-11 button-bg rounded-full flex items-center justify-center  no-underline transition-all duration-300 ease-in-out  button-bg:hover"
                   >
                     <i className="fab fa-facebook-f"></i>
                   </a>
                   <a
                     href="#"
-                    className="w-11 h-11 button-bg rounded-full flex items-center justify-center text-gray-800 no-underline transition-all duration-300 ease-in-out  button-bg:hover"
+                    className="w-11 h-11 button-bg rounded-full flex items-center justify-center  no-underline transition-all duration-300 ease-in-out  button-bg:hover"
                   >
                     <i className="fab fa-instagram"></i>
                   </a>
                   <a
                     href="#"
-                    className="w-11 h-11 button-bg rounded-full flex items-center justify-center text-gray-800 no-underline transition-all duration-300 ease-in-out   button-bg:hover"
+                    className="w-11 h-11 button-bg rounded-full flex items-center justify-center  no-underline transition-all duration-300 ease-in-out   button-bg:hover"
                   >
                     <i className="fab fa-twitter"></i>
                   </a>
                   <a
                     href="#"
-                    className="w-11 h-11 button-bg rounded-full flex items-center justify-center text-gray-800 no-underline transition-all duration-300 ease-in-out  button-bg:hover "
+                    className="w-11 h-11 button-bg rounded-full flex items-center justify-center  no-underline transition-all duration-300 ease-in-out  button-bg:hover "
                   >
                     <i className="fab fa-pinterest"></i>
                   </a>

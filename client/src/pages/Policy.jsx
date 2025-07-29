@@ -16,12 +16,12 @@ const Policy = () => {
           <div className="w-full lg:w-2/3 ">
             <div className="bg-white p-8 px-6 md:p-12 rounded-2xl shadow-2xl">
               <section className="mb-2 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0">
-                <h2 className="text-xl md:text-1xl font-semibold mb-2 text-gray-800">1. Information We Collect</h2>
-                <p className="text-gray-600 leading-[1.8] mb-2">
+                <h2 className="text-xl md:text-1xl font-semibold mb-2 ">1. Information We Collect</h2>
+                <p className=" leading-[1.8] mb-2">
                   We collect information you provide directly to us, such as when you create an account, make a
                   purchase, or contact us for support. This may include:
                 </p>
-                <ul className="text-gray-600 leading-[1.8] pl-8 list-disc">
+                <ul className=" leading-[1.8] pl-8 list-disc">
                   <li className="mb-2">Name, email address, and phone number</li>
                   <li className="mb-2">Billing and shipping addresses</li>
                   <li className="mb-2">Payment information (processed securely by our payment providers)</li>
@@ -31,9 +31,9 @@ const Policy = () => {
               </section>
 
               <section className="mb-2 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0">
-                <h2 className="text-xl md:text-1xl font-semibold mb-2 text-gray-800">2. How We Use Your Information</h2>
-                <p className="text-gray-600 leading-[1.8] mb-2">We use the information we collect to:</p>
-                <ul className="text-gray-600 leading-[1.8] pl-8 list-disc">
+                <h2 className="text-xl md:text-1xl font-semibold mb-2 ">2. How We Use Your Information</h2>
+                <p className=" leading-[1.8] mb-2">We use the information we collect to:</p>
+                <ul className=" leading-[1.8] pl-8 list-disc">
                   <li className="mb-2">Process and fulfill your orders</li>
                   <li className="mb-2">Communicate with you about your orders and account</li>
                   <li className="mb-2">Provide customer support</li>
@@ -44,12 +44,12 @@ const Policy = () => {
               </section>
 
               <section className="mb-2 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0">
-                <h2 className="text-xl md:text-1xl font-semibold mb-2 text-gray-800">3. Information Sharing</h2>
-                <p className="text-gray-600 leading-[1.8] mb-2">
+                <h2 className="text-xl md:text-1xl font-semibold mb-2 ">3. Information Sharing</h2>
+                <p className=" leading-[1.8] mb-2">
                   We do not sell, trade, or otherwise transfer your personal information to third parties except in the
                   following circumstances:
                 </p>
-                <ul className="text-gray-600 leading-[1.8] pl-8 list-disc">
+                <ul className=" leading-[1.8] pl-8 list-disc">
                   <li className="mb-2">With your explicit consent</li>
                   <li className="mb-2">
                     To trusted service providers who assist us in operating our website and conducting business
@@ -60,12 +60,12 @@ const Policy = () => {
               </section>
 
               <section className="mb-2 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0">
-                <h2 className="text-xl md:text-1xl font-semibold mb-2 text-gray-800">4. Data Security</h2>
-                <p className="text-gray-600 leading-[1.8] mb-2">
+                <h2 className="text-xl md:text-1xl font-semibold mb-2 ">4. Data Security</h2>
+                <p className=" leading-[1.8] mb-2">
                   We implement appropriate security measures to protect your personal information against unauthorized
                   access, alteration, disclosure, or destruction. This includes:
                 </p>
-                <ul className="text-gray-600 leading-[1.8] pl-8 list-disc">
+                <ul className=" leading-[1.8] pl-8 list-disc">
                   <li className="mb-2">SSL encryption for data transmission</li>
                   <li className="mb-2">Secure payment processing</li>
                   <li className="mb-2">Regular security audits</li>
@@ -74,17 +74,17 @@ const Policy = () => {
               </section>
 
               <section className="mb-2 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0">
-                <h2 className="text-xl md:text-1xl font-semibold mb-2 text-gray-800">5. Cookies and Tracking</h2>
-                <p className="text-gray-600 leading-[1.8] mb-2">
+                <h2 className="text-xl md:text-1xl font-semibold mb-2 ">5. Cookies and Tracking</h2>
+                <p className=" leading-[1.8] mb-2">
                   We use cookies and similar tracking technologies to enhance your browsing experience, analyze website
                   traffic, and personalize content. You can control cookie settings through your browser preferences.
                 </p>
               </section>
 
               <section className="mb-2 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0">
-                <h2 className="text-xl md:text-1xl font-semibold mb-2 text-gray-800">6. Your Rights</h2>
-                <p className="text-gray-600 leading-[1.8] mb-2">You have the right to:</p>
-                <ul className="text-gray-600 leading-[1.8] pl-8 list-disc">
+                <h2 className="text-xl md:text-1xl font-semibold mb-2 ">6. Your Rights</h2>
+                <p className=" leading-[1.8] mb-2">You have the right to:</p>
+                <ul className=" leading-[1.8] pl-8 list-disc">
                   <li className="mb-2">Access and update your personal information</li>
                   <li className="mb-2">Request deletion of your account and data</li>
                   <li className="mb-2">Opt out of marketing communications</li>
@@ -94,8 +94,8 @@ const Policy = () => {
               </section>
 
               <section className="mb-2 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0">
-                <h2 className="text-xl md:text-1xl font-semibold mb-2 text-gray-800">7. Children's Privacy</h2>
-                <p className="text-gray-600 leading-[1.8] mb-2">
+                <h2 className="text-xl md:text-1xl font-semibold mb-2 ">7. Children's Privacy</h2>
+                <p className=" leading-[1.8] mb-2">
                   Our services are not intended for children under 13 years of age. We do not knowingly collect personal
                   information from children under 13. If we become aware that we have collected such information, we
                   will take steps to delete it.
@@ -103,8 +103,8 @@ const Policy = () => {
               </section>
 
               <section className="mb-2 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0">
-                <h2 className="text-xl md:text-1xl font-semibold mb-2 text-gray-800">8. International Transfers</h2>
-                <p className="text-gray-600 leading-[1.8] mb-2">
+                <h2 className="text-xl md:text-1xl font-semibold mb-2 ">8. International Transfers</h2>
+                <p className=" leading-[1.8] mb-2">
                   Your information may be transferred to and processed in countries other than your own. We ensure
                   appropriate safeguards are in place to protect your information in accordance with this privacy
                   policy.
@@ -112,16 +112,16 @@ const Policy = () => {
               </section>
 
               <section className="mb-2 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0">
-                <h2 className="text-xl md:text-1xl font-semibold mb-2 text-gray-800">9. Changes to This Policy</h2>
-                <p className="text-gray-600 leading-[1.8] mb-2">
+                <h2 className="text-xl md:text-1xl font-semibold mb-2 ">9. Changes to This Policy</h2>
+                <p className=" leading-[1.8] mb-2">
                   We may update this privacy policy from time to time. We will notify you of any changes by posting the
                   new policy on this page and updating the "Last updated" date.
                 </p>
               </section>
 
               <section className="mb-2 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0">
-                <h2 className="text-xl md:text-1xl font-semibold mb-2 text-gray-800">10. Contact Us</h2>
-                <p className="text-gray-600 leading-[1.8] mb-2">
+                <h2 className="text-xl md:text-1xl font-semibold mb-2 ">10. Contact Us</h2>
+                <p className=" leading-[1.8] mb-2">
                   If you have any questions about this Privacy Policy or our data practices, please contact us:
                 </p>
                  <div className="shadow-2xl p-6 rounded-lg mt-4">

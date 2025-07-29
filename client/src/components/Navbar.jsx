@@ -52,7 +52,7 @@ const Navbar = () => {
         </Link>
 
         <button
-          className="md:hidden text-gray-800 bg-transparent focus:outline-none"
+          className="md:hidden  bg-transparent focus:outline-none"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? <HiX className="h-6 w-6" /> : <HiOutlineMenu className="h-6 w-6" />}
@@ -61,21 +61,21 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-8">
           {user?.role === "admin" ? (
             <>
-              <Link to="/" className="text-gray-700 hover:text-pink-600 font-medium">Home</Link>
-              <Link to="/about" className="text-gray-700 hover:text-pink-600 font-medium">About</Link>
-              <Link to="/shop" className="text-gray-700 hover:text-pink-600 font-medium">Shop</Link>
-              <Link to="/admin/orders" className="text-gray-700 hover:text-pink-600 font-medium">Order Management</Link>
-              <Link to="/admin/products" className="text-gray-700 hover:text-pink-600 font-medium">Product Management</Link>
+              <Link to="/" className=" hover:text-pink-600 font-medium">Home</Link>
+              <Link to="/about" className=" hover:text-pink-600 font-medium">About</Link>
+              <Link to="/shop" className=" hover:text-pink-600 font-medium">Shop</Link>
+              <Link to="/admin/orders" className=" hover:text-pink-600 font-medium">Order Management</Link>
+              <Link to="/admin/products" className=" hover:text-pink-600 font-medium">Product Management</Link>
             </>
           ) : (
             <>
-              <Link to="/" className="text-gray-700 hover:text-pink-600 font-medium">Home</Link>
-              <Link to="/about" className="text-gray-700 hover:text-pink-600 font-medium">About</Link>
-              <Link to="/shop" className="text-gray-700 hover:text-pink-600 font-medium">Shop</Link>
-              <Link to="/customize" className="text-gray-700 hover:text-pink-600 font-medium">Customize</Link>
+              <Link to="/" className=" hover:text-pink-600 font-medium">Home</Link>
+              <Link to="/about" className=" hover:text-pink-600 font-medium">About</Link>
+              <Link to="/shop" className=" hover:text-pink-600 font-medium">Shop</Link>
+              <Link to="/customize" className=" hover:text-pink-600 font-medium">Customize</Link>
 
               {/* ❤️ Wishlist icon with badge */}
-              <Link to="/wishlist" className="relative text-gray-700 hover:text-pink-600 transition">
+              <Link to="/wishlist" className="relative  hover:text-pink-600 transition">
                 <i className="fas fa-heart"></i>
                 {Array.isArray(wishlist) && wishlist.length > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 rounded-full text-xs px-1 text-white">
@@ -85,7 +85,7 @@ const Navbar = () => {
               </Link>
 
               {/* 🛒 Cart icon with total quantity badge */}
-              <Link to="/cart" className="relative text-gray-700 hover:text-pink-600 transition">
+              <Link to="/cart" className="relative  hover:text-pink-600 transition">
                 <i className="fas fa-shopping-cart"></i>
                 {typeof getCartItemsCount === "function" && getCartItemsCount() > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 rounded-full text-xs px-1 text-white">
@@ -99,7 +99,7 @@ const Navbar = () => {
           {/* 🔐 Login/Profile */}
           {user ? (
             <div className="relative group">
-              <button className="text-gray-700 hover:text-pink-600 flex items-center gap-1">
+              <button className=" hover:text-pink-600 flex items-center gap-1">
                 <i className="fas fa-user"></i> {user.name}
               </button>
               <div className="absolute right-0 top-10 w-48 bg-white border border-gray-200 shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-40">
@@ -109,7 +109,7 @@ const Navbar = () => {
               </div>
             </div>
           ) : (
-            <Link to={isUserRegistered ? "/login" : "/register"} className="text-gray-700 hover:text-pink-600 transition">
+            <Link to={isUserRegistered ? "/login" : "/register"} className=" hover:text-pink-600 transition">
               <i className="fas fa-sign-in-alt mr-1"></i>{isUserRegistered ? "Login" : "Register"}
             </Link>
           )}
@@ -123,28 +123,28 @@ const Navbar = () => {
         <div className="md:hidden bg-gray-100 shadow-md px-4 py-4 space-y-2">
           {user?.role === "admin" ? (
             <>
-              <Link to="/" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Home</Link>
-              <Link to="/about" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">About</Link>
-              <Link to="/shop" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Shop</Link>
-              <Link to="/admin/orders" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Order Management</Link>
-              <Link to="/admin/products" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Product Management</Link>
+              <Link to="/" onClick={() => setIsMenuOpen(false)} className="block  font-medium">Home</Link>
+              <Link to="/about" onClick={() => setIsMenuOpen(false)} className="block  font-medium">About</Link>
+              <Link to="/shop" onClick={() => setIsMenuOpen(false)} className="block  font-medium">Shop</Link>
+              <Link to="/admin/orders" onClick={() => setIsMenuOpen(false)} className="block  font-medium">Order Management</Link>
+              <Link to="/admin/products" onClick={() => setIsMenuOpen(false)} className="block  font-medium">Product Management</Link>
             </>
           ) : (
             <>
-              <Link to="/" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Home</Link>
-              <Link to="/about" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">About</Link>
-              <Link to="/shop" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Shop</Link>
-              <Link to="/customize" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Customize</Link>
-              <Link to="/wishlist" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Wishlist</Link>
-              <Link to="/cart" onClick={() => setIsMenuOpen(false)} className="block text-gray-700 font-medium">Cart</Link>
+              <Link to="/" onClick={() => setIsMenuOpen(false)} className="block  font-medium">Home</Link>
+              <Link to="/about" onClick={() => setIsMenuOpen(false)} className="block  font-medium">About</Link>
+              <Link to="/shop" onClick={() => setIsMenuOpen(false)} className="block  font-medium">Shop</Link>
+              <Link to="/customize" onClick={() => setIsMenuOpen(false)} className="block  font-medium">Customize</Link>
+              <Link to="/wishlist" onClick={() => setIsMenuOpen(false)} className="block  font-medium">Wishlist</Link>
+              <Link to="/cart" onClick={() => setIsMenuOpen(false)} className="block  font-medium">Cart</Link>
             </>
           )}
 
           <div className="flex items-center gap-2 border-t pt-3 mt-3 border-gray-300">
-            <i className="fas fa-user text-gray-600"></i>
+            <i className="fas fa-user "></i>
             {user ? (
               <div className="flex flex-col">
-                <span className="text-sm text-gray-800 font-semibold">{user.name}</span>
+                <span className="text-sm  font-semibold">{user.name}</span>
                 <button
                   onClick={handleLogout}
                   className="text-left text-pink-600 hover:underline text-sm"

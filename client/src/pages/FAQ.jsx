@@ -79,7 +79,7 @@ const FAQ = () => {
               {faqs.map((faq, index) => (
                 <div key={index} className="bg-white rounded-xl mb-4 shadow-md overflow-hidden">
                   <button
-                    className={`w-full bg-transparent border-none p-6 md:p-8 text-left flex justify-between items-center text-lg font-semibold text-gray-800 cursor-pointer transition-all duration-300 ease-in-out hover:bg-gray-50 ${
+                    className={`w-full bg-transparent border-none p-6 md:p-8 text-left flex justify-between items-center text-lg font-semibold  cursor-pointer transition-all duration-300 ease-in-out hover:bg-gray-50 ${
                       activeIndex === index ? "bg-[#fecfef] text-black" : ""
                     }`}
                     onClick={() => toggleFAQ(index)}
@@ -96,7 +96,7 @@ const FAQ = () => {
                       activeIndex === index ? "max-h-48" : ""
                     }`}
                   >
-                    <p className="px-8 pb-6 m-0 text-gray-600 leading-relaxed">{faq.answer}</p>
+                    <p className="px-8 pb-6 m-0  leading-relaxed">{faq.answer}</p>
                   </div>
                 </div>
               ))}
@@ -106,8 +106,8 @@ const FAQ = () => {
         
 
         {/* <div className="text-center p-12 bg-[#ede8eb] rounded-2xl">
-          <h3 className="text-gray-800 mb-4 font-semibold">Still have questions?</h3>
-          <p className="text-gray-600 mb-8">
+          <h3 className=" mb-4 font-semibold">Still have questions?</h3>
+          <p className=" mb-8">
             Can't find what you're looking for? Our customer service team is here to help!
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
@@ -116,8 +116,8 @@ const FAQ = () => {
                 <i className="fas fa-phone"></i>
               </div>
               <div>
-                <h5 className="text-gray-800 mb-1 font-semibold">Call Us</h5>
-                <p className="text-gray-600 m-0 text-sm">+1 (555) 123-4567</p>
+                <h5 className=" mb-1 font-semibold">Call Us</h5>
+                <p className=" m-0 text-sm">+1 (555) 123-4567</p>
               </div>
             </div>
             <div className="flex flex-col md:flex-row items-center md:items-start gap-4 p-6 bg-white rounded-xl shadow-md text-center md:text-left">
@@ -125,8 +125,8 @@ const FAQ = () => {
                 <i className="fas fa-envelope"></i>
               </div>
               <div>
-                <h5 className="text-gray-800 mb-1 font-semibold">Email Us</h5>
-                <p className="text-gray-600 m-0 text-sm">support@bloomingbasket.com</p>
+                <h5 className=" mb-1 font-semibold">Email Us</h5>
+                <p className=" m-0 text-sm">support@bloomingbasket.com</p>
               </div>
             </div>
             <div className="flex flex-col md:flex-row items-center md:items-start gap-4 p-6 bg-white rounded-xl shadow-md text-center md:text-left">
@@ -134,8 +134,8 @@ const FAQ = () => {
                 <i className="fas fa-comments"></i>
               </div>
               <div>
-                <h5 className="text-gray-800 mb-1 font-semibold">Live Chat</h5>
-                <p className="text-gray-600 m-0 text-sm">Available 9 AM - 6 PM EST</p>
+                <h5 className=" mb-1 font-semibold">Live Chat</h5>
+                <p className=" m-0 text-sm">Available 9 AM - 6 PM EST</p>
               </div>
             </div>
            </div> 

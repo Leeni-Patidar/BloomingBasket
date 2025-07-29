@@ -63,7 +63,7 @@ const OrderManagement = () => {
     <div className="min-h-screen bg-gray-50 p-6">
       <h1 className="text-3xl font-bold mb-6 text-pink-600">Order Management</h1>
       {orders.length === 0 ? (
-        <p className="text-gray-600">No orders found.</p>
+        <p className="">No orders found.</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border">

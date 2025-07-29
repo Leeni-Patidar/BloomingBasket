@@ -146,8 +146,8 @@ const Customize = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Customize Your Perfect Bouquet</h1>
-          <p className="text-lg text-gray-600">Craft your own personalized bouquet for any occasion</p>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 ">Customize Your Perfect Bouquet</h1>
+          <p className="text-lg ">Craft your own personalized bouquet for any occasion</p>
           {!user && step === 1 && (
             <div className="mt-4 p-3 bg-yellow-100 border border-yellow-400 rounded-lg">
               <p className="text-yellow-800">
@@ -164,12 +164,12 @@ const Customize = () => {
               <div key={`step-${stepNum}`} className="flex flex-col items-center gap-2">
                 <div
                   className={`w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all duration-300 ${
-                    step >= stepNum ? "bg-pink-500 text-white" : "bg-gray-300 text-gray-600"
+                    step >= stepNum ? "bg-pink-500 text-white" : "bg-gray-300 "
                   }`}
                 >
                   {stepNum}
                 </div>
-                <div className={`text-sm font-bold ${step >= stepNum ? "text-pink-500" : "text-gray-500"}`}>
+                <div className={`text-sm font-bold ${step >= stepNum ? "text-pink-500" : ""}`}>
                   {stepNum === 1 && "Type"}
                   {stepNum === 2 && "Size"}
                   {stepNum === 3 && "Details"}
@@ -191,7 +191,7 @@ const Customize = () => {
           {step === 1 && (
             <div>
               <div className="mb-8 flex justify-between items-center">
-                <h3 className="text-2xl font-semibold text-gray-800">Choose your bouquet type</h3>
+                <h3 className="text-2xl font-semibold ">Choose your bouquet type</h3>
                 <button
                   onClick={() => setShowPriceChart(true)}
                   className="text-sm text-pink-500 underline hover:text-pink-600"
@@ -210,7 +210,7 @@ const Customize = () => {
                     }`}
                     onClick={() => handleInputChange("bouquetType", type)}
                   >
-                    <span className="font-semibold text-gray-800">{type}</span>
+                    <span className="font-semibold ">{type}</span>
                   </div>
                 ))}
               </div>
@@ -221,7 +221,7 @@ const Customize = () => {
           {step === 2 && (
             <div>
               <div className="mb-8 flex justify-between items-center">
-                <h3 className="text-2xl font-semibold text-gray-800">Choose bouquet size</h3>
+                <h3 className="text-2xl font-semibold ">Choose bouquet size</h3>
                 <button
                   onClick={() => setShowSizeChart(true)}
                   className="text-sm text-pink-500 underline hover:text-pink-600"
@@ -238,8 +238,8 @@ const Customize = () => {
                     }`}
                     onClick={() => handleInputChange("size", size)}
                   >
-                    <h5 className="text-xl font-bold text-gray-800">{size}</h5>
-                    <p className="text-sm text-gray-600">₹{customization.size === size ? calculatePrice() : ""}</p>
+                    <h5 className="text-xl font-bold ">{size}</h5>
+                    <p className="text-sm ">₹{customization.size === size ? calculatePrice() : ""}</p>
                   </div>
                 ))}
               </div>
@@ -249,10 +249,10 @@ const Customize = () => {
           {/* Step 3: Details */}
           {step === 3 && (
             <div>
-              <h3 className="mb-8 text-2xl font-semibold text-center text-gray-800">Add your details</h3>
+              <h3 className="mb-8 text-2xl font-semibold text-center ">Add your details</h3>
               <div className="space-y-6">
                 <div>
-                  <label className="block font-medium mb-2 text-gray-700">Personal Message (Optional)</label>
+                  <label className="block font-medium mb-2 ">Personal Message (Optional)</label>
                   <textarea
                     className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-pink-500 focus:outline-none"
                     rows="3"
@@ -262,7 +262,7 @@ const Customize = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium mb-2 text-gray-700">Preferred Delivery Date</label>
+                  <label className="block font-medium mb-2 ">Preferred Delivery Date</label>
                   <input
                     type="date"
                     className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-pink-500 focus:outline-none"
@@ -272,7 +272,7 @@ const Customize = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium mb-2 text-gray-700">Special Instructions (Optional)</label>
+                  <label className="block font-medium mb-2 ">Special Instructions (Optional)</label>
                   <textarea
                     className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-pink-500 focus:outline-none"
                     rows="3"
@@ -282,7 +282,7 @@ const Customize = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium mb-2 text-gray-700">Upload Reference Image (Optional)</label>
+                  <label className="block font-medium mb-2 ">Upload Reference Image (Optional)</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -291,7 +291,7 @@ const Customize = () => {
                   />
                   {customization.referenceImage && (
                     <div className="mt-4">
-                      <p className="text-sm font-semibold mb-2 text-gray-700">Preview:</p>
+                      <p className="text-sm font-semibold mb-2 ">Preview:</p>
                       <img
                         src={customization.referenceImage || "/placeholder.svg"}
                         alt="Reference preview"
@@ -307,41 +307,41 @@ const Customize = () => {
           {/* Step 4: Review */}
           {step === 4 && (
             <div>
-              <h3 className="mb-8 text-2xl font-semibold text-center text-gray-800">Review your bouquet</h3>
+              <h3 className="mb-8 text-2xl font-semibold text-center ">Review your bouquet</h3>
               <div className="bg-gray-50 p-6 rounded-lg space-y-3">
                 <div className="flex justify-between">
-                  <span className="font-semibold text-gray-700">Product Name:</span>
-                  <span className="text-gray-800">Customize {customization.bouquetType}</span>
+                  <span className="font-semibold ">Product Name:</span>
+                  <span className="">Customize {customization.bouquetType}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-semibold text-gray-700">Type:</span>
-                  <span className="text-gray-800">{customization.bouquetType}</span>
+                  <span className="font-semibold ">Type:</span>
+                  <span className="">{customization.bouquetType}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-semibold text-gray-700">Size:</span>
-                  <span className="text-gray-800">{customization.size}</span>
+                  <span className="font-semibold ">Size:</span>
+                  <span className="">{customization.size}</span>
                 </div>
                 {customization.message && (
                   <div className="flex justify-between">
-                    <span className="font-semibold text-gray-700">Message:</span>
-                    <span className="text-gray-800 text-right max-w-xs">{customization.message}</span>
+                    <span className="font-semibold ">Message:</span>
+                    <span className=" text-right max-w-xs">{customization.message}</span>
                   </div>
                 )}
                 {customization.deliveryDate && (
                   <div className="flex justify-between">
-                    <span className="font-semibold text-gray-700">Delivery Date:</span>
-                    <span className="text-gray-800">{new Date(customization.deliveryDate).toLocaleDateString()}</span>
+                    <span className="font-semibold ">Delivery Date:</span>
+                    <span className="">{new Date(customization.deliveryDate).toLocaleDateString()}</span>
                   </div>
                 )}
                 {customization.specialInstructions && (
                   <div className="flex justify-between">
-                    <span className="font-semibold text-gray-700">Instructions:</span>
-                    <span className="text-gray-800 text-right max-w-xs">{customization.specialInstructions}</span>
+                    <span className="font-semibold ">Instructions:</span>
+                    <span className=" text-right max-w-xs">{customization.specialInstructions}</span>
                   </div>
                 )}
                 {customization.referenceImage && (
                   <div className="mt-4">
-                    <span className="font-semibold text-gray-700">Reference Image:</span>
+                    <span className="font-semibold ">Reference Image:</span>
                     <img
                       src={customization.referenceImage || "/placeholder.svg"}
                       alt="Reference"
@@ -351,7 +351,7 @@ const Customize = () => {
                 )}
                 <div className="border-t pt-4 mt-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-xl font-bold text-gray-800">Total Price:</span>
+                    <span className="text-xl font-bold ">Total Price:</span>
                     <span className="text-2xl font-bold text-pink-500">₹{calculatePrice()}</span>
                   </div>
                 </div>
@@ -374,25 +374,32 @@ const Customize = () => {
           </div>
           <div>
             {step < 4 ? (
-              <button
-                onClick={nextStep}
-                disabled={isNextDisabled}
-                className={`px-8 py-3 rounded-lg transition duration-200 font-semibold ${
-                  isNextDisabled
-                    ? "bg-gray-300 cursor-not-allowed text-gray-500"
-                    : "bg-pink-500 text-white hover:bg-pink-600"
-                }`}
-              >
-                {step === 1 && !user ? "Login to Continue" : "Next"}
-              </button>
-            ) : (
-              <button
-                className="px-8 py-3 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition duration-200 font-semibold"
-                onClick={handleAddToCart}
-              >
-                Add to Cart - ₹{calculatePrice()}
-              </button>
-            )}
+  <button
+    onClick={() => {
+      if (step === 1 && !user) {
+        navigate("/login")
+      } else {
+        nextStep()
+      }
+    }}
+    disabled={step !== 1 && isNextDisabled}
+    className={`px-8 py-3 rounded-lg transition duration-200 font-semibold ${
+      step !== 1 && isNextDisabled
+        ? "bg-gray-300 cursor-not-allowed text-gray-500"
+        : "bg-pink-500 text-white hover:bg-pink-600"
+    }`}
+  >
+    {step === 1 && !user ? "Login to Continue" : "Next"}
+  </button>
+) : (
+  <button
+    className="px-8 py-3 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition duration-200 font-semibold"
+    onClick={handleAddToCart}
+  >
+    Add to Cart - ₹{calculatePrice()}
+  </button>
+)}
+
           </div>
         </div>
 
@@ -400,8 +407,8 @@ const Customize = () => {
         {showSizeChart && (
           <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
             <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md">
-              <h4 className="text-lg font-semibold mb-4 text-center text-gray-800">Bouquet Size Chart</h4>
-              <ul className="text-sm text-gray-700 space-y-2">
+              <h4 className="text-lg font-semibold mb-4 text-center ">Bouquet Size Chart</h4>
+              <ul className="text-sm  space-y-2">
                 {[
                   { size: "XS", description: "2 flowers", price: "₹20" },
                   { size: "S", description: "3–5 flowers", price: "₹30" },
@@ -433,8 +440,8 @@ const Customize = () => {
         {showPriceChart && (
           <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
             <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md">
-              <h4 className="text-lg font-semibold mb-4 text-center text-gray-800">Bouquet Price Chart</h4>
-              <ul className="text-sm text-gray-700 space-y-2">
+              <h4 className="text-lg font-semibold mb-4 text-center ">Bouquet Price Chart</h4>
+              <ul className="text-sm  space-y-2">
                 {[
                   { type: "Flower Bouquet", price: "₹25+" },
                   { type: "Chocolate Bouquet", price: "₹20+" },

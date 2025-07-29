@@ -184,7 +184,7 @@ const ProductManagement = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">Product Management</h1>
+            <h1 className="text-3xl font-bold ">Product Management</h1>
             <button
               onClick={() => setShowAddForm(true)}
               className="bg-pink-500 text-white px-6 py-2 rounded-lg hover:bg-pink-600 transition-colors"
@@ -228,7 +228,7 @@ const ProductManagement = () => {
               <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-semibold">{editingProduct ? "Edit Product" : "Add New Product"}</h2>
-                  <button onClick={resetForm} className="text-gray-500 hover:text-gray-700">
+                  <button onClick={resetForm} className=" hover:">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -237,7 +237,7 @@ const ProductManagement = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Name *</label>
+                    <label className="block text-sm font-medium  mb-1">Product Name *</label>
                     <input
                       type="text"
                       value={productForm.name}
@@ -248,7 +248,7 @@ const ProductManagement = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+                    <label className="block text-sm font-medium  mb-1">Description *</label>
                     <textarea
                       value={productForm.description}
                       onChange={(e) => setProductForm((prev) => ({ ...prev, description: e.target.value }))}
@@ -260,7 +260,7 @@ const ProductManagement = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Price *</label>
+                      <label className="block text-sm font-medium  mb-1">Price *</label>
                       <input
                         type="number"
                         step="0.01"
@@ -272,7 +272,7 @@ const ProductManagement = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+                      <label className="block text-sm font-medium  mb-1">Category *</label>
                       <select
                         value={productForm.category}
                         onChange={(e) => setProductForm((prev) => ({ ...prev, category: e.target.value }))}
@@ -288,7 +288,7 @@ const ProductManagement = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                      <label className="block text-sm font-medium  mb-1">Stock</label>
                       <input
                         type="number"
                         value={productForm.stock}
@@ -299,7 +299,7 @@ const ProductManagement = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Images</label>
+                    <label className="block text-sm font-medium  mb-1">Product Images</label>
                     {productForm.images.map((image, index) => (
                       <div key={index} className="flex gap-2 mb-2">
                         <input
@@ -333,7 +333,7 @@ const ProductManagement = () => {
                       onChange={(e) => setProductForm((prev) => ({ ...prev, featured: e.target.checked }))}
                       className="mr-2"
                     />
-                    <label htmlFor="featured" className="text-sm text-gray-700">
+                    <label htmlFor="featured" className="text-sm ">
                       Featured Product
                     </label>
                   </div>
@@ -348,7 +348,7 @@ const ProductManagement = () => {
                     <button
                       type="button"
                       onClick={resetForm}
-                      className="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition-colors"
+                      className="bg-gray-300  px-6 py-2 rounded-lg hover:bg-gray-400 transition-colors"
                     >
                       Cancel
                     </button>
@@ -361,8 +361,8 @@ const ProductManagement = () => {
           {/* Products List */}
           {products.length === 0 ? (
             <div className="bg-white rounded-lg shadow-md p-8 text-center">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">No Products Found</h3>
-              <p className="text-gray-600">No products match your current filters.</p>
+              <h3 className="text-lg font-semibold  mb-2">No Products Found</h3>
+              <p className="">No products match your current filters.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -378,21 +378,21 @@ const ProductManagement = () => {
 
                   <div className="p-4">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-gray-800 line-clamp-1">{product.name}</h3>
+                      <h3 className="font-semibold  line-clamp-1">{product.name}</h3>
                       {product.featured && (
                         <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">Featured</span>
                       )}
                     </div>
 
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
+                    <p className=" text-sm mb-3 line-clamp-2">{product.description}</p>
 
                     <div className="flex justify-between items-center mb-3">
                       <span className="text-lg font-bold text-pink-600">₹{product.price}</span>
-                      <span className="text-sm text-gray-500">Stock: {product.stock}</span>
+                      <span className="text-sm ">Stock: {product.stock}</span>
                     </div>
 
                     <div className="flex justify-between items-center mb-4">
-                      <span className="text-sm text-gray-500 capitalize">{product.category.replace("-", " ")}</span>
+                      <span className="text-sm  capitalize">{product.category.replace("-", " ")}</span>
                       <span
                         className={`text-xs px-2 py-1 rounded ${
                           product.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"

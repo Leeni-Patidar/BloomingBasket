@@ -38,7 +38,7 @@ const OrderDetail = () => {
 
   if (!order) {
     return (
-      <div className="min-h-screen flex justify-center items-center text-gray-600">
+      <div className="min-h-screen flex justify-center items-center ">
         <p>Order not found</p>
       </div>
     )
@@ -48,8 +48,8 @@ const OrderDetail = () => {
     <div className="min-h-screen bg-gray-50 py-10 px-4">
       <div className="max-w-4xl mx-auto bg-white p-6 rounded shadow">
         <div className="mb-6 border-b pb-4">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Order #{order.orderNumber}</h1>
-          <p className="text-gray-600">Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
+          <h1 className="text-2xl font-bold  mb-2">Order #{order.orderNumber}</h1>
+          <p className="">Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
           <span
             className={`inline-block mt-2 px-3 py-1 rounded-full text-sm font-medium ${
               order.status === "pending"
@@ -68,7 +68,7 @@ const OrderDetail = () => {
         </div>
 
         <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">Items</h2>
+          <h2 className="text-lg font-semibold  mb-2">Items</h2>
           <div className="space-y-3">
             {order.items.map((item, i) => (
               <div key={i} className="flex items-center justify-between gap-4 border p-3 rounded">
@@ -79,12 +79,12 @@ const OrderDetail = () => {
                     className="w-14 h-14 object-cover rounded"
                   />
                   <div>
-                    <p className="font-medium text-gray-800">{item.productId?.name || "Product"}</p>
-                    <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
-                    <p className="text-sm text-gray-600">Price: ₹{item.price}</p>
+                    <p className="font-medium ">{item.productId?.name || "Product"}</p>
+                    <p className="text-sm ">Qty: {item.quantity}</p>
+                    <p className="text-sm ">Price: ₹{item.price}</p>
                   </div>
                 </div>
-                <p className="font-semibold text-gray-800">
+                <p className="font-semibold ">
                   ₹{(item.price * item.quantity).toFixed(2)}
                 </p>
               </div>
@@ -93,8 +93,8 @@ const OrderDetail = () => {
         </div>
 
         <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">Shipping Address</h2>
-          <div className="border p-3 rounded text-gray-700">
+          <h2 className="text-lg font-semibold  mb-2">Shipping Address</h2>
+          <div className="border p-3 rounded ">
             <p className="font-semibold">{order.shippingAddress.fullName}</p>
             <p>
               {order.shippingAddress.addressLine1}
@@ -108,8 +108,8 @@ const OrderDetail = () => {
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">Payment Summary</h2>
-          <div className="border p-3 rounded text-gray-700 space-y-1">
+          <h2 className="text-lg font-semibold  mb-2">Payment Summary</h2>
+          <div className="border p-3 rounded  space-y-1">
             <p>Payment Method: <span className="font-medium">{order.paymentMethod === "cod" ? "Cash on Delivery" : "Online Payment"}</span></p>
             <p>Subtotal: ₹{order.subtotal.toFixed(2)}</p>
             <p>Delivery Fee: ₹{order.deliveryFee.toFixed(2)}</p>
@@ -121,8 +121,8 @@ const OrderDetail = () => {
 
         {order.orderNotes && (
           <div className="mt-4">
-            <h3 className="font-semibold text-gray-800 mb-1">Order Notes</h3>
-            <p className="text-gray-600">{order.orderNotes}</p>
+            <h3 className="font-semibold  mb-1">Order Notes</h3>
+            <p className="">{order.orderNotes}</p>
           </div>
         )}
 

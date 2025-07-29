@@ -38,8 +38,8 @@ const Wishlist = () => {
         <div className="text-center">
           <div className="mb-8">
             <i className="fas fa-heart text-6xl text-gray-300 mb-4"></i>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Your wishlist is empty</h2>
-            <p className="text-gray-600 mb-6">Save your favorite products to your wishlist for easy access later.</p>
+            <h2 className="text-3xl font-bold  mb-2">Your wishlist is empty</h2>
+            <p className=" mb-6">Save your favorite products to your wishlist for easy access later.</p>
             <Link
               to="/shop"
               className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 hover:shadow-lg transform hover:scale-105"
@@ -58,8 +58,8 @@ const Wishlist = () => {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">My Wishlist</h1>
-          <p className="text-lg text-gray-600">
+          <h1 className="text-4xl font-bold  mb-2">My Wishlist</h1>
+          <p className="text-lg ">
             Your saved favorites ({wishlistItems.length} item{wishlistItems.length !== 1 ? "s" : ""})
           </p>
         </div>
@@ -97,7 +97,7 @@ const Wishlist = () => {
                 {/* Product Info */}
                 <div className="p-4">
                   <Link to={`/product/${product._id}`}>
-                    <h3 className="text-lg font-semibold text-gray-800 truncate hover:text-pink-600 transition mb-2">
+                    <h3 className="text-lg font-semibold  truncate hover:text-pink-600 transition mb-2">
                       {product.name}
                     </h3>
                   </Link>
@@ -105,7 +105,7 @@ const Wishlist = () => {
                   <p className="text-pink-600 font-bold text-xl mb-3">₹{product.price}</p>
 
                   {product.description && (
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
+                    <p className=" text-sm mb-4 line-clamp-2">{product.description}</p>
                   )}
 
                   {/* Action Buttons */}
@@ -150,7 +150,7 @@ const Wishlist = () => {
         <div className="text-center mt-12">
           <Link
             to="/shop"
-            className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-semibold hover:bg-gray-50 transition"
+            className="inline-flex items-center px-6 py-3 border border-gray-300  rounded-full font-semibold hover:bg-gray-50 transition"
           >
             <i className="fas fa-arrow-left mr-2"></i>
             Continue Shopping
