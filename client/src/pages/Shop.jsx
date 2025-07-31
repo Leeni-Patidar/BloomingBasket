@@ -7,18 +7,20 @@ import { AuthContext } from "../context/AuthContext"
 import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
 
-const bouquetTypes = [
-  "Flower Bouquet",
-  "Chocolate Bouquet",
-  "Soft Toy Bouquet",
-  "Pipecleaner Bouquet",
-  "Butterfly Bouquet",
-  "Fairy Light Bouquet",
-  "Crochet Bouquet",
-  "Origami Bouquet",
-  "Fruit Bouquet",
-  "Skincare Bouquet",
-]
+// Mapping readable labels to backend enums
+const categoryMap = {
+  "Flower Bouquet": "flower",
+  "Chocolate Bouquet": "chocolate",
+  "Soft Toy Bouquet": "soft-toy",
+  "Pipecleaner Bouquet": "pipecleaner",
+  "Butterfly Bouquet": "butterfly",
+  "Fairy Light Bouquet": "fairy-light",
+  "Crochet Bouquet": "crochet",
+  "Origami Bouquet": "origami",
+  "Fruit Bouquet": "fruit",
+  "Skincare Bouquet": "skincare",
+}
+const reverseCategoryMap = Object.fromEntries(Object.entries(categoryMap).map(([label, key]) => [key, label]))
 
 const Shop = () => {
   const [products, setProducts] = useState([])
@@ -44,7 +46,6 @@ const Shop = () => {
       setLoading(true)
       const { category, sort, price, page } = filters
 
-      // Map sort values to backend expected format
       const sortMap = {
         latest: "createdAt",
         price_low_high: "price-low",
@@ -62,7 +63,7 @@ const Shop = () => {
 
       const res = await axios.get(`/api/products?${params.toString()}`)
       setProducts(res.data.products || [])
-      setTotalPages(res.data.pagination?.pages || 1)
+      setTotalPages(res.data.totalPages || 1)
     } catch (err) {
       console.error("Product fetch error:", err)
       toast.error("Failed to load products")
@@ -77,12 +78,9 @@ const Shop = () => {
       if (!token) return
 
       const res = await axios.get("/api/user", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
 
-      // Extract wishlist from the response object
       const wishlistItems = res.data.wishlist || []
       const ids = wishlistItems.map((item) => (typeof item === "object" ? item._id : item))
       setWishlist(ids)
@@ -117,9 +115,7 @@ const Shop = () => {
         "/api/user/cart",
         { productId: product._id, quantity: 1 },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         },
       )
       toast.success("Added to cart")
@@ -150,11 +146,7 @@ const Shop = () => {
       }
     } catch (err) {
       console.error("Wishlist update error:", err)
-      if (err.response?.data?.message === "Already in wishlist") {
-        toast.info("Item already in wishlist")
-      } else {
-        toast.error(err.response?.data?.message || "Wishlist update failed")
-      }
+      toast.error(err.response?.data?.message || "Wishlist update failed")
     }
   }
 
@@ -162,31 +154,33 @@ const Shop = () => {
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-10">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold mb-2 ">Shop Flowers</h1>
-          <p className="text-lg ">Browse our beautiful selection of fresh floral arrangements.</p>
+          <h1 className="text-4xl font-bold mb-2">Shop Flowers</h1>
+          <p className="text-lg">Browse our beautiful selection of fresh floral arrangements.</p>
         </div>
 
         {/* Filters */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <div>
-              <label className="block font-semibold mb-2 ">Bouquet Type</label>
+              <label className="block font-semibold mb-2">Bouquet Type</label>
               <select
-                value={filters.category}
-                onChange={(e) => handleFilterChange("category", e.target.value)}
+                value={filters.category === "all" ? "all" : reverseCategoryMap[filters.category]}
+                onChange={(e) =>
+                  handleFilterChange("category", e.target.value === "all" ? "all" : categoryMap[e.target.value])
+                }
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent"
               >
                 <option value="all">All Bouquets</option>
-                {bouquetTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
+                {Object.keys(categoryMap).map((label) => (
+                  <option key={label} value={label}>
+                    {label}
                   </option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="block font-semibold mb-2 ">Sort By</label>
+              <label className="block font-semibold mb-2">Sort By</label>
               <select
                 value={filters.sort}
                 onChange={(e) => handleFilterChange("sort", e.target.value)}
@@ -199,7 +193,7 @@ const Shop = () => {
             </div>
 
             <div>
-              <label className="block font-semibold mb-2 ">Max Price (₹)</label>
+              <label className="block font-semibold mb-2">Max Price (₹)</label>
               <input
                 type="number"
                 value={filters.price}
@@ -228,7 +222,7 @@ const Shop = () => {
           </div>
         </div>
 
-        {/* Loading State */}
+        {/* Loading */}
         {loading && (
           <div className="flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
@@ -241,8 +235,8 @@ const Shop = () => {
             <div className="mb-4">
               <i className="fas fa-search text-6xl text-gray-300"></i>
             </div>
-            <h3 className="text-2xl font-semibold  mb-2">No products found</h3>
-            <p className=" mb-6">Try adjusting your filters or search criteria</p>
+            <h3 className="text-2xl font-semibold mb-2">No products found</h3>
+            <p className="mb-6">Try adjusting your filters or search criteria</p>
             <button
               onClick={() =>
                 setFilters({
@@ -262,7 +256,7 @@ const Shop = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product) => (
                 <ProductCard
-                  key={product._id || product.id}
+                  key={product._id}
                   product={product}
                   onAddToCart={() => handleAddToCart(product)}
                   onAddToWishlist={() => handleAddToWishlist(product._id)}
@@ -281,8 +275,8 @@ const Shop = () => {
               disabled={filters.page === 1}
               className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                 filters.page === 1
-                  ? "bg-gray-200  cursor-not-allowed"
-                  : "bg-white  hover:bg-gray-100 border border-gray-300"
+                  ? "bg-gray-200 cursor-not-allowed"
+                  : "bg-white hover:bg-gray-100 border border-gray-300"
               }`}
             >
               <i className="fas fa-chevron-left mr-2"></i>
@@ -291,16 +285,11 @@ const Shop = () => {
 
             <div className="flex gap-1">
               {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                let pageNum
-                if (totalPages <= 5) {
-                  pageNum = i + 1
-                } else if (filters.page <= 3) {
-                  pageNum = i + 1
-                } else if (filters.page >= totalPages - 2) {
-                  pageNum = totalPages - 4 + i
-                } else {
-                  pageNum = filters.page - 2 + i
-                }
+                let pageNum = filters.page
+                if (totalPages <= 5) pageNum = i + 1
+                else if (filters.page <= 3) pageNum = i + 1
+                else if (filters.page >= totalPages - 2) pageNum = totalPages - 4 + i
+                else pageNum = filters.page - 2 + i
 
                 return (
                   <button
@@ -309,7 +298,7 @@ const Shop = () => {
                     className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                       filters.page === pageNum
                         ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white"
-                        : "bg-white  hover:bg-gray-100 border border-gray-300"
+                        : "bg-white hover:bg-gray-100 border border-gray-300"
                     }`}
                   >
                     {pageNum}
@@ -323,8 +312,8 @@ const Shop = () => {
               disabled={filters.page === totalPages}
               className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                 filters.page === totalPages
-                  ? "bg-gray-200  cursor-not-allowed"
-                  : "bg-white  hover:bg-gray-100 border border-gray-300"
+                  ? "bg-gray-200 cursor-not-allowed"
+                  : "bg-white hover:bg-gray-100 border border-gray-300"
               }`}
             >
               Next
@@ -333,9 +322,9 @@ const Shop = () => {
           </div>
         )}
 
-        {/* Results Info */}
+        {/* Footer Info */}
         {!loading && products.length > 0 && (
-          <div className="text-center mt-8 ">
+          <div className="text-center mt-8">
             <p>
               Showing page {filters.page} of {totalPages} ({products.length} products)
             </p>

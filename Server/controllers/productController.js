@@ -1,5 +1,3 @@
-// ✅ controllers/productController.js (Converted to CommonJS)
-
 const Product = require("../models/Product");
 
 const getProducts = async (req, res) => {
@@ -11,8 +9,7 @@ const getProducts = async (req, res) => {
       search,
       minPrice,
       maxPrice,
-      sortBy = "createdAt",
-      sortOrder = "desc",
+      sort, // expects: "price-low", "price-high", or "createdAt"
       featured,
     } = req.query;
 
@@ -27,11 +24,14 @@ const getProducts = async (req, res) => {
     }
     if (featured === "true") filter.featured = true;
 
-    const sort = {};
-    sort[sortBy] = sortOrder === "asc" ? 1 : -1;
+    // ✅ Custom sort mapping
+    let sortOption = { createdAt: -1 };
+    if (sort === "price-low") sortOption = { price: 1 };
+    else if (sort === "price-high") sortOption = { price: -1 };
+    else if (sort === "createdAt") sortOption = { createdAt: -1 };
 
     const products = await Product.find(filter)
-      .sort(sort)
+      .sort(sortOption)
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .populate("reviews.user", "name");
@@ -41,7 +41,7 @@ const getProducts = async (req, res) => {
     res.json({
       products,
       totalPages: Math.ceil(total / limit),
-      currentPage: page,
+      currentPage: Number(page),
       total,
     });
   } catch (error) {

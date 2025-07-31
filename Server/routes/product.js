@@ -30,7 +30,7 @@ router.post(
     body("category").isIn([
       "flower", "chocolate", "soft-toy", "pipecleaner",
       "butterfly", "fairy-light", "crochet", "origami",
-      "fruit", "skincare"
+      "fruit", "skincare", "custom"
     ]).withMessage("Invalid category"),
     body("stock").isInt({ min: 0 }).withMessage("Stock must be a non-negative integer")
   ],
