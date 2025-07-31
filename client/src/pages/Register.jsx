@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+ import { Eye, EyeOff } from "lucide-react"; 
+ 
 const Register = () => {
   const navigate = useNavigate();
   const API = "http://localhost:5001/api/auth";
@@ -202,12 +203,14 @@ const Register = () => {
                       className="w-full border-2 border-black rounded-lg px-4 py-3 pr-12"
                     />
                     <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2"
-                    >
-                      {showPassword ? "Hide" : "Show"}
-                    </button>
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-3 flex items-center top-5"
+                    tabIndex={-1}
+                  >
+                    {/* Use below if you have lucide-react installed */}
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
                   </div>
                   <button
                     type="button"

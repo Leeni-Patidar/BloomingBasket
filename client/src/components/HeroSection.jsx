@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
-    <section className="min-h-screen flex items-center  ">
-      <div className="container mx-auto relative z-10 px-4">
-        <div className="flex flex-col lg:flex-row items-center justify-between min-h-[calc(100vh-80px)] gap-y-12 lg:gap-x-16">
+    <section className="  items-center  ">
+      <div className="container mx-auto relative py-4 px-4 pb-6">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-y-12 lg:gap-x-16">
           {/* Left: Text */}
           <div className="w-full lg:w-1/2 text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">

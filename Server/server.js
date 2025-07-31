@@ -13,6 +13,7 @@ const uploadRoute = require("./routes/uploadRoute")
 const addressRoute = require("./routes/addressRoute")
 const userRoute = require("./routes/user")
 const wishlistRoute = require("./routes/wishlistRoute")
+const contactRoute = require("./routes/contactRoute")
 
 dotenv.config()
 
@@ -46,14 +47,15 @@ mongoose
 
 // ✅ API Routes
 app.use("/api/auth", authRoute)
-app.use("/api/user", userRoute) // 🛒 Cart & user data
-app.use("/api/user/cart", cartRoute) // 🛒 Cart routes
-app.use("/api/user/wishlist", wishlistRoute) // ❤️ Wishlist routes
+app.use("/api/user", userRoute)
+app.use("/api/user/cart", cartRoute) 
+app.use("/api/user/wishlist", wishlistRoute) 
 app.use("/api/products", productRoute)
-app.use("/api/products/custom", customProductRoute) // Add this line
+app.use("/api/products/custom", customProductRoute) 
 app.use("/api/orders", orderRoute)
 app.use("/api/upload", uploadRoute)
 app.use("/api/addresses", addressRoute)
+app.use("/api/contact", contactRoute)
 
 // ✅ Health Check Route
 app.get("/api/health", (req, res) => {

@@ -89,7 +89,7 @@ const Login = () => {
                   </label>
                   <input
                     type={showPassword ? "text" : "password"}
-                    className="w-full border-2 border-black rounded-lg px-4 py-3 pr-12 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
+                    className="w-full border-2 border-black rounded-lg px-4 py-3 pr-10 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
                     id="password"
                     name="password"
                     value={formData.password}
@@ -99,13 +99,11 @@ const Login = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-3 flex items-center top-1"
+                    className="absolute inset-y-0 right-3 flex items-center top-5"
                     tabIndex={-1}
                   >
                     {/* Use below if you have lucide-react installed */}
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-
-                    
                   </button>
                 </div>
 
