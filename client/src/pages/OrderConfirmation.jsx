@@ -53,7 +53,7 @@ const OrderConfirmation = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen  py-8">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
@@ -175,7 +175,7 @@ const OrderConfirmation = () => {
           <div className="flex gap-4 justify-center">
             <Link
               to="/my-orders"
-              className="bg-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink-600 transition-colors"
+              className="button-bg button-bg:hover px-6 py-3 rounded-lg font-semibold transition-colors"
             >
               View All Orders
             </Link>

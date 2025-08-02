@@ -297,7 +297,45 @@ const Customize = () => {
           )}
         </div>
 
-        {/* Size and Price Chart Modals remain unchanged */}
+       {showSizeChart && (
+        <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50" style={{ backdropFilter: "blur(4px)" }}>
+          <div className="bg-white p-6 rounded-lg max-w-md w-full">
+            <h3 className="text-xl font-bold mb-4">Size Chart</h3>
+            <ul className="text-sm space-y-2">
+              <li><strong>Small:</strong> 5-7 stems</li>
+              <li><strong>Medium:</strong> 8-12 stems</li>
+              <li><strong>Large:</strong> 13-20 stems</li>
+              <li><strong>Deluxe:</strong> 20+ stems</li>
+            </ul>
+            <button
+              onClick={() => setShowSizeChart(false)}
+              className="mt-4 button-bg button-bg:hover  px-4 py-2 rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showPriceChart && (
+        <div className="fixed inset-0  bg-opacity-40 flex items-center justify-center z-50 " style={{ backdropFilter: "blur(4px)" }}>
+          <div className="bg-white p-6 rounded-lg max-w-md w-full">
+            <h3 className="text-xl font-bold mb-4">Price Chart</h3>
+            <ul className="text-sm space-y-2">
+              <li><strong>Small:</strong> ₹299</li>
+              <li><strong>Medium:</strong> ₹499</li>
+              <li><strong>Large:</strong> ₹699</li>
+              <li><strong>Deluxe:</strong> ₹999</li>
+            </ul>
+            <button
+              onClick={() => setShowPriceChart(false)}
+              className="mt-4 button-bg button-bg:hover px-4 py-2 rounded"
+            >
+              Close
+            </button>
+          </div>
+          </div>
+      )}
       </div>
     </div>
   )

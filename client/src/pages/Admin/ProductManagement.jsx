@@ -180,14 +180,14 @@ const ProductManagement = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen  py-8">
       <div className="container mx-auto px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold ">Product Management</h1>
             <button
               onClick={() => setShowAddForm(true)}
-              className="bg-pink-500 text-white px-6 py-2 rounded-lg hover:bg-pink-600 transition-colors"
+              className="button-bg px-6 py-2 rounded-lg button-bg:hover transition-colors"
             >
               Add New Product
             </button>
@@ -202,14 +202,14 @@ const ProductManagement = () => {
                   placeholder="Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-pink-500 focus:outline-none"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2  focus:outline-none"
                 />
               </div>
               <div>
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 focus:border-pink-500 focus:outline-none"
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none"
                 >
                   <option value="all">All Categories</option>
                   {categories.map((category) => (
@@ -224,7 +224,7 @@ const ProductManagement = () => {
 
           {/* Add/Edit Product Form */}
           {showAddForm && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center p-4 z-50"  style={{ backdropFilter: "blur(4px)" }}>
               <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-semibold">{editingProduct ? "Edit Product" : "Add New Product"}</h2>
@@ -320,12 +320,12 @@ const ProductManagement = () => {
                         )}
                       </div>
                     ))}
-                    <button type="button" onClick={addImageField} className="text-pink-500 hover:text-pink-600 text-sm">
+                    <button type="button" onClick={addImageField} className=" button-bg button-bg:hover text-sm rounded p-2">
                       + Add Another Image
                     </button>
                   </div>
 
-                  <div className="flex items-center">
+                  {/* <div className="flex items-center">
                     <input
                       type="checkbox"
                       id="featured"
@@ -336,12 +336,12 @@ const ProductManagement = () => {
                     <label htmlFor="featured" className="text-sm ">
                       Featured Product
                     </label>
-                  </div>
+                  </div> */}
 
                   <div className="flex gap-3 pt-4">
                     <button
                       type="submit"
-                      className="bg-pink-500 text-white px-6 py-2 rounded-lg hover:bg-pink-600 transition-colors"
+                      className="button-bg button-bg:hover px-6 py-2 rounded-lg transition-colors"
                     >
                       {editingProduct ? "Update Product" : "Create Product"}
                     </button>
@@ -360,66 +360,81 @@ const ProductManagement = () => {
 
           {/* Products List */}
           {products.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-8 text-center">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <h3 className="text-lg font-semibold  mb-2">No Products Found</h3>
               <p className="">No products match your current filters.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
-                <div key={product._id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                  <div className="aspect-square overflow-hidden">
-                    <img
-                      src={product.images?.[0] || "/placeholder.svg?height=300&width=300"}
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+  {products.map((product) => {
+    const trimmedDescription = product.description
+      .split(" ")
+      .slice(0, 15)
+      .join(" ") + (product.description.split(" ").length > 20 ? "..." : "");
 
-                  <div className="p-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold  line-clamp-1">{product.name}</h3>
-                      {product.featured && (
-                        <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">Featured</span>
-                      )}
-                    </div>
+    return (
+      <div
+        key={product._id}
+        className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+      >
 
-                    <p className=" text-sm mb-3 line-clamp-2">{product.description}</p>
+        <div className="relative h-60 overflow-hidden bg-gray-100">
+          <img
+            src={product.images?.[0] || "/placeholder.svg?height=300&width=300"}
+            alt={product.name}
+            className="w-full h-full object-cover"
+          />
+        </div>
 
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-lg font-bold text-pink-600">₹{product.price}</span>
-                      <span className="text-sm ">Stock: {product.stock}</span>
-                    </div>
+        <div className="p-4">
+          <div className="flex justify-between items-start mb-2">
+            <h3 className="font-semibold line-clamp-1">{product.name}</h3>
+            {product.featured && (
+              <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
+                Featured
+              </span>
+            )}
+          </div>
 
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-sm  capitalize">{product.category.replace("-", " ")}</span>
-                      <span
-                        className={`text-xs px-2 py-1 rounded ${
-                          product.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {product.isActive ? "Active" : "Inactive"}
-                      </span>
-                    </div>
+          <p className="text-sm mb-3 text-gray-700 line-clamp-2">{trimmedDescription}</p>
 
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleEdit(product)}
-                        className="flex-1 bg-blue-500 text-white py-2 px-3 rounded text-sm hover:bg-blue-600 transition-colors"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(product._id)}
-                        className="flex-1 bg-red-500 text-white py-2 px-3 rounded text-sm hover:bg-red-600 transition-colors"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-lg font-bold text-pink-600">₹{product.price}</span>
+            <span className="text-sm">Stock: {product.stock}</span>
+          </div>
+
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-sm capitalize">{product.category.replace("-", " ")}</span>
+            <span
+              className={`text-xs px-2 py-1 rounded ${
+                product.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+              }`}
+            >
+              {product.isActive ? "Active" : "Inactive"}
+            </span>
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleEdit(product)}
+              className="flex-1 button-bg button-bg:hover py-2 px-3 rounded text-sm"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => handleDelete(product._id)}
+              className="flex-1 py-2 px-3 rounded text-sm button-bg button-bg:hover"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  })}
+</div>
+
+
           )}
 
           {/* Pagination */}

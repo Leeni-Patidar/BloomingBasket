@@ -221,12 +221,6 @@ const Checkout = () => {
                 </div>
               ))}
             </div>
-
-            {/* Notes */}
-            {/* <div className="bg-white p-6 rounded shadow">
-              <h2 className="text-xl font-semibold mb-2">Order Notes (optional)</h2>
-              <textarea value={orderNotes} onChange={(e) => setOrderNotes(e.target.value)} placeholder="Any special instructions..." className="w-full border rounded px-3 py-2" rows="3" />
-            </div> */}
           </div>
 
           {/* Summary */}

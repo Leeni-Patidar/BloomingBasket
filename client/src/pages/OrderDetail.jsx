@@ -45,7 +45,7 @@ const OrderDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4">
+    <div className="min-h-screen  py-10 px-4">
       <div className="max-w-4xl mx-auto bg-white p-6 rounded shadow">
         <div className="mb-6 border-b pb-4">
           <h1 className="text-2xl font-bold  mb-2">Order #{order.orderNumber}</h1>
@@ -129,7 +129,7 @@ const OrderDetail = () => {
         <div className="mt-6 text-center">
           <Link
             to="/my-orders"
-            className="inline-block bg-pink-500 text-white px-6 py-3 rounded hover:bg-pink-600 transition"
+            className="inline-block px-6 py-3 rounded button-bg button-bg:hover transition"
           >
             Back to My Orders
           </Link>
