@@ -62,7 +62,11 @@ const Shop = () => {
       if (price) params.append("maxPrice", price)
 
       const res = await axios.get(`/api/products?${params.toString()}`)
-      setProducts(res.data.products || [])
+
+      // ✅ Filter out custom products before setting state
+      const nonCustomProducts = (res.data.products || []).filter((p) => !p.isCustom)
+
+      setProducts(nonCustomProducts)
       setTotalPages(res.data.totalPages || 1)
     } catch (err) {
       console.error("Product fetch error:", err)
@@ -222,15 +226,12 @@ const Shop = () => {
           </div>
         </div>
 
-        {/* Loading */}
-        {loading && (
+        {/* Product Grid */}
+        {loading ? (
           <div className="flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
           </div>
-        )}
-
-        {/* Product List */}
-        {!loading && products.length === 0 ? (
+        ) : products.length === 0 ? (
           <div className="text-center py-12">
             <div className="mb-4">
               <i className="fas fa-search text-6xl text-gray-300"></i>
@@ -252,19 +253,17 @@ const Shop = () => {
             </button>
           </div>
         ) : (
-          !loading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {products.map((product) => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  onAddToCart={() => handleAddToCart(product)}
-                  onAddToWishlist={() => handleAddToWishlist(product._id)}
-                  isInWishlist={wishlist.includes(product._id)}
-                />
-              ))}
-            </div>
-          )
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                onAddToCart={() => handleAddToCart(product)}
+                onAddToWishlist={() => handleAddToWishlist(product._id)}
+                isInWishlist={wishlist.includes(product._id)}
+              />
+            ))}
+          </div>
         )}
 
         {/* Pagination */}
@@ -279,8 +278,7 @@ const Shop = () => {
                   : "bg-white hover:bg-gray-100 border border-gray-300"
               }`}
             >
-              <i className="fas fa-chevron-left mr-2"></i>
-              Previous
+              <i className="fas fa-chevron-left mr-2"></i>Previous
             </button>
 
             <div className="flex gap-1">
@@ -316,18 +314,8 @@ const Shop = () => {
                   : "bg-white hover:bg-gray-100 border border-gray-300"
               }`}
             >
-              Next
-              <i className="fas fa-chevron-right ml-2"></i>
+              Next<i className="fas fa-chevron-right ml-2"></i>
             </button>
-          </div>
-        )}
-
-        {/* Footer Info */}
-        {!loading && products.length > 0 && (
-          <div className="text-center mt-8">
-            <p>
-              Showing page {filters.page} of {totalPages} ({products.length} products)
-            </p>
           </div>
         )}
       </div>

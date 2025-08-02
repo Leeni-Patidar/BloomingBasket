@@ -84,13 +84,14 @@ const ForgotPassword = () => {
                     Registered Email
                   </label>
                   <input
-                    type="email"
-                    id="email"
-                    className="w-full border-2 border-black rounded-lg px-4 py-3 mb-4"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
+  type="email"
+  id="email"
+  className="w-full border-2 border-black rounded-lg px-4 py-3 mb-4 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  required
+/>
+
                   <button
                     type="submit"
                     disabled={loading}
@@ -109,7 +110,7 @@ const ForgotPassword = () => {
                   <input
                     type="text"
                     id="otp"
-                    className="w-full border-2 border-black rounded-lg px-4 py-3 mb-4"
+                     className="w-full border-2 border-black rounded-lg px-4 py-3 mb-4 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
                     required
@@ -133,7 +134,7 @@ const ForgotPassword = () => {
                     <input
                       type={showPassword ? "text" : "password"}
                       id="newPassword"
-                      className="w-full border-2 border-black rounded-lg px-4 py-3 pr-12"
+                      className="w-full border-2 border-black rounded-lg px-4 py-3 pr-12 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       required
@@ -151,7 +152,7 @@ const ForgotPassword = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg"
+                    className="w-full button-bg px-6 py-3 text-lg font-semibold rounded-lg bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
                   >
                     {loading ? "Resetting..." : "Reset Password"}
                   </button>

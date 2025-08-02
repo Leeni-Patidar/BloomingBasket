@@ -45,7 +45,7 @@ const Cart = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center ">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
       </div>
     )
@@ -53,7 +53,7 @@ const Cart = () => {
 
   if (!cartItems || cartItems.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center ">
         <div className="text-center">
           <div className="mb-8">
             <i className="fas fa-shopping-cart text-6xl text-gray-300 mb-4"></i>
@@ -62,14 +62,14 @@ const Cart = () => {
             <div className="space-x-4">
               <Link
                 to="/shop"
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 hover:shadow-lg transform hover:scale-105"
+                className="inline-flex items-center px-6 py-3 button-bg button-bg:hover rounded-full transition-all duration-200 hover:shadow-lg transform hover:scale-105"
               >
                 <i className="fas fa-shopping-bag mr-2"></i>
                 Shop Products
               </Link>
               <Link
                 to="/customize"
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-full font-semibold hover:from-purple-600 hover:to-pink-700 transition-all duration-200 hover:shadow-lg transform hover:scale-105"
+                className="inline-flex items-center px-6 py-3 button-bg button-bg:hover rounded-full transition-all duration-200 hover:shadow-lg transform hover:scale-105"
               >
                 <i className="fas fa-palette mr-2"></i>
                 Customize Bouquet
@@ -85,7 +85,7 @@ const Cart = () => {
   const totalAmount = getCartTotal()
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen  py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
@@ -100,7 +100,7 @@ const Cart = () => {
           <div className="lg:w-2/3">
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               {/* Desktop Table Header */}
-              <div className="hidden md:block bg-gray-50 px-6 py-4">
+              <div className="hidden md:block bg-white px-6 py-4">
                 <div className="grid grid-cols-12 gap-4 font-semibold ">
                   <div className="col-span-6">Product</div>
                   <div className="col-span-2 text-center">Price</div>
@@ -129,7 +129,7 @@ const Cart = () => {
                               <p>Size: {item.productId.customization.size}</p>
                             </div>
                           )}
-                          <p className="text-pink-600 font-bold text-lg mb-2">₹{item.productId?.price}</p>
+                          <p className=" font-bold text-lg mb-2">₹{item.productId?.price}</p>
 
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
@@ -194,7 +194,7 @@ const Cart = () => {
                         </div>
 
                         <div className="col-span-2 text-center">
-                          <span className="font-semibold text-pink-600">₹{item.productId?.price}</span>
+                          <span className="font-semibold">₹{item.productId?.price}</span>
                         </div>
 
                         <div className="col-span-2 text-center">
@@ -231,7 +231,7 @@ const Cart = () => {
             <div className="mt-4">
               <button
                 onClick={handleClearCart}
-                className="px-6 py-2 border border-red-500 text-red-500 rounded-full hover:bg-red-50 transition"
+                className="px-6 py-2  button-bg button-bg:hover rounded-full transition"
                 disabled={loading}
               >
                 <i className="fas fa-trash mr-2"></i>
@@ -265,7 +265,7 @@ const Cart = () => {
               <div className="space-y-3">
                 <Link
                   to="/checkout"
-                  className="w-full block text-center py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 hover:shadow-lg transform hover:scale-105"
+                  className="w-full block text-center py-3 button-bg button-bg:hover rounded-full transition-all duration-200 hover:shadow-lg transform hover:scale-105"
                 >
                   <i className="fas fa-credit-card mr-2"></i>
                   Proceed to Checkout

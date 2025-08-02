@@ -113,7 +113,7 @@ const Register = () => {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full border-2 border-black rounded-lg px-4 py-3"
+                      className="w-full border-2 border-black rounded-lg px-4 py-3 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
                     />
                   </div>
 
@@ -125,7 +125,7 @@ const Register = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full border-2 border-black rounded-lg px-4 py-3"
+                      className="w-full border-2 border-black rounded-lg px-4 py-3 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
                     />
                   </div>
 
@@ -137,7 +137,7 @@ const Register = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="10-digit phone number"
-                      className="w-full border-2 border-black rounded-lg px-4 py-3"
+                      className="w-full border-2 border-black rounded-lg px-4 py-3 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
                     />
                   </div>
 
@@ -162,7 +162,7 @@ const Register = () => {
                       name="otp"
                       value={formData.otp}
                       onChange={handleChange}
-                      className="w-full border-2 border-black rounded-lg px-4 py-3"
+                      className="w-full border-2 border-black rounded-lg px-4 py-3 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
                     />
                   </div>
 
@@ -200,7 +200,7 @@ const Register = () => {
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
-                      className="w-full border-2 border-black rounded-lg px-4 py-3 pr-12"
+                      className="w-full border-2 border-black rounded-lg px-4 py-3 pr-12 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
                     />
                     <button
                     type="button"

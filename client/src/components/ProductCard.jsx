@@ -166,7 +166,7 @@ const ProductCard = ({ product }) => {
 
           <div className="text-xs mb-3">
             {product.stock > 0 ? (
-              <span className="text-green-600">In Stock ({product.stock} available)</span>
+              <span className="text-green-600">In Stock </span>
             ) : (
               <span className="text-red-600">Out of Stock</span>
             )}
@@ -178,23 +178,23 @@ const ProductCard = ({ product }) => {
         <button
           onClick={handleAddToCart}
           disabled={cartLoading || product.stock <= 0 || productInCart}
-          className={`w-full py-2 px-4 rounded-lg font-semibold transition-all duration-200 ${
+          className={`w-full py-2 button-bg px-4 rounded-lg font-semibold transition-all duration-200 ${
             productInCart
-              ? "bg-green-100 text-green-700 cursor-default"
+              ? "bg-green-100  cursor-default"
               : product.stock <= 0
               ? "bg-gray-300 cursor-not-allowed"
               : cartLoading
-              ? "bg-pink-300 text-pink-700 cursor-not-allowed"
-              : "bg-pink-500 text-white hover:bg-pink-600 active:transform active:scale-95"
+              ? "bg-pink-300 button-bg cursor-not-allowed"
+              : "button-bg  button-bg:hover active:transform active:scale-95"
           }`}
         >
           {cartLoading ? (
-            <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+            <div className="flex items-center justify-center ">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2 "></div>
               Adding...
             </div>
           ) : productInCart ? (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center ">
               <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"

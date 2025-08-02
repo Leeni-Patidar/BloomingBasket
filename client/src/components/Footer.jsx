@@ -15,11 +15,11 @@ const Footer = () => {
           <div className="w-full lg:w-1/3 md:w-1/2 px-4 mb-4">
             <div className="mb-4">
               <h5 className="text-2xl font-bold mb-4 text-pink-100">Blooming Basket</h5>
-              <p className=" leading-relaxed mb-6">
+              <p className=" leading-relaxed mb-6 text-gray-300">
                 Your trusted partner for beautiful flowers and memorable moments. We deliver fresh, stunning
                 arrangements right to your doorstep.
               </p>
-              <div className="flex gap-4">
+              <div className="flex gap-4 text-gray-300">
                 {/* Social Icons */}
                 <a href="#" className="flex items-center justify-center w-10 h-10 bg-pink-300/20 rounded-full hover:bg-pink-100 transition">
                   <i className="fab fa-facebook-f"></i>
@@ -41,7 +41,7 @@ const Footer = () => {
           <div className="w-full lg:w-1/6 md:w-1/2 px-4 mb-8">
             <div className="mb-8">
               <h6 className="text-lg font-semibold mb-4 text-gray-200">Quick Links</h6>
-              <ul className="list-none p-0 m-0">
+              <ul className="list-none p-0 m-0 text-gray-300">
                 <li className="mb-2">
                   <Link to="/" className=" hover:text-pink-100">Home</Link>
                 </li>
@@ -80,7 +80,7 @@ const Footer = () => {
           <div className="w-full lg:w-1/6 md:w-1/2 px-4 mb-8">
             <div className="mb-8">
               <h6 className="text-lg font-semibold mb-4 text-gray-200">Support</h6>
-              <ul className="list-none p-0 m-0">
+              <ul className="list-none p-0 m-0 text-gray-300">
                 <li className="mb-2">
                   <Link to="/faq" className=" hover:text-pink-100">FAQ</Link>
                 </li>
@@ -98,7 +98,7 @@ const Footer = () => {
           </div>
 
           {/* Contact Info */}
-          <div className="w-full lg:w-1/3 md:w-1/2 px-4 mb-5">
+          <div className="w-full lg:w-1/3 md:w-1/2 px-4 mb-5 text-gray-300">
             <div className="mb-8">
               <h6 className="text-lg font-semibold mb-4 text-gray-200">Contact Info</h6>
               <div className="flex flex-col gap-4 ">
@@ -120,7 +120,7 @@ const Footer = () => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="flex flex-wrap -mx-4">
+        <div className="flex flex-wrap -mx-4 text-gray-300">
           <div className="w-full px-4 text-center">
             <p className=" m-0 text-sm">
               © Blooming Basket. All rights reserved. Made with ❤️ for flower lovers.

@@ -138,7 +138,7 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen py-8 bg-gray-50">
+    <div className="min-h-screen py-8 ">
       <div className="max-w-6xl mx-auto px-4">
         <h1 className="text-3xl font-bold  mb-6">Checkout</h1>
 
@@ -157,7 +157,7 @@ const Checkout = () => {
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold">Delivery Address</h2>
                 <button
-                  className="text-pink-600 font-medium"
+                  className=" font-medium"
                   onClick={() => setShowAddressForm(!showAddressForm)}
                 >
                   + Add New
@@ -181,7 +181,7 @@ const Checkout = () => {
                     <span>Set as default address</span>
                   </label>
                   <div className="col-span-2 flex gap-3 mt-2">
-                    <button disabled={loading} type="submit" className="btn bg-pink-500 text-white">
+                    <button disabled={loading} type="submit" className="btn button-bg text-white">
                       {loading ? "Adding..." : "Add Address"}
                     </button>
                     <button type="button" onClick={() => setShowAddressForm(false)} className="btn bg-gray-300 text-black">Cancel</button>
@@ -252,7 +252,7 @@ const Checkout = () => {
               <div className="flex justify-between font-bold text-lg border-t pt-2"><span>Total</span><span className="text-pink-600">₹{total.toFixed(2)}</span></div>
             </div>
 
-            <button disabled={!selectedAddress || loading || cartLoading} onClick={handlePlaceOrder} className="w-full mt-6 py-3 bg-pink-500 hover:bg-pink-600 text-white rounded-lg font-semibold disabled:opacity-50">
+            <button disabled={!selectedAddress || loading || cartLoading} onClick={handlePlaceOrder} className="w-full mt-6 py-3 button-bg button-bg:hover  rounded-lg font-semibold disabled:opacity-50">
               {loading ? "Placing Order..." : `Place Order - ₹${total.toFixed(2)}`}
             </button>
 

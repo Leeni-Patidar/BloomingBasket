@@ -159,7 +159,7 @@ const Contact = () => {
                   <div className="w-full px-2">
                     <button
                       type="submit"
-                      className="w-full bg-[#ffc0cb] border-none text-black px-8 py-4 text-lg font-semibold rounded-2xl hover:shadow-lg disabled:opacity-70"
+                      className="w-full button-bg button-bg:hover  border-none text-black px-8 py-4 text-lg font-semibold rounded-2xl hover:shadow-lg disabled:opacity-70"
                       disabled={loading}
                     >
                       {loading ? "Sending..." : "Send Message"}

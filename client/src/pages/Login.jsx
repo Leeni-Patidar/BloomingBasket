@@ -73,7 +73,7 @@ const Login = () => {
                   </label>
                   <input
                     type="email"
-                    className="w-full border-2 border-black rounded-lg px-4 py-3 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
+                     className="w-full border-2 border-black rounded-lg px-4 py-3  bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
                     id="email"
                     name="email"
                     value={formData.email}
@@ -89,7 +89,8 @@ const Login = () => {
                   </label>
                   <input
                     type={showPassword ? "text" : "password"}
-                    className="w-full border-2 border-black rounded-lg px-4 py-3 pr-10 text-base transition-all duration-300 ease-in-out focus:border-[#ff9a9e] focus:ring-4 focus:ring-[#ff9a9e]/25"
+                    className="w-full border-2 border-black rounded-lg px-4 py-3 pr-10 text-base "
+
                     id="password"
                     name="password"
                     value={formData.password}

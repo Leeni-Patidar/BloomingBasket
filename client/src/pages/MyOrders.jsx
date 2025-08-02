@@ -49,7 +49,7 @@ const MyOrders = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen  py-8 px-4">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold  mb-6 text-center">My Orders</h1>
 
@@ -89,7 +89,7 @@ const MyOrders = () => {
                   <div className="flex gap-3">
                     <Link
                       to={`/order-confirmation/${order._id}`}
-                      className="text-sm bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition"
+                      className="text-sm button-bg px-4 py-2 rounded button-bg:hover transition"
                     >
                       View
                     </Link>

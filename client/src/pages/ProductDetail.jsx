@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect, useContext } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -19,8 +17,6 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
   const [selectedImage, setSelectedImage] = useState(0)
-  const [showReviewForm, setShowReviewForm] = useState(false)
-  const [reviewData, setReviewData] = useState({ rating: 5, comment: "" })
 
   useEffect(() => {
     fetchProduct()
@@ -53,25 +49,6 @@ const ProductDetail = () => {
     }
   }
 
-  const handleReviewSubmit = async (e) => {
-    e.preventDefault()
-    if (!user) {
-      toast.error("Please login to submit a review")
-      return
-    }
-
-    try {
-      await axios.post(`/api/products/${id}/reviews`, reviewData)
-      toast.success("Review submitted successfully!")
-      setShowReviewForm(false)
-      setReviewData({ rating: 5, comment: "" })
-      fetchProduct()
-    } catch (error) {
-      const message = error.response?.data?.message || "Failed to submit review"
-      toast.error(message)
-    }
-  }
-
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[50vh]">
@@ -85,7 +62,7 @@ const ProductDetail = () => {
       <div className="flex justify-center items-center min-h-[50vh] flex-col gap-4">
         <h2 className="text-2xl font-semibold">Product not found</h2>
         <button
-          className="bg-blue-600  px-4 py-2 rounded-md hover:bg-blue-700"
+          className="bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 text-white"
           onClick={() => navigate("/shop")}
         >
           Back to Shop
@@ -94,173 +71,70 @@ const ProductDetail = () => {
     )
   }
 
+  const productInWishlist = isInWishlist(product._id)
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen py-10">
       <div className="container mx-auto px-4">
-        <div className="flex flex-wrap -mx-4">
-          {/* Product Images */}
-          <div className="w-full lg:w-1/2 px-4 mb-4">
-            <div className="sticky top-8">
-              <img
-                src={product.images?.[selectedImage] || "/placeholder.svg"}
-                alt={product.name}
-                className="w-full h-[500px] object-cover rounded-xl shadow"
-              />
-              {product.images?.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto mt-4">
-                  {product.images.map((img, i) => (
-                    <img
-                      key={i}
-                      src={img}
-                      onClick={() => setSelectedImage(i)}
-                      className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${
-                        i === selectedImage ? "border-pink-500" : "border-transparent"
-                      }`}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+        <div className="grid md:grid-cols-2 gap-10 items-start">
+          {/* Product Image Section */}
+          <div>
+            <img
+              src={product.images?.[selectedImage] || "/placeholder.svg"}
+              alt={product.name}
+              className="w-full h-[500px] object-cover rounded-xl shadow-md"
+            />
+            {product.images?.length > 1 && (
+              <div className="flex gap-2 mt-4 overflow-x-auto">
+                {product.images.map((img, i) => (
+                  <img
+                    key={i}
+                    src={img}
+                    onClick={() => setSelectedImage(i)}
+                    className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${
+                      i === selectedImage ? "border-pink-500" : "border-transparent"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Product Info */}
-          <div className="w-full lg:w-1/2 px-4">
-            <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
-            <p className="text-lg  mb-2">{product.category}</p>
-            <p className="text-3xl  font-semibold mb-6">₹{product.price}</p>
-
-            {/* <div className="flex items-center mb-6">
-              {[...Array(5)].map((_, i) => (
-                <i
-                  key={i}
-                  className={`fas fa-star ${
-                    i < Math.floor(product.rating?.average) ? "text-yellow-400" : "text-gray-300"
-                  }`}
-                ></i>
-              ))}
-              <span className="ml-2  text-sm">
-                ({product.rating?.count || 0} reviews)
-              </span>
-            </div> */}
-
-            <p className=" mb-6">{product.description}</p>
+          {/* Product Details Section */}
+          <div>
+            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+            <p className="text-lg text-gray-500 mb-1">{product.category}</p>
+            <p className="text-3xl font-semibold text-pink-600 mb-4">₹{product.price}</p>
+            <p className="text-gray-700 mb-4">{product.description}</p>
 
             {product.careInstructions && (
-              <div className="bg-gray-100 p-4 rounded mb-6">
+              <div className="bg-gray-100 p-4 rounded mb-4">
                 <h4 className="font-medium mb-2">Care Instructions</h4>
-                <p className="text-sm ">{product.careInstructions}</p>
+                <p className="text-sm text-gray-600">{product.careInstructions}</p>
               </div>
             )}
 
-            {/* <div className="flex items-center gap-3 mb-6">
-              <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="px-4 py-2 border rounded hover:bg-gray-100"
-              >
-                -
-              </button>
-              <span>{quantity}</span>
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="px-4 py-2 border rounded hover:bg-gray-100"
-              >
-                +
-              </button>
-            </div> */}
-
-            <div className="flex gap-4 mb-6">
+            <div className="flex items-center gap-4 mt-6">
               <button
                 onClick={handleAddToCart}
                 disabled={product.stock <= 0}
-                className="flex-1 button-bg button-bg:hover  px-6 py-3 rounded disabled:opacity-50"
+                className="button-bg button-bg:hover  px-6 py-3 rounded  disabled:opacity-50"
               >
                 {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
               </button>
+
               <button
                 onClick={handleWishlistToggle}
-                className={`w-12 h-12 rounded-full border-2 ${
-                  isInWishlist(product._id) ? "bg-pink-500 " : "text-pink-600"
+                className={`p-3 rounded-full shadow transition-colors duration-200 ${
+                  productInWishlist
+                    ? "button-bg button-bg:hover text-white"
+                    : "bg-white text-pink-600 hover:bg-gray-100"
                 }`}
+                title={productInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
               >
                 <i className="fas fa-heart"></i>
               </button>
             </div>
-          </div>
-        </div>
-
-        {/* Reviews */}
-        <div className="mt-16 border-t pt-8">
-          <h2 className="text-xl font-semibold mb-4">Customer Reviews</h2>
-
-          {user && (
-            <div className="mb-6">
-              <button
-                onClick={() => setShowReviewForm((prev) => !prev)}
-                className="bg-pink-600  px-6 py-2 rounded"
-              >
-                {showReviewForm ? "Cancel Review" : "Write a Review"}
-              </button>
-            </div>
-          )}
-
-          {showReviewForm && (
-            <form onSubmit={handleReviewSubmit} className="bg-gray-50 p-6 rounded mb-6">
-              <div className="mb-4">
-                <label className="block mb-1">Rating</label>
-                <div className="flex gap-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <i
-                      key={star}
-                      className={`fas fa-star text-xl cursor-pointer ${
-                        reviewData.rating >= star ? "text-yellow-400" : "text-gray-300"
-                      }`}
-                      onClick={() => setReviewData((r) => ({ ...r, rating: star }))}
-                    ></i>
-                  ))}
-                </div>
-              </div>
-              <div className="mb-4">
-                <label className="block mb-1">Comment</label>
-                <textarea
-                  className="w-full border rounded p-2"
-                  rows={4}
-                  required
-                  value={reviewData.comment}
-                  onChange={(e) => setReviewData((r) => ({ ...r, comment: e.target.value }))}
-                ></textarea>
-              </div>
-              <button type="submit" className="bg-blue-600  px-6 py-2 rounded">
-                Submit Review
-              </button>
-            </form>
-          )}
-
-          <div className="space-y-4">
-            {product.reviews?.length > 0 ? (
-              product.reviews.map((review) => (
-                <div key={review._id} className="bg-white p-4 rounded shadow">
-                  <div className="flex justify-between items-center mb-2">
-                    <strong>{review.user?.name || "Anonymous"}</strong>
-                    <span className="text-sm ">
-                      {new Date(review.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex gap-1 mb-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <i
-                        key={star}
-                        className={`fas fa-star text-sm ${
-                          review.rating >= star ? "text-yellow-400" : "text-gray-300"
-                        }`}
-                      ></i>
-                    ))}
-                  </div>
-                  <p className="">{review.comment}</p>
-                </div>
-              ))
-            ) : (
-              <p className="">No reviews yet. Be the first to review this product.</p>
-            )}
           </div>
         </div>
       </div>

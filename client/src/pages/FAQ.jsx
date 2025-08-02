@@ -104,42 +104,6 @@ const FAQ = () => {
           </div>
         </div>
         
-
-        {/* <div className="text-center p-12 bg-[#ede8eb] rounded-2xl">
-          <h3 className=" mb-4 font-semibold">Still have questions?</h3>
-          <p className=" mb-8">
-            Can't find what you're looking for? Our customer service team is here to help!
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-4 p-6 bg-white rounded-xl shadow-md text-center md:text-left">
-              <div className="w-12 h-12 button-bg rounded-full flex items-center justify-center text-xl ">
-                <i className="fas fa-phone"></i>
-              </div>
-              <div>
-                <h5 className=" mb-1 font-semibold">Call Us</h5>
-                <p className=" m-0 text-sm">+1 (555) 123-4567</p>
-              </div>
-            </div>
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-4 p-6 bg-white rounded-xl shadow-md text-center md:text-left">
-              <div className="w-12 h-12 button-bg rounded-full flex items-center justify-center text-xl ">
-                <i className="fas fa-envelope"></i>
-              </div>
-              <div>
-                <h5 className=" mb-1 font-semibold">Email Us</h5>
-                <p className=" m-0 text-sm">support@bloomingbasket.com</p>
-              </div>
-            </div>
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-4 p-6 bg-white rounded-xl shadow-md text-center md:text-left">
-              <div className="w-12 h-12 button-bg rounded-full flex items-center justify-center text-xl ">
-                <i className="fas fa-comments"></i>
-              </div>
-              <div>
-                <h5 className=" mb-1 font-semibold">Live Chat</h5>
-                <p className=" m-0 text-sm">Available 9 AM - 6 PM EST</p>
-              </div>
-            </div>
-           </div> 
-        </div>*/}
       </div>
     </div>
   )

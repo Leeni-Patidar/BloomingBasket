@@ -24,7 +24,7 @@ const OrderManagement = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("/api/orders/admin/all", {
+      const res = await axios.get("/api/orders", {
         headers: { Authorization: `Bearer ${token}` },
       })
       setOrders(res.data.orders || [])
