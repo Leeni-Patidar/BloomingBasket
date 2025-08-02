@@ -2,16 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const bouquetCategories = [
-  { name: "Flower Bouquet", image: "/images/flower.jpg" },
-  { name: "Chocolate Bouquet", image: "/images/chocolate.jpg" },
-  { name: "Soft Toy Bouquet", image: "/images/softtoy.jpg" },
-  { name: "Pipecleaner Bouquet", image: "/images/pipecleaner.jpg" },
-  { name: "Butterfly Bouquet", image: "/images/butterfly.jpg" },
-  { name: "Fairy Light Bouquet", image: "/images/fairylight.jpg" },
-  { name: "Crochet Bouquet", image: "/images/crochet.jpg" },
-  { name: "Origami Bouquet", image: "/images/origami.jpg" },
-  { name: "Fruit Bouquet", image: "/images/fruit.jpg" },
-  { name: "Skincare Bouquet", image: "/images/skincare.jpg" },
+  { name: "Flower Bouquet", image: "/images/categories/flower.jpg" },
+  { name: "Chocolate Bouquet", image: "/images/categories/chocolate.jpg" },
+  { name: "Soft Toy Bouquet", image: "/images/categories/softtoy.jpg" },
+  { name: "Pipecleaner Bouquet", image: "/images/categories/pipecleaner.jpg" },
+  { name: "Butterfly Bouquet", image: "/images/categories/butterfly.jpg" },
+  { name: "Hair Clip Bouquet", image: "/images/categories/hairclip.jpg" },
+  { name: "Crochet Bouquet", image: "/images/categories/crochet.jpg" },
+  { name: "Origami Bouquet", image: "/images/categories/origami.jpg" },
+  { name: "Fruit Bouquet", image: "/images/categories/fruit.jpg" },
+  { name: "Skincare Bouquet", image: "/images/categories/skincare.jpg" },
 ];
 
 const CategoryGrid = () => {

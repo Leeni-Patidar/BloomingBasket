@@ -8,10 +8,14 @@ const {
   updateProduct,
   deleteProduct,
   addReview,
-  getCategories
+  getCategories,
+  getFeaturedProducts, // ✅ NEW
 } = require("../controllers/productController.js");
 
 const router = express.Router();
+
+// ✅ Get latest 8 featured products
+router.get("/featured", getFeaturedProducts); // ✅ NEW
 
 // ✅ Get all products with filters, pagination, sorting
 router.get("/", getProducts);
@@ -29,7 +33,7 @@ router.post(
     body("price").isFloat({ min: 0 }).withMessage("Price must be a positive number"),
     body("category").isIn([
       "flower", "chocolate", "soft-toy", "pipecleaner",
-      "butterfly", "fairy-light", "crochet", "origami",
+      "butterfly", "hair-clip", "crochet", "origami",
       "fruit", "skincare", "custom"
     ]).withMessage("Invalid category"),
     body("stock").isInt({ min: 0 }).withMessage("Stock must be a non-negative integer")

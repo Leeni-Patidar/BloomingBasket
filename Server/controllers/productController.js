@@ -9,7 +9,7 @@ const getProducts = async (req, res) => {
       search,
       minPrice,
       maxPrice,
-      sort, // expects: "price-low", "price-high", or "createdAt"
+      sort,
       featured,
     } = req.query;
 
@@ -24,7 +24,6 @@ const getProducts = async (req, res) => {
     }
     if (featured === "true") filter.featured = true;
 
-    // ✅ Custom sort mapping
     let sortOption = { createdAt: -1 };
     if (sort === "price-low") sortOption = { price: 1 };
     else if (sort === "price-high") sortOption = { price: -1 };
@@ -138,6 +137,21 @@ const getCategories = async (req, res) => {
   }
 };
 
+// ✅ New: Get latest 8 products
+const getFeaturedProducts = async (req, res) => {
+  try {
+    const products = await Product.find({ isActive: true })
+      .sort({ createdAt: -1 })
+      .limit(8)
+      .populate("reviews.user", "name");
+
+    res.json(products);
+  } catch (error) {
+    console.error("Get Featured Products Error:", error);
+    res.status(500).json({ message: "Failed to fetch featured products" });
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
@@ -146,4 +160,5 @@ module.exports = {
   deleteProduct,
   addReview,
   getCategories,
+  getFeaturedProducts, // ✅ export the new one
 };

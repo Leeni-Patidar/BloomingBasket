@@ -38,7 +38,6 @@ export const CartProvider = ({ children }) => {
     }
   }
 
-  // Add product to cart (works for both regular and custom products)
   const addToCart = async (productId, quantity = 1) => {
     if (!token) {
       toast.warn("Please login to add items to cart")
@@ -51,7 +50,7 @@ export const CartProvider = ({ children }) => {
         { productId, quantity },
         {
           headers: { Authorization: `Bearer ${token}` },
-        },
+        }
       )
       setCartItems(res.data.items || [])
       toast.success("Added to cart!")
@@ -64,7 +63,6 @@ export const CartProvider = ({ children }) => {
     }
   }
 
-  // Remove from Cart
   const removeFromCart = async (productId) => {
     if (!token) return
     try {
@@ -81,7 +79,6 @@ export const CartProvider = ({ children }) => {
     }
   }
 
-  // Update Quantity
   const updateQuantity = async (productId, quantity) => {
     if (quantity < 1) return
     if (!token) return
@@ -92,7 +89,7 @@ export const CartProvider = ({ children }) => {
         { quantity },
         {
           headers: { Authorization: `Bearer ${token}` },
-        },
+        }
       )
       setCartItems(res.data.items || [])
     } catch (err) {
@@ -103,58 +100,47 @@ export const CartProvider = ({ children }) => {
     }
   }
 
-  // Clear All Items
- const clearCart = async () => {
-  try {
-    if (!token) {
-      toast.error("You must be logged in to clear your cart")
-      return
+  // ✅ Fixed clearCart function
+  const clearCart = async () => {
+    try {
+      if (!token) {
+        toast.error("You must be logged in to clear your cart")
+        return
+      }
+
+      const res = await axios.delete("/api/user/cart", {
+        headers: { Authorization: `Bearer ${token}` },
+        data: {}, // Axios fix: avoid sending undefined body
+      })
+
+      console.log("Cart cleared response:", res.data)
+      setCartItems([])
+      toast.success("Cart cleared")
+    } catch (err) {
+      console.error("Clear cart error:", err)
+      toast.error(err.response?.data?.message || "Failed to clear cart")
     }
-
-    const res = await axios.delete("/api/user/cart", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-
-    console.log("Cart cleared response:", res.data)
-    setCartItems([]) // Clear local state
-    toast.success("Cart cleared")
-  } catch (err) {
-    console.error("Clear cart error:", err)
-    toast.error(err.response?.data?.message || "Failed to clear cart")
   }
-}
 
-  // Total Quantity Badge
   const getCartItemsCount = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0)
   }
 
-  // Total Price
   const getCartTotal = () => {
-    return cartItems.reduce((total, item) => total + item.quantity * (item.productId?.price || 0), 0)
+    return cartItems.reduce(
+      (total, item) => total + item.quantity * (item.productId?.price || 0),
+      0
+    )
   }
 
-  // Check if product is in cart (with debugging)
   const isInCart = (productId) => {
-    if (!productId) {
-      console.log("isInCart: No productId provided")
-      return false
-    }
+    if (!productId) return false
+    if (!cartItems || cartItems.length === 0) return false
 
-    if (!cartItems || cartItems.length === 0) {
-      console.log("isInCart: No cart items")
-      return false
-    }
-
-    const found = cartItems.some((item) => {
+    return cartItems.some((item) => {
       const itemProductId = item.productId?._id || item.productId
-      const match = itemProductId === productId
-      console.log(`Checking: ${itemProductId} === ${productId} = ${match}`)
-      return match
+      return itemProductId === productId
     })
-
-    console.log(`Product ${productId} in cart: ${found}`)
-    return found
   }
 
   return (

@@ -14,7 +14,7 @@ const categoryMap = {
   "Soft Toy Bouquet": "soft-toy",
   "Pipecleaner Bouquet": "pipecleaner",
   "Butterfly Bouquet": "butterfly",
-  "Fairy Light Bouquet": "fairy-light",
+  "Hair Clip Bouquet": "hair-clip",
   "Crochet Bouquet": "crochet",
   "Origami Bouquet": "origami",
   "Fruit Bouquet": "fruit",

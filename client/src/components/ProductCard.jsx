@@ -13,7 +13,7 @@ const categoryLabels = {
   "soft-toy": "Soft Toy Bouquet",
   pipecleaner: "Pipecleaner Bouquet",
   butterfly: "Butterfly Bouquet",
-  "fairy-light": "Fairy Light Bouquet",
+  hairclip: "Hair Clip Bouquet",
   crochet: "Crochet Bouquet",
   origami: "Origami Bouquet",
   fruit: "Fruit Bouquet",

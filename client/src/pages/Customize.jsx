@@ -24,7 +24,7 @@ const Customize = () => {
 
   const bouquetTypes = [
     "Flower Bouquet", "Chocolate Bouquet", "Soft Toy Bouquet",
-    "Pipecleaner Bouquet", "Butterfly Bouquet", "Fairy Light Bouquet",
+    "Pipecleaner Bouquet", "Butterfly Bouquet", "Hair Clip Bouquet",
     "Crochet Bouquet", "Origami Bouquet", "Fruit Bouquet", "Skincare Bouquet"
   ]
 

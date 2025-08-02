@@ -21,7 +21,7 @@ const categories = [
 
 const OccasionCategories = () => {
   return (
-    <section className="bg-pink-50 py-12 min-h-screen" >
+    <section className="bg-pink-50 py-12" >
       <div className="max-w-6xl mx-auto text-center px-4">
         <h2 className="text-2xl md:text-3xl font-semibold  mb-8">
           Shop by Occasion
