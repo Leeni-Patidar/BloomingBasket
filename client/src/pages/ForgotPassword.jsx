@@ -84,13 +84,13 @@ const ForgotPassword = () => {
                     Registered Email
                   </label>
                   <input
-  type="email"
-  id="email"
-  className="w-full border-2 border-black rounded-lg px-4 py-3 mb-4 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
-  value={email}
-  onChange={(e) => setEmail(e.target.value)}
-  required
-/>
+                    type="email"
+                    id="email"
+                    className="w-full border-2 border-black rounded-lg px-4 py-3 mb-4 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
 
                   <button
                     type="submit"
@@ -110,7 +110,7 @@ const ForgotPassword = () => {
                   <input
                     type="text"
                     id="otp"
-                     className="w-full border-2 border-black rounded-lg px-4 py-3 mb-4 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
+                    className="w-full border-2 border-black rounded-lg px-4 py-3 mb-4 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
                     required
@@ -136,18 +136,19 @@ const ForgotPassword = () => {
                       id="newPassword"
                       className="w-full border-2 border-black rounded-lg px-4 py-3 pr-12 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
                       value={newPassword}
+                      placeholder="strongpassword(abx#4322)"
                       onChange={(e) => setNewPassword(e.target.value)}
                       required
                     />
-                   <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-3 flex items-center top-5"
-                    tabIndex={-1}
-                  >
-                    {/* Use below if you have lucide-react installed */}
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-3 flex items-center top-5"
+                      tabIndex={-1}
+                    >
+                      {/* Use below if you have lucide-react installed */}
+                      {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                    </button>
                   </div>
                   <button
                     type="submit"

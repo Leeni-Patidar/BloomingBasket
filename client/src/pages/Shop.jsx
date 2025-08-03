@@ -247,7 +247,7 @@ const Shop = () => {
                   page: 1,
                 })
               }
-              className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200"
+              className="px-6 py-3 b button-bg button-bg:hover rounded-full font-semibold transition-all duration-200"
             >
               Clear All Filters
             </button>
@@ -295,8 +295,8 @@ const Shop = () => {
                     onClick={() => setFilters((prev) => ({ ...prev, page: pageNum }))}
                     className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                       filters.page === pageNum
-                        ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white"
-                        : "bg-white hover:bg-gray-100 border border-gray-300"
+                        ? "button-bg"
+                        : " hover:bg-gray-100 border border-gray-300"
                     }`}
                   >
                     {pageNum}

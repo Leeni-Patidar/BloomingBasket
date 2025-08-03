@@ -199,6 +199,7 @@ const Register = () => {
                       type={showPassword ? "text" : "password"}
                       name="password"
                       value={formData.password}
+                      placeholder="strongpassword(abx#4322)"
                       onChange={handleChange}
                       className="w-full border-2 border-black rounded-lg px-4 py-3 pr-12 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
                     />
@@ -209,7 +210,7 @@ const Register = () => {
                     tabIndex={-1}
                   >
                     {/* Use below if you have lucide-react installed */}
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                   </button>
                   </div>
                   <button

@@ -185,7 +185,7 @@ const Checkout = () => {
                     <span>Set as default address</span>
                   </label>
                   <div className="col-span-2 flex gap-3 mt-2">
-                    <button disabled={loading} type="submit" className="btn button-bg text-white">
+                    <button disabled={loading} type="submit" className="btn button-bg">
                       {loading ? "Adding..." : "Add Address"}
                     </button>
                     <button type="button" onClick={() => setShowAddressForm(false)} className="btn bg-gray-300 text-black">Cancel</button>
