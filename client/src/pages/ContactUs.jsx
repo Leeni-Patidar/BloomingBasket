@@ -71,7 +71,7 @@ const Contact = () => {
         <div className="flex flex-wrap -mx-4">
           <div className="w-full lg:w-2/3 px-4 mb-8 lg:mb-0">
             <div className="bg-white p-6 md:p-10 rounded-xl shadow-xl">
-              <h3 className="mb-8 font-semibold">Send us a Message</h3>
+              {/* <h3 className="mb-8 font-semibold">Send us a Message</h3> */}
               <form onSubmit={handleSubmit}>
                 <div className="flex flex-wrap -mx-2">
                   <div className="w-full md:w-1/2 px-2 mb-4">

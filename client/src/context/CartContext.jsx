@@ -11,7 +11,7 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(false)
 
-  // Fetch cart items when user logs in
+  // ✅ Fetch cart when user logs in
   useEffect(() => {
     if (user && token) {
       fetchCart()
@@ -20,11 +20,12 @@ export const CartProvider = ({ children }) => {
     }
   }, [user, token])
 
+  // ✅ Corrected route here
   const fetchCart = async () => {
     if (!token) return
     try {
       setLoading(true)
-      const res = await axios.get("/api/user", {
+      const res = await axios.get("/api/user/cart", {
         headers: { Authorization: `Bearer ${token}` },
       })
       setCartItems(res.data.items || [])
@@ -100,7 +101,7 @@ export const CartProvider = ({ children }) => {
     }
   }
 
-  // ✅ Fixed clearCart function
+  // ✅ Fixed clearCart to sync backend + frontend
   const clearCart = async () => {
     try {
       if (!token) {
@@ -108,13 +109,11 @@ export const CartProvider = ({ children }) => {
         return
       }
 
-      const res = await axios.delete("/api/user/cart", {
+      await axios.delete("/api/user/cart", {
         headers: { Authorization: `Bearer ${token}` },
-        data: {}, // Axios fix: avoid sending undefined body
       })
 
-      console.log("Cart cleared response:", res.data)
-      setCartItems([])
+      setCartItems([]) // ✅ frontend update
       toast.success("Cart cleared")
     } catch (err) {
       console.error("Clear cart error:", err)
