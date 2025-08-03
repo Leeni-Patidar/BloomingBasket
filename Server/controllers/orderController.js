@@ -2,7 +2,7 @@ const Order = require("../models/Order");
 const Product = require("../models/Product");
 const Cart = require("../models/Cart");
 
-// ✅ Create Order (No transactions used)
+// ✅ Create Order
 const createOrder = async (req, res) => {
   try {
     const {
@@ -166,7 +166,25 @@ const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
+    const validStatuses = [
+      "pending",
+      "confirmed",
+      "processing",
+      "shipped",
+      "delivered",
+      "cancelled",
+      "returned",
+    ];
+
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid status value: ${status}`,
+      });
+    }
+
     order.status = status;
+    order.statusHistory = order.statusHistory || [];
     order.statusHistory.push({
       status,
       timestamp: new Date(),
@@ -175,16 +193,18 @@ const updateOrderStatus = async (req, res) => {
 
     await order.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Order status updated",
       order,
     });
   } catch (error) {
-    console.error("Update order status error:", error.message);
-    res
-      .status(500)
-      .json({ success: false, message: "Failed to update order status" });
+    console.error("Update order status error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update order status",
+      error: error.message,
+    });
   }
 };
 

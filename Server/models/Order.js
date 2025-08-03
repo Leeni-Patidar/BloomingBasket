@@ -62,12 +62,23 @@ const orderSchema = new mongoose.Schema(
     total: { type: Number, required: true },
     status: {
       type: String,
-      enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
+      enum: [
+        "pending",
+        "confirmed",
+        "processing",
+        "shipped",
+        "delivered",
+        "cancelled",
+        "returned",
+      ],
       default: "pending",
     },
     orderNotes: { type: String },
   },
   { timestamps: true }
 );
+
+// Add method if needed later
+// orderSchema.statics.generateOrderNumber = generateOrderNumber;
 
 module.exports = mongoose.model("Order", orderSchema);
