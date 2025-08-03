@@ -29,6 +29,7 @@ const ProductCard = ({ product }) => {
 
   const productInCart = isInCart(product._id)
   const productInWishlist = isInWishlist(product._id)
+  const isAdmin = user?.role === "admin"
 
   const handleAddToCart = async (e) => {
     e.preventDefault()
@@ -98,39 +99,39 @@ const ProductCard = ({ product }) => {
             }}
           />
 
-          {/* Wishlist Button */}
-          <button
-            onClick={handleWishlistToggle}
-            className={`absolute top-2 right-2 p-2 rounded-full transition-colors duration-200 ${
-              productInWishlist
-                ? "bg-pink-500 text-white hover:bg-pink-600"
-                : "bg-white hover:bg-gray-100"
-            }`}
-            aria-label={productInWishlist ? "Remove from wishlist" : "Add to wishlist"}
-          >
-            <svg
-              className="w-4 h-4"
-              fill={productInWishlist ? "currentColor" : "none"}
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          {/* Wishlist Button (hidden for admin) */}
+          {!isAdmin && (
+            <button
+              onClick={handleWishlistToggle}
+              className={`absolute top-2 right-2 p-2 rounded-full transition-colors duration-200 ${
+                productInWishlist
+                  ? "bg-pink-500 text-white hover:bg-pink-600"
+                  : "bg-white hover:bg-gray-100"
+              }`}
+              aria-label={productInWishlist ? "Remove from wishlist" : "Add to wishlist"}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              />
-            </svg>
-          </button>
+              <svg
+                className="w-4 h-4"
+                fill={productInWishlist ? "currentColor" : "none"}
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            </button>
+          )}
 
-          {/* Stock Badge */}
+          {/* Stock or Featured Badge */}
           {product.stock <= 0 && (
             <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold">
               Out of Stock
             </div>
           )}
-
-          {/* Featured Badge */}
           {product.featured && (
             <div className="absolute top-2 left-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold">
               Featured
@@ -143,7 +144,6 @@ const ProductCard = ({ product }) => {
             {product.name}
           </h3>
 
-          {/* Category Display */}
           <p className="text-xs text-gray-500 mb-2">
             {categoryLabels[product.category] || "Other"}
           </p>
@@ -166,7 +166,7 @@ const ProductCard = ({ product }) => {
 
           <div className="text-xs mb-3">
             {product.stock > 0 ? (
-              <span className="text-green-600">In Stock </span>
+              <span className="text-green-600">In Stock</span>
             ) : (
               <span className="text-red-600">Out of Stock</span>
             )}
@@ -174,43 +174,46 @@ const ProductCard = ({ product }) => {
         </div>
       </Link>
 
-      <div className="px-4 pb-4">
-        <button
-          onClick={handleAddToCart}
-          disabled={cartLoading || product.stock <= 0 || productInCart}
-          className={`w-full py-2 button-bg px-4 rounded-lg font-semibold transition-all duration-200 ${
-            productInCart
-              ? "bg-green-100  cursor-default"
-              : product.stock <= 0
-              ? "bg-gray-300 cursor-not-allowed"
-              : cartLoading
-              ? "bg-pink-300 button-bg cursor-not-allowed"
-              : "button-bg  button-bg:hover active:transform active:scale-95"
-          }`}
-        >
-          {cartLoading ? (
-            <div className="flex items-center justify-center ">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2 "></div>
-              Adding...
-            </div>
-          ) : productInCart ? (
-            <div className="flex items-center justify-center ">
-              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Added to Cart
-            </div>
-          ) : product.stock <= 0 ? (
-            "Out of Stock"
-          ) : (
-            "Add to Cart"
-          )}
-        </button>
-      </div>
+      {/* Add to Cart Button (hidden for admin) */}
+      {!isAdmin && (
+        <div className="px-4 pb-4">
+          <button
+            onClick={handleAddToCart}
+            disabled={cartLoading || product.stock <= 0 || productInCart}
+            className={`w-full py-2 button-bg px-4 rounded-lg font-semibold transition-all duration-200 ${
+              productInCart
+                ? "bg-green-100 cursor-default"
+                : product.stock <= 0
+                ? "bg-gray-300 cursor-not-allowed"
+                : cartLoading
+                ? "bg-pink-300 button-bg cursor-not-allowed"
+                : "button-bg button-bg:hover active:transform active:scale-95"
+            }`}
+          >
+            {cartLoading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                Adding...
+              </div>
+            ) : productInCart ? (
+              <div className="flex items-center justify-center">
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Added to Cart
+              </div>
+            ) : product.stock <= 0 ? (
+              "Out of Stock"
+            ) : (
+              "Add to Cart"
+            )}
+          </button>
+        </div>
+      )}
     </div>
   )
 }
