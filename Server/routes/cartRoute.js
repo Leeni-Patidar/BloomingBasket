@@ -122,7 +122,6 @@ router.delete("/", auth, async (req, res) => {
     }
 
     const cart = await Cart.findOne({ userId: req.user.id });
-
     if (!cart) {
       return res.status(404).json({ message: "Cart not found" });
     }

@@ -123,9 +123,13 @@ export const logout = async (req, res) => {
   }
 };
 
-// ✅ Update Profile
+// ✅ Update Profile (blocked for admin)
 export const updateUserProfile = async (req, res) => {
   try {
+    if (req.user.role === "admin") {
+      return res.status(403).json({ message: "Admins cannot update profile" });
+    }
+
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -155,11 +159,15 @@ export const updateUserProfile = async (req, res) => {
   }
 };
 
-// ✅ Change Password
+// ✅ Change Password (blocked for admin)
 export const changePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
   try {
+    if (req.user.role === "admin") {
+      return res.status(403).json({ message: "Admins cannot change password here" });
+    }
+
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -190,7 +198,7 @@ export const adminLogin = async (req, res) => {
       password === process.env.ADMIN_PASSWORD &&
       email === process.env.ADMIN_EMAIL
     ) {
-      const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "7d" });
+      const token = jwt.sign({ email, role: "admin" }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
       res.cookie("adminToken", token, {
         httpOnly: true,
