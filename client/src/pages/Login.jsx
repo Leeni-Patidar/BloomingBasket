@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
- import { Eye, EyeOff } from "lucide-react"; // Uncomment if using lucide-react
+import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -37,6 +37,7 @@ const Login = () => {
     if (result.success) {
       navigate(from, { replace: true });
     } else {
+      alert(result.message || "Login failed. Please try again."); // 🔔 Alert added
       setError(result.message || "Login failed. Please try again.");
     }
   };
@@ -73,7 +74,7 @@ const Login = () => {
                   </label>
                   <input
                     type="email"
-                     className="w-full border-2 border-black rounded-lg px-4 py-3  bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
+                    className="w-full border-2 border-black rounded-lg px-4 py-3 bg-transparent focus:bg-transparent focus:shadow-[0_0_0_4px_rgba(186,84,169,0.25)] transition-shadow duration-200"
                     id="email"
                     name="email"
                     value={formData.email}
@@ -82,15 +83,13 @@ const Login = () => {
                   />
                 </div>
 
-                {/* Password with Eye Toggle */}
                 <div className="mb-4 relative">
                   <label htmlFor="password" className="block text-sm font-medium mb-1">
                     Password
                   </label>
                   <input
                     type={showPassword ? "text" : "password"}
-                    className="w-full border-2 border-black rounded-lg px-4 py-3 pr-10 text-base "
-
+                    className="w-full border-2 border-black rounded-lg px-4 py-3 pr-10 text-base"
                     id="password"
                     name="password"
                     value={formData.password}
@@ -103,7 +102,6 @@ const Login = () => {
                     className="absolute inset-y-0 right-3 flex items-center top-5"
                     tabIndex={-1}
                   >
-                    {/* Use below if you have lucide-react installed */}
                     {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                   </button>
                 </div>

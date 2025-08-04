@@ -9,7 +9,7 @@
   --button-hover-shadow: rgba(255, 154, 158, 0.4);
   --text-color-default: #333;
   --text-hover-light: white;
-  --font-main: "Playfair Display"
+  --font-main: "Playfair Display";
 }
 
 .button-bg {
@@ -17,7 +17,6 @@
 }
 .button-bg:hover {
   background-image: linear-gradient(to right, #761461 0%, #fecfef 50%, #761461 100%);
-  
   transform: translateY(-2px); /* Equivalent to -translate-y-0.5 */
 }
 
@@ -28,3 +27,10 @@ body {
   font-family: var(--font-main);
 }
 
+/* 🔕 Disable Toastify */
+.Toastify__toast-container {
+  display: none !important;
+}
+.Toastify__toast {
+  display: none !important;
+}

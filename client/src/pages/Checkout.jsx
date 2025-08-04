@@ -175,7 +175,7 @@ const Checkout = () => {
                   <input required value={newAddress.state} onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })} placeholder="State *" className="input" />
                   <input required value={newAddress.zipCode} onChange={(e) => setNewAddress({ ...newAddress, zipCode: e.target.value })} placeholder="Zip Code *" className="input" />
                   <input value={newAddress.landmark} onChange={(e) => setNewAddress({ ...newAddress, landmark: e.target.value })} placeholder="Landmark (optional)" className="input col-span-2" />
-                  <select value={newAddress.label} onChange={(e) => setNewAddress({ ...newAddress, label: e.target.value })} className="input">
+                  <select value={newAddress.label} onChange={(e) => setNewAddress({ ...newAddress, label: e.target.value })} className="input button-bg p-2 rounded">
                     <option value="Home">Home</option>
                     <option value="Work">Work</option>
                     <option value="Other">Other</option>
@@ -185,10 +185,10 @@ const Checkout = () => {
                     <span>Set as default address</span>
                   </label>
                   <div className="col-span-2 flex gap-3 mt-2">
-                    <button disabled={loading} type="submit" className="btn button-bg">
+                    <button disabled={loading} type="submit" className="btn button-bg rounded p-2">
                       {loading ? "Adding..." : "Add Address"}
                     </button>
-                    <button type="button" onClick={() => setShowAddressForm(false)} className="btn bg-gray-300 text-black">Cancel</button>
+                    <button type="button" onClick={() => setShowAddressForm(false)} className="btn bg-gray-300 text-black rounded p-2">Cancel</button>
                   </div>
                 </form>
               )}

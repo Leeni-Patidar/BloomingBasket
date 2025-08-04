@@ -50,7 +50,7 @@ const Customize = () => {
 
   const calculatePrice = () => {
     const basePrices = {
-      XS: 20, S: 30, M: 45, L: 60, XL: 80, XXL: 100, XXXL: 120
+      XS: 120, S: 150, M: 275, L: 300, XL: 350, XXL: 400, XXXL: 500
     }
     return basePrices[customization.size] || 0
   }
@@ -104,18 +104,13 @@ const Customize = () => {
   }
 
   const nextStep = () => {
-    if (step === 1 && !user) {
-      toast.error("Please login to continue")
-      navigate("/login")
-      return
-    }
     if (step < 4) setStep(step + 1)
   }
 
   const prevStep = () => step > 1 && setStep(step - 1)
 
   const isNextDisabled =
-    (step === 1 && (!customization.bouquetType || !user)) ||
+    (step === 1 && !customization.bouquetType) ||
     (step === 2 && !customization.size) ||
     (step === 3 && !customization.referenceImage)
 
@@ -127,7 +122,7 @@ const Customize = () => {
           <h1 className="text-3xl md:text-4xl font-bold mb-4">Customize Your Perfect Bouquet</h1>
           <p className="text-lg">Craft your own personalized bouquet for any occasion</p>
           {!user && step === 1 && (
-            <div className="mt-4 p-3 button-bg rounded-lg">
+            <div className="mt-4 p-3 button-bg rounded-lg cursor-pointer" onClick={() => navigate("/login")}>
               <p className="text-black">
                 Please <span className="font-semibold">login</span> to continue with your customization
               </p>
@@ -204,40 +199,27 @@ const Customize = () => {
             <h3 className="text-2xl font-semibold text-center mb-8">Add your details</h3>
             <div>
               <label className="block font-medium mb-2">Personal Message (Optional)</label>
-              <textarea
-                className="w-full border-2 border-gray-300 rounded-lg px-4 py-3"
-                rows="3"
+              <textarea className="w-full border-2 border-gray-300 rounded-lg px-4 py-3" rows="3"
                 value={customization.message}
-                onChange={(e) => handleInputChange("message", e.target.value)}
-              />
+                onChange={(e) => handleInputChange("message", e.target.value)} />
             </div>
             <div>
               <label className="block font-medium mb-2">Preferred Delivery Date</label>
-              <input
-                type="date"
-                className="w-full border-2 border-gray-300 rounded-lg px-4 py-3"
+              <input type="date" className="w-full border-2 border-gray-300 rounded-lg px-4 py-3"
                 value={customization.deliveryDate}
                 onChange={(e) => handleInputChange("deliveryDate", e.target.value)}
-                min={new Date().toISOString().split("T")[0]}
-              />
+                min={new Date().toISOString().split("T")[0]} />
             </div>
             <div>
               <label className="block font-medium mb-2">Special Instructions (Optional)</label>
-              <textarea
-                className="w-full border-2 border-gray-300 rounded-lg px-4 py-3"
-                rows="3"
+              <textarea className="w-full border-2 border-gray-300 rounded-lg px-4 py-3" rows="3"
                 value={customization.specialInstructions}
-                onChange={(e) => handleInputChange("specialInstructions", e.target.value)}
-              />
+                onChange={(e) => handleInputChange("specialInstructions", e.target.value)} />
             </div>
             <div>
               <label className="block font-medium mb-2">Upload Reference Image <span className="text-red-500">*</span></label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="w-full border-2 border-gray-300 rounded-lg px-4 py-3"
-              />
+              <input type="file" accept="image/*" onChange={handleFileChange}
+                className="w-full border-2 border-gray-300 rounded-lg px-4 py-3" />
               {!customization.referenceImage && (
                 <p className="text-red-500 text-sm mt-1">* Reference image is required</p>
               )}
@@ -282,10 +264,16 @@ const Customize = () => {
           ) : <div />}
           {step < 4 ? (
             <button
-              onClick={() => (step === 1 && !user ? navigate("/login") : nextStep())}
-              disabled={isNextDisabled}
+              onClick={() => {
+                if (step === 1 && !user) {
+                  navigate("/login")
+                } else {
+                  nextStep()
+                }
+              }}
+              disabled={isNextDisabled && user}
               className={`px-8 py-3 rounded-lg font-semibold ${
-                isNextDisabled ? "bg-gray-300 cursor-not-allowed text-gray-500" : "button-bg button-bg:hover"
+                isNextDisabled && user ? "bg-gray-300 cursor-not-allowed text-gray-500" : "button-bg button-bg:hover"
               }`}
             >
               {step === 1 && !user ? "Login to Continue" : "Next"}
@@ -297,45 +285,61 @@ const Customize = () => {
           )}
         </div>
 
-       {showSizeChart && (
-        <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50" style={{ backdropFilter: "blur(4px)" }}>
-          <div className="bg-white p-6 rounded-lg max-w-md w-full">
-            <h3 className="text-xl font-bold mb-4">Size Chart</h3>
-            <ul className="text-sm space-y-2">
-              <li><strong>Small:</strong> 5-7 stems</li>
-              <li><strong>Medium:</strong> 8-12 stems</li>
-              <li><strong>Large:</strong> 13-20 stems</li>
-              <li><strong>Deluxe:</strong> 20+ stems</li>
-            </ul>
-            <button
-              onClick={() => setShowSizeChart(false)}
-              className="mt-4 button-bg button-bg:hover  px-4 py-2 rounded"
-            >
-              Close
-            </button>
+        {/* Modals */}
+        {showSizeChart && (
+          <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50" style={{ backdropFilter: "blur(4px)" }}>
+            <div className="bg-white p-6 rounded-lg max-w-md w-full">
+              <h3 className="text-xl font-bold mb-4">Size Chart</h3>
+              <ul className="text-sm space-y-2">
+                <li><strong>Small:</strong> 5–7 stems</li>
+                <li><strong>Medium:</strong> 8–12 stems</li>
+                <li><strong>Large:</strong> 13–20 stems</li>
+                <li><strong>Deluxe:</strong> 20+ stems</li>
+              </ul>
+              <button onClick={() => setShowSizeChart(false)} className="mt-4 button-bg button-bg:hover px-4 py-2 rounded">
+                Close
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {showPriceChart && (
-        <div className="fixed inset-0  bg-opacity-40 flex items-center justify-center z-50 " style={{ backdropFilter: "blur(4px)" }}>
-          <div className="bg-white p-6 rounded-lg max-w-md w-full">
-            <h3 className="text-xl font-bold mb-4">Price Chart</h3>
-            <ul className="text-sm space-y-2">
-              <li><strong>Small:</strong> ₹299</li>
-              <li><strong>Medium:</strong> ₹499</li>
-              <li><strong>Large:</strong> ₹699</li>
-              <li><strong>Deluxe:</strong> ₹999</li>
-            </ul>
-            <button
-              onClick={() => setShowPriceChart(false)}
-              className="mt-4 button-bg button-bg:hover px-4 py-2 rounded"
-            >
-              Close
-            </button>
-          </div>
-          </div>
-      )}
+       {showPriceChart && (
+  <div
+    className="fixed inset-0  bg-opacity-40 flex items-center justify-center z-50"
+    style={{ backdropFilter: "blur(4px)" }}
+  >
+    <div className="bg-white p-6 rounded-lg max-w-md w-full shadow-lg">
+      <h3 className="text-xl font-bold mb-4 text-center">Price Chart</h3>
+
+      {/* Bouquet Type Chart Only */}
+      <div className="mb-4">
+        <h4 className="font-semibold mb-2">Bouquet Types:</h4>
+        <ul className="text-sm space-y-1 list-disc list-inside">
+          <li>Flower Bouquet – ₹250</li>
+          <li>Chocolate Bouquet – ₹550</li>
+          <li>Soft Toy Bouquet – ₹550</li>
+          <li>Pipecleaner Bouquet – ₹450</li>
+          <li>Butterfly Bouquet – ₹450</li>
+          <li>Hair Clip Bouquet – ₹350</li>
+          <li>Crochet Bouquet – ₹650</li>
+          <li>Origami Bouquet – ₹650</li>
+          <li>Fruit Bouquet – ₹650</li>
+          <li>Skincare Bouquet – ₹650</li>
+        </ul>
+      </div>
+
+      <div className="text-center">
+        <button
+          onClick={() => setShowPriceChart(false)}
+          className="mt-2 button-bg button-bg:hover px-6 py-2 rounded text-white font-medium"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
       </div>
     </div>
   )

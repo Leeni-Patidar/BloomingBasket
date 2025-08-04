@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-toastify";
 import { Eye, EyeOff } from "lucide-react"; // optional icons
 
 const ForgotPassword = () => {
@@ -19,10 +18,10 @@ const ForgotPassword = () => {
     setLoading(true);
     try {
       const res = await axios.post("/api/auth/send-otp", { email });
-      toast.success(res.data.message || "OTP sent to your email.");
+      alert(res.data.message || "OTP sent to your email.");
       setStep(2);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to send OTP.");
+      alert(err.response?.data?.message || "Failed to send OTP.");
     } finally {
       setLoading(false);
     }
@@ -33,10 +32,10 @@ const ForgotPassword = () => {
     setLoading(true);
     try {
       const res = await axios.post("/api/auth/verify-otp", { email, otp });
-      toast.success(res.data.message || "OTP verified.");
+      alert(res.data.message || "OTP verified.");
       setStep(3);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Invalid OTP.");
+      alert(err.response?.data?.message || "Invalid OTP.");
     } finally {
       setLoading(false);
     }
@@ -50,12 +49,12 @@ const ForgotPassword = () => {
         email,
         password: newPassword,
       });
-      toast.success(res.data.message || "Password updated.");
+      alert(res.data.message || "Password updated.");
       setTimeout(() => {
         navigate("/login");
       }, 2000);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to reset password.");
+      alert(err.response?.data?.message || "Failed to reset password.");
     } finally {
       setLoading(false);
     }
@@ -146,7 +145,6 @@ const ForgotPassword = () => {
                       className="absolute inset-y-0 right-3 flex items-center top-5"
                       tabIndex={-1}
                     >
-                      {/* Use below if you have lucide-react installed */}
                       {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                     </button>
                   </div>

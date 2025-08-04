@@ -4,7 +4,6 @@ import { Link } from "react-router-dom"
 import { CartContext } from "../context/CartContext"
 import { WishlistContext } from "../context/WishlistContext"
 import { AuthContext } from "../context/AuthContext"
-import { toast } from "react-toastify"
 
 // Mapping backend category values to readable labels
 const categoryLabels = {
@@ -36,12 +35,12 @@ const ProductCard = ({ product }) => {
     e.stopPropagation()
 
     if (!user) {
-      toast.error("Please login to add items to cart")
+      alert("Please login to add items to cart")
       return
     }
 
     if (product.stock <= 0) {
-      toast.error("Product is out of stock")
+      alert("Product is out of stock")
       return
     }
 
@@ -57,7 +56,7 @@ const ProductCard = ({ product }) => {
     e.stopPropagation()
 
     if (!user) {
-      toast.error("Please login to manage wishlist")
+      alert("Please login to manage wishlist")
       return
     }
 
@@ -99,7 +98,6 @@ const ProductCard = ({ product }) => {
             }}
           />
 
-          {/* Wishlist Button (hidden for admin) */}
           {!isAdmin && (
             <button
               onClick={handleWishlistToggle}
@@ -126,7 +124,6 @@ const ProductCard = ({ product }) => {
             </button>
           )}
 
-          {/* Stock or Featured Badge */}
           {product.stock <= 0 && (
             <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold">
               Out of Stock
@@ -174,7 +171,6 @@ const ProductCard = ({ product }) => {
         </div>
       </Link>
 
-      {/* Add to Cart Button (hidden for admin) */}
       {!isAdmin && (
         <div className="px-4 pb-4">
           <button
