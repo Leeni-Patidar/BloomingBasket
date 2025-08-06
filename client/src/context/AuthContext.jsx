@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [loading, setLoading] = useState(true);
 
-  const API = "http://localhost:5001";
+  const API = "https://bloomingbasket-server.onrender.com";
   axios.defaults.baseURL = API;
   axios.defaults.withCredentials = true;
 
