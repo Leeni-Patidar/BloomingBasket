@@ -5,7 +5,8 @@ import { Eye, EyeOff } from "lucide-react";
 
 const Register = () => {
   const navigate = useNavigate();
-  const API = import.meta.env.VITE_API_URL;
+ const API = import.meta.env.VITE_API;
+
 
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
