@@ -5,8 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 const Register = () => {
   const navigate = useNavigate();
- const API = import.meta.env.VITE_API;
-
+  const API = "https://bloomingbasket-server.onrender.com";
 
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -41,7 +40,7 @@ const Register = () => {
   const sendOTP = async () => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API}/send-registration-otp`, {
+      const res = await axios.post(`${API}/api/auth/send-registration-otp`, {
         email: formData.email,
       });
       alert(res.data.message || "OTP sent to your email.");
@@ -58,7 +57,7 @@ const Register = () => {
   const verifyOTP = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${API}/verify-otp`, {
+      const response = await axios.post(`${API}/api/auth/verify-otp`, {
         email: formData.email,
         otp: formData.otp,
       });
@@ -74,7 +73,7 @@ const Register = () => {
   const registerUser = async () => {
     setLoading(true);
     try {
-      await axios.post(`${API}/register`, {
+      await axios.post(`${API}/api/auth/register`, {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
