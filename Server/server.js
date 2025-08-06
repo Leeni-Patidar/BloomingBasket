@@ -15,7 +15,6 @@ const addressRoute = require("./routes/addressRoute");
 const userRoute = require("./routes/user");
 const wishlistRoute = require("./routes/wishlistRoute");
 const contactRoute = require("./routes/contactRoute");
-// const otpRoute = require("./routes/otpRoute"); // ✅ Add OTP route if not already added
 
 // Load env
 dotenv.config();
@@ -74,7 +73,6 @@ app.use("/api/orders", orderRoute);
 app.use("/api/upload", uploadRoute);
 app.use("/api/addresses", addressRoute);
 app.use("/api/contact", contactRoute);
-// app.use("/api/otp", otpRoute); // ✅ Ensure OTP route is available
 
 // ✅ Health Check
 app.get("/api/health", (req, res) => {
