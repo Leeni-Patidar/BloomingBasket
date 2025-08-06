@@ -6,7 +6,7 @@ const path = require("path")
 
 const authRoute = require("./routes/auth")
 const productRoute = require("./routes/product")
-const customProductRoute = require("./routes/customProduct") // Add this line
+const customProductRoute = require("./routes/customProduct")
 const orderRoute = require("./routes/order")
 const cartRoute = require("./routes/cartRoute")
 const uploadRoute = require("./routes/uploadRoute")
@@ -19,14 +19,15 @@ dotenv.config()
 
 const app = express()
 
-// ✅ Middleware
+// ✅ CORS setup
+const allowedOrigins = [
+  "https://bloomingbasket-client.onrender.com",
+  "http://localhost:5173",
+]
+
 app.use(
   cors({
     origin: function (origin, callback) {
-      const allowedOrigins = [
-        "https://bloomingbasket-client.onrender.com",
-        "http://localhost:5173",
-      ]
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true)
       } else {
@@ -34,7 +35,7 @@ app.use(
       }
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 )
@@ -61,10 +62,10 @@ mongoose
 // ✅ API Routes
 app.use("/api/auth", authRoute)
 app.use("/api/user", userRoute)
-app.use("/api/user/cart", cartRoute) 
-app.use("/api/user/wishlist", wishlistRoute) 
+app.use("/api/user/cart", cartRoute)
+app.use("/api/user/wishlist", wishlistRoute)
 app.use("/api/products", productRoute)
-app.use("/api/products/custom", customProductRoute) 
+app.use("/api/products/custom", customProductRoute)
 app.use("/api/orders", orderRoute)
 app.use("/api/upload", uploadRoute)
 app.use("/api/addresses", addressRoute)
