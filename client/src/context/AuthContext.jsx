@@ -2,17 +2,21 @@ import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+// Create Context
 export const AuthContext = createContext();
 
+// Auth Provider
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [loading, setLoading] = useState(true);
 
+  // ✅ Server API Base
   const API = "https://bloomingbasket-server.onrender.com";
   axios.defaults.baseURL = API;
-  axios.defaults.withCredentials = true;
+  axios.defaults.withCredentials = true; // 🔑 Allow credentials (cookies)
 
+  // ✅ Set token in headers if available
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -22,6 +26,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
+  // ✅ Fetch Authenticated User
   const fetchUser = async () => {
     try {
       const res = await axios.get("/api/auth/is-auth");
@@ -37,6 +42,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // ✅ Login
   const login = async (email, password) => {
     try {
       const res = await axios.post("/api/auth/login", { email, password });
@@ -54,6 +60,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // ✅ Register
   const register = async (name, email, phone, password) => {
     try {
       const res = await axios.post("/api/auth/register", {
@@ -76,6 +83,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // ✅ Logout
   const logout = () => {
     localStorage.removeItem("token");
     setToken("");
@@ -84,6 +92,7 @@ export const AuthProvider = ({ children }) => {
     toast.info("Logged out successfully.");
   };
 
+  // ✅ Update Profile
   const updateProfile = async (profileData) => {
     try {
       const { data } = await axios.put("/api/user/profile", profileData);
@@ -96,6 +105,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // ✅ Change Password
   const changePassword = async (oldPassword, newPassword) => {
     try {
       await axios.put("/api/user/change-password", {
