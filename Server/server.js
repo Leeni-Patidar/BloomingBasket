@@ -22,12 +22,20 @@ const app = express()
 // ✅ Middleware
 app.use(
   cors({
-    origin: process.env.NODE_ENV === "production"
-      ? "https://bloomingbasket-client.onrender.com"
-      : "http://localhost:5173",
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "https://bloomingbasket-client.onrender.com",
+        "http://localhost:5173",
+      ]
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error("Not allowed by CORS"))
+      }
+    },
     credentials: true,
-    methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-    allowedHeaders: "Content-Type,Authorization",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 )
 
