@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react"; 
+import { Eye, EyeOff } from "lucide-react";
 
 const Register = () => {
   const navigate = useNavigate();
-  const API = "http://localhost:5001/api/auth";
+  const API = import.meta.env.VITE_API_URL;
 
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -102,7 +102,6 @@ const Register = () => {
                 <p>Join Blooming Basket today</p>
               </div>
 
-              {/* STEP 1: DETAILS + SEND OTP */}
               {step === 1 && (
                 <>
                   <div className="mb-4">
@@ -152,7 +151,6 @@ const Register = () => {
                 </>
               )}
 
-              {/* STEP 2: VERIFY OTP */}
               {step === 2 && (
                 <>
                   <div className="mb-4">
@@ -190,7 +188,6 @@ const Register = () => {
                 </>
               )}
 
-              {/* STEP 3: SET PASSWORD */}
               {step === 3 && (
                 <>
                   <div className="mb-6 relative">
@@ -223,7 +220,6 @@ const Register = () => {
                 </>
               )}
 
-              {/* Navigation Links */}
               <div className="text-center mt-6">
                 <div className="flex justify-between text-sm">
                   <a href="/" className="text-[#ba54a9] hover:text-[#da81a4] hover:underline">
@@ -234,6 +230,7 @@ const Register = () => {
                   </a>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
