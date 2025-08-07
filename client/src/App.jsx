@@ -19,6 +19,7 @@ import Login from "./pages/Login"
 import MyOrders from "./pages/MyOrders"
 import NotFound from "./pages/NotFound"
 import OrderDetail from "./pages/OrderDetail"
+import Payment from "./pages/Payment";
 import Policy from "./pages/Policy"
 import ProductDetail from "./pages/ProductDetail"
 import Profile from "./pages/Profile"
@@ -61,6 +62,7 @@ function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/my-orders" element={<MyOrders />} />
+      <Route path="/payment" element={<Payment />} />
       <Route path="/order/:id" element={<OrderDetail />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/admin/products" element={<ProductManagement />} />
