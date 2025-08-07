@@ -15,6 +15,7 @@ const addressRoute = require("./routes/addressRoute");
 const userRoute = require("./routes/user");
 const wishlistRoute = require("./routes/wishlistRoute");
 const contactRoute = require("./routes/contactRoute");
+const paymentRoute = require("./routes/paymentRoute");
 
 // Load env
 dotenv.config();
@@ -73,6 +74,8 @@ app.use("/api/orders", orderRoute);
 app.use("/api/upload", uploadRoute);
 app.use("/api/addresses", addressRoute);
 app.use("/api/contact", contactRoute);
+app.use("/api/payment", paymentRoute);
+
 
 // ✅ Health Check
 app.get("/api/health", (req, res) => {
