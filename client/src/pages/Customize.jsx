@@ -1,4 +1,3 @@
-"use client"
 import { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { CartContext } from "../context/CartContext"
@@ -13,6 +12,7 @@ const Customize = () => {
   const [step, setStep] = useState(1)
   const [showSizeChart, setShowSizeChart] = useState(false)
   const [showPriceChart, setShowPriceChart] = useState(false)
+
   const [customization, setCustomization] = useState({
     bouquetType: "",
     size: "",
@@ -49,10 +49,33 @@ const Customize = () => {
   }
 
   const calculatePrice = () => {
-    const basePrices = {
-      XS: 120, S: 150, M: 275, L: 300, XL: 350, XXL: 400, XXXL: 500
+    const sizePrices = {
+      XS: 120,
+      S: 150,
+      M: 275,
+      L: 300,
+      XL: 350,
+      XXL: 400,
+      XXXL: 500
     }
-    return basePrices[customization.size] || 0
+
+    const typePrices = {
+      "Flower Bouquet": 250,
+      "Chocolate Bouquet": 550,
+      "Soft Toy Bouquet": 550,
+      "Pipecleaner Bouquet": 450,
+      "Butterfly Bouquet": 450,
+      "Hair Clip Bouquet": 350,
+      "Crochet Bouquet": 650,
+      "Origami Bouquet": 650,
+      "Fruit Bouquet": 650,
+      "Skincare Bouquet": 650,
+    }
+
+    const typePrice = typePrices[customization.bouquetType] || 0
+    const sizePrice = sizePrices[customization.size] || 0
+
+    return typePrice + sizePrice
   }
 
   const handleAddToCart = async () => {
@@ -91,8 +114,8 @@ const Customize = () => {
       })
 
       if (!response.ok) throw new Error("Failed to create custom product")
-      const { product } = await response.json()
 
+      const { product } = await response.json()
       await addToCart(product._id, 1)
 
       toast.success("Custom bouquet added to cart!")
@@ -331,7 +354,7 @@ const Customize = () => {
       <div className="text-center">
         <button
           onClick={() => setShowPriceChart(false)}
-          className="mt-2 button-bg button-bg:hover px-6 py-2 rounded text-white font-medium"
+          className="mt-2 button-bg button-bg:hover px-6 py-2 rounded  font-medium"
         >
           Close
         </button>
