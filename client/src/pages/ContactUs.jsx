@@ -176,7 +176,7 @@ const Contact = () => {
 
               <div className="mb-8">
                 <h5 className="mb-2 font-semibold">Address</h5>
-                <p>123 Flower Street, Garden City, GC 12345</p>
+                <p>123 xxxx , xxxxx , xxxxx</p>
               </div>
 
               <div className="mb-8">

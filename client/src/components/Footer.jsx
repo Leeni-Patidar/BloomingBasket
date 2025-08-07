@@ -85,13 +85,16 @@ const Footer = () => {
                   <Link to="/faq" className=" hover:text-pink-100">FAQ</Link>
                 </li>
                 <li className="mb-2">
-                  <Link to="/contactUs" className=" hover:text-pink-100">Contact Us</Link>
+                  <Link to="/cancellation-refund" className=" hover:text-pink-100">Cancellation & Refund</Link>
                 </li>
                 <li className="mb-2">
                   <Link to="/policy" className=" hover:text-pink-100">Privacy Policy</Link>
                 </li>
                 <li className="mb-2">
                   <Link to="/terms" className=" hover:text-pink-100">Terms & Conditions</Link>
+                </li>
+                <li className="mb-2">
+                  <Link to="/shippingDelivery" className=" hover:text-pink-100">Shipping & Delivery</Link>
                 </li>
               </ul>
             </div>
@@ -102,6 +105,9 @@ const Footer = () => {
             <div className="mb-8">
               <h6 className="text-lg font-semibold mb-4 text-gray-200">Contact Info</h6>
               <div className="flex flex-col gap-4 ">
+                <div className="flex items-center gap-3">
+                  <Link to="/contactUs" className=" hover:text-pink-100">Contact Us</Link>
+                </div>
                 <div className="flex items-center gap-3">
                   <i className="fas fa-map-marker-alt  w-5"></i>
                   <span>123 Flower Street, Garden City, GC 12345</span>

@@ -9,6 +9,7 @@ import ScrollToTop from "./components/ScrollToTop"
 
 // Pages
 import About from "./pages/About"
+import CancellationRefund from "./pages/CancellationRefund";
 import Cart from "./pages/Cart"
 import ContactUs from "./pages/ContactUs"
 import Customize from "./pages/Customize"
@@ -22,6 +23,7 @@ import Policy from "./pages/Policy"
 import ProductDetail from "./pages/ProductDetail"
 import Profile from "./pages/Profile"
 import Register from "./pages/Register"
+import ShippingDelivery from "./pages/ShippingDelivery";
 import Shop from "./pages/Shop"
 import Terms from "./pages/Terms"
 import Wishlist from "./pages/Wishlist"
@@ -43,10 +45,12 @@ function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/shop" element={<Shop />} />
       <Route path="/about" element={<About />} />
+      <Route path="/cancellation-refund" element={<CancellationRefund />} />
       <Route path="/contactUs" element={<ContactUs />} />
       <Route path="/product/:id" element={<ProductDetail />} />
       <Route path="/policy" element={<Policy />} />
-      <Route path="/terms" element={<Terms />} />
+      <Route path="/terms" element={<Terms />} />\
+      <Route path="/shippingDelivery" element={<ShippingDelivery />} />
       <Route path="/faq" element={<FAQ />} />
       <Route path="/customize" element={<Customize />} />
       <Route path="/wishlist" element={<Wishlist />} />
