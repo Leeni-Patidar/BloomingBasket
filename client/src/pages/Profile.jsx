@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Eye, EyeOff } from "lucide-react";
 
 const Profile = () => {
   const { user, token, updateProfile, changePassword } = useContext(AuthContext);
@@ -32,6 +33,10 @@ const Profile = () => {
     newPassword: "",
     confirmPassword: "",
   });
+
+  const [showOld, setShowOld] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -201,7 +206,7 @@ const Profile = () => {
           </form>
         )}
 
-        {/* Address Section (Hidden for admin) */}
+        {/* Address Section */}
         {activeTab === "address" && user?.role !== "admin" && (
           <div className="space-y-4  p-4 rounded-md ">
             <h2 className="text-lg font-semibold text-brown-800">{editingAddressId ? "Edit Address" : "Add Address"}</h2>
@@ -256,12 +261,54 @@ const Profile = () => {
 
         {/* Change Password */}
         {activeTab === "password" && (
-          <form onSubmit={handlePasswordSubmit} className="space-y-4  p-4 rounded-md ">
+          <form onSubmit={handlePasswordSubmit} className="space-y-4 p-4 rounded-md relative">
             <h2 className="text-lg font-semibold text-brown-800">Change Password</h2>
-            <input type="password" value={passwords.oldPassword} onChange={(e) => setPasswords({ ...passwords, oldPassword: e.target.value })} placeholder="Old Password" className="w-full px-4 py-3 border border-brown-300 rounded-md bg-white text-brown-800" />
-            <input type="password" value={passwords.newPassword} onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })} placeholder="New Password" className="w-full px-4 py-3 border border-brown-300 rounded-md bg-white text-brown-800" />
-            <input type="password" value={passwords.confirmPassword} onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })} placeholder="Confirm Password" className="w-full px-4 py-3 border border-brown-300 rounded-md bg-white text-brown-800" />
-            <button type="submit" className="button-bg button-bg:hover px-4 py-2 rounded shadow">Update Password</button>
+
+            {/* Old Password */}
+            <div className="relative">
+              <input
+                type={showOld ? "text" : "password"}
+                value={passwords.oldPassword}
+                onChange={(e) => setPasswords({ ...passwords, oldPassword: e.target.value })}
+                placeholder="Old Password"
+                className="w-full px-4 py-3 border border-brown-300 rounded-md bg-white text-brown-800"
+              />
+              <button type="button" onClick={() => setShowOld(!showOld)} className="absolute inset-y-0 right-3 flex items-center top-2" tabIndex={-1}>
+                {showOld ? <Eye size={20} /> : <EyeOff size={20} />}
+              </button>
+            </div>
+
+            {/* New Password */}
+            <div className="relative">
+              <input
+                type={showNew ? "text" : "password"}
+                value={passwords.newPassword}
+                onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
+                placeholder="New Password"
+                className="w-full px-4 py-3 border border-brown-300 rounded-md bg-white text-brown-800"
+              />
+              <button type="button" onClick={() => setShowNew(!showNew)} className="absolute inset-y-0 right-3 flex items-center top-2" tabIndex={-1}>
+                {showNew ? <Eye size={20} /> : <EyeOff size={20} />}
+              </button>
+            </div>
+
+            {/* Confirm Password */}
+            <div className="relative">
+              <input
+                type={showConfirm ? "text" : "password"}
+                value={passwords.confirmPassword}
+                onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })}
+                placeholder="Confirm Password"
+                className="w-full px-4 py-3 border border-brown-300 rounded-md bg-white text-brown-800"
+              />
+              <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute inset-y-0 right-3 flex items-center top-2" tabIndex={-1}>
+                {showConfirm ? <Eye size={20} /> : <EyeOff size={20} />}
+              </button>
+            </div>
+
+            <button type="submit" className="button-bg button-bg:hover px-4 py-2 rounded shadow">
+              Update Password
+            </button>
           </form>
         )}
       </main>
