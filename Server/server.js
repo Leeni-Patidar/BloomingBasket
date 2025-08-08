@@ -74,13 +74,18 @@ const paymentRoute = require("./routes/paymentRoute");
 // ==========================
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
-app.use("/api/user/cart", cartRoute);
+// server.js
+app.use("/api/cart", cartRoute);
+app.use("/api/user/cart", cartRoute); // backwards compatibility
+app.use("/api/address", addressRoute);
+app.use("/api/user/address", addressRoute); // backwards compatibility
+
 app.use("/api/user/wishlist", wishlistRoute);
 app.use("/api/products", productRoute);
 app.use("/api/products/custom", customProductRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/upload", uploadRoute);
-app.use("/api/addresses", addressRoute);
+// app.use("/api/addresses", addressRoute);
 app.use("/api/contact", contactRoute);
 app.use("/api/payment", paymentRoute);
 
