@@ -26,34 +26,43 @@ const Checkout = () => {
   const [cartLoading, setCartLoading] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const subtotal = cartItems.reduce((acc, item) => acc + item.productId.price * item.quantity, 0);
+  const subtotal = cartItems.reduce((acc, item) => acc + (item.productId?.price || 0) * item.quantity, 0);
   const deliveryFee = subtotal >= 500 ? 0 : 50;
   const tax = Math.round((subtotal * 18) / 100);
   const total = subtotal + deliveryFee + tax;
 
-  // Fetch user profile and addresses
+  // ✅ Fetch user profile, address, and cart
   useEffect(() => {
+    if (!token) {
+      toast.error("Please log in to proceed to checkout");
+      navigate("/login");
+      return;
+    }
+
     const fetchData = async () => {
       try {
+        setCartLoading(true);
         const [userRes, addressRes, cartRes] = await Promise.all([
           axios.get("/api/user/profile", { headers: { Authorization: `Bearer ${token}` } }),
           axios.get("/api/user/address", { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get("/api/cart", { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get("/api/user/cart", { headers: { Authorization: `Bearer ${token}` } }),
         ]);
 
         setUserProfile(userRes.data);
         setAddresses(addressRes.data);
-        setCartItems(cartRes.data.cartItems);
+        setCartItems(cartRes.data.items || []); // ✅ fixed key from backend
       } catch (err) {
-        console.error("Error loading checkout data", err);
+        console.error("Error loading checkout data:", err.response?.data || err.message);
         toast.error("Failed to load checkout data");
+      } finally {
+        setCartLoading(false);
       }
     };
 
     fetchData();
-  }, [token]);
+  }, [token, navigate]);
 
-  // Handle add address
+  // ✅ Add new address
   const handleAddAddress = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -72,9 +81,12 @@ const Checkout = () => {
     }
   };
 
-  // Handle order placement
+  // ✅ Place order
   const handlePlaceOrder = async () => {
-    if (!selectedAddress || !paymentMethod) return;
+    if (!selectedAddress || !paymentMethod) {
+      toast.error("Please select a delivery address and payment method");
+      return;
+    }
 
     const orderData = {
       items: cartItems,
@@ -88,7 +100,6 @@ const Checkout = () => {
     };
 
     if (paymentMethod === "online") {
-      // Redirect to payment page with data
       navigate("/payment", { state: orderData });
     } else {
       try {
@@ -217,13 +228,13 @@ const Checkout = () => {
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {cartItems.map((item) => (
-                <div key={item.productId._id} className="flex gap-3 border-b pb-2">
-                  <img src={item.productId.images?.[0] || "/placeholder.svg"} alt={item.productId.name} className="w-12 h-12 object-cover rounded" />
+                <div key={item.productId?._id || item._id} className="flex gap-3 border-b pb-2">
+                  <img src={item.productId?.images?.[0] || "/placeholder.svg"} alt={item.productId?.name} className="w-12 h-12 object-cover rounded" />
                   <div>
-                    <h4 className="text-sm font-medium">{item.productId.name}</h4>
+                    <h4 className="text-sm font-medium">{item.productId?.name}</h4>
                     <p className="text-xs">Qty: {item.quantity}</p>
                   </div>
-                  <span className="ml-auto font-semibold text-sm">₹{(item.productId.price * item.quantity).toFixed(2)}</span>
+                  <span className="ml-auto font-semibold text-sm">₹{((item.productId?.price || 0) * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
             </div>
