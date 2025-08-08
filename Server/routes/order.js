@@ -1,3 +1,4 @@
+// routes/order.js
 const express = require("express");
 const router = express.Router();
 const {
@@ -5,7 +6,7 @@ const {
   getUserOrders,
   getOrderById,
   cancelOrder,
-  getAllOrders,
+  getAllOrders, // ✅ name now matches controller
   updateOrderStatus,
 } = require("../controllers/orderController");
 

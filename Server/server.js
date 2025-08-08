@@ -77,7 +77,7 @@ app.use("/api/user", userRoute);
 app.use("/api/user/cart", cartRoute);
 
 app.use("/api/addresses", addressRoute);
-app.use("/api/user/addresses", addressRoute);
+// app.use("/api/user/addresses", addressRoute);
 
 
 app.use("/api/user/wishlist", wishlistRoute);

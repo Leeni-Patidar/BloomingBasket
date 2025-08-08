@@ -1,14 +1,16 @@
+// models/Order.js
 const mongoose = require("mongoose");
 
-// Helper function to generate a unique order number (e.g. BB202507290001)
-function generateOrderNumber() {
-  const now = new Date();
-  const yyyyMMdd = now.toISOString().split("T")[0].replace(/-/g, ""); // YYYYMMDD
-  const random = Math.floor(1000 + Math.random() * 9000); // 4-digit random
-  return `BB${yyyyMMdd}${random}`;
-}
+const paymentResultSchema = new mongoose.Schema(
+  {
+    razorpay_order_id: { type: String },
+    razorpay_payment_id: { type: String },
+    razorpay_signature: { type: String },
+    status: { type: String, default: "created" }, // created, paid, failed
+  },
+  { _id: false }
+);
 
-// Order Item Schema
 const orderItemSchema = new mongoose.Schema(
   {
     productId: {
@@ -16,49 +18,39 @@ const orderItemSchema = new mongoose.Schema(
       ref: "Product",
       required: true,
     },
-    quantity: { type: Number, required: true },
+    name: { type: String, required: true },
+    image: { type: String },
     price: { type: Number, required: true },
+    quantity: { type: Number, required: true },
   },
   { _id: false }
 );
 
-// Shipping Address Schema
-const addressSchema = new mongoose.Schema(
+const shippingAddressSchema = new mongoose.Schema(
   {
     fullName: { type: String, required: true },
-    addressLine1: { type: String, required: true },
-    addressLine2: { type: String },
+    street: { type: String, required: true },
     city: { type: String, required: true },
     state: { type: String, required: true },
-    pincode: { type: String, required: true },
-    phone: { type: String, required: true },
+    zipCode: { type: String, required: true },
+    country: { type: String, default: "India" },
+    phone: { type: String },
+    landmark: { type: String },
+    label: { type: String, enum: ["Home", "Work", "Other"], default: "Home" },
   },
   { _id: false }
 );
 
-// Main Order Schema
 const orderSchema = new mongoose.Schema(
   {
-    orderNumber: {
-      type: String,
-      default: generateOrderNumber,
-      unique: true,
-    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    items: [orderItemSchema],
-    shippingAddress: addressSchema,
-    paymentMethod: {
-      type: String,
-      enum: ["cod", "online"],
-      required: true,
-    },
-    subtotal: { type: Number, required: true },
-    deliveryFee: { type: Number, default: 0 },
-    tax: { type: Number, default: 0 },
+    orderItems: [orderItemSchema],
+    shippingAddress: shippingAddressSchema,
+    paymentResult: paymentResultSchema,
     total: { type: Number, required: true },
     status: {
       type: String,
@@ -73,12 +65,8 @@ const orderSchema = new mongoose.Schema(
       ],
       default: "pending",
     },
-    orderNotes: { type: String },
   },
   { timestamps: true }
 );
-
-// Add method if needed later
-// orderSchema.statics.generateOrderNumber = generateOrderNumber;
 
 module.exports = mongoose.model("Order", orderSchema);

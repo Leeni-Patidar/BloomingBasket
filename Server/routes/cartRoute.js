@@ -1,10 +1,11 @@
+// routes/cartRoutes.js
 const express = require("express");
 const router = express.Router();
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 const { auth } = require("../middleware/auth");
 
-// ✅ Utility: block admin access
+// Utility to block admin
 const blockAdmin = (req, res) => {
   if (!req.user || req.user.role === "admin") {
     res.status(403).json({ message: "Admins cannot perform cart operations" });
@@ -17,18 +18,15 @@ const blockAdmin = (req, res) => {
 router.get("/", auth, async (req, res) => {
   if (blockAdmin(req, res)) return;
   try {
-    const cart = await Cart.findOne({ userId: req.user.id })
-      .populate("items.productId");
-
-    // Always send items array for frontend safety
-    res.json({ items: cart?.items || [] });
+    const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId");
+    res.json({ items: cart ? cart.items : [] });
   } catch (err) {
     console.error("Cart GET error:", err);
     res.status(500).json({ message: "Failed to fetch cart" });
   }
 });
 
-// ✅ POST /api/user/cart — Add item to cart
+// ✅ POST /api/user/cart — Add item
 router.post("/", auth, async (req, res) => {
   if (blockAdmin(req, res)) return;
 
@@ -39,9 +37,7 @@ router.post("/", auth, async (req, res) => {
 
   try {
     const product = await Product.findById(productId);
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
+    if (!product) return res.status(404).json({ message: "Product not found" });
 
     let cart = await Cart.findOne({ userId: req.user.id });
     if (!cart) {
@@ -59,84 +55,15 @@ router.post("/", auth, async (req, res) => {
     }
 
     await cart.save();
-    const populated = await cart.populate("items.productId");
-    res.json({ items: populated.items });
+    await cart.populate("items.productId");
+    res.json({ items: cart.items });
   } catch (err) {
     console.error("Cart POST error:", err);
     res.status(500).json({ message: "Failed to add to cart" });
   }
 });
 
-// ✅ PUT /api/user/cart/:productId — Update item quantity
-router.put("/:productId", auth, async (req, res) => {
-  if (blockAdmin(req, res)) return;
-
-  const { quantity } = req.body;
-  if (!quantity || quantity < 1) {
-    return res.status(400).json({ message: "Quantity must be at least 1" });
-  }
-
-  try {
-    const cart = await Cart.findOne({ userId: req.user.id });
-    if (!cart) return res.status(404).json({ message: "Cart not found" });
-
-    const itemIndex = cart.items.findIndex(
-      (item) => item.productId.toString() === req.params.productId
-    );
-
-    if (itemIndex === -1) {
-      return res.status(404).json({ message: "Item not found in cart" });
-    }
-
-    cart.items[itemIndex].quantity = quantity;
-    await cart.save();
-    const populated = await cart.populate("items.productId");
-    res.json({ items: populated.items });
-  } catch (err) {
-    console.error("Cart PUT error:", err);
-    res.status(500).json({ message: "Failed to update cart item" });
-  }
-});
-
-// ✅ DELETE /api/user/cart/:productId — Remove item from cart
-router.delete("/:productId", auth, async (req, res) => {
-  if (blockAdmin(req, res)) return;
-
-  try {
-    const cart = await Cart.findOne({ userId: req.user.id });
-    if (!cart) return res.status(404).json({ message: "Cart not found" });
-
-    cart.items = cart.items.filter(
-      (item) => item.productId.toString() !== req.params.productId
-    );
-
-    await cart.save();
-    const populated = await cart.populate("items.productId");
-    res.json({ items: populated.items });
-  } catch (err) {
-    console.error("Cart DELETE error:", err);
-    res.status(500).json({ message: "Failed to remove item from cart" });
-  }
-});
-
-// ✅ DELETE /api/user/cart — Clear entire cart
-router.delete("/", auth, async (req, res) => {
-  if (blockAdmin(req, res)) return;
-
-  try {
-    await Cart.findOneAndUpdate(
-      { userId: req.user.id },
-      { $set: { items: [] } },
-      { new: true }
-    );
-    res.json({ items: [] });
-  } catch (err) {
-    console.error("Cart CLEAR error:", err);
-    res.status(500).json({ message: "Failed to clear cart" });
-  }
-});
-
-// ✅ UPDATE quantity
+// ✅ PUT /api/user/cart/:productId — Update quantity
 router.put("/:productId", auth, async (req, res) => {
   if (blockAdmin(req, res)) return;
   const { quantity } = req.body;
@@ -147,40 +74,40 @@ router.put("/:productId", auth, async (req, res) => {
 
   try {
     const cart = await Cart.findOne({ userId: req.user.id });
-    if (!cart) return res.status(404).json({ message: "Cart not found" });
+    if (!cart) return res.json({ items: [] });
 
     const item = cart.items.find((i) => i.productId.toString() === req.params.productId);
-    if (!item) return res.status(404).json({ message: "Item not found in cart" });
+    if (!item) return res.json({ items: cart.items });
 
     item.quantity = quantity;
     await cart.save();
-    const populated = await cart.populate("items.productId");
-    res.json({ items: populated.items });
+    await cart.populate("items.productId");
+    res.json({ items: cart.items });
   } catch (err) {
     console.error("Cart PUT error:", err);
     res.status(500).json({ message: "Failed to update quantity." });
   }
 });
 
-// ✅ REMOVE single item
+// ✅ DELETE /api/user/cart/:productId — Remove item
 router.delete("/:productId", auth, async (req, res) => {
   if (blockAdmin(req, res)) return;
 
   try {
     const cart = await Cart.findOne({ userId: req.user.id });
-    if (!cart) return res.status(404).json({ message: "Cart not found" });
+    if (!cart) return res.json({ items: [] });
 
     cart.items = cart.items.filter((i) => i.productId.toString() !== req.params.productId);
     await cart.save();
-    const populated = await cart.populate("items.productId");
-    res.json({ items: populated.items });
+    await cart.populate("items.productId");
+    res.json({ items: cart.items });
   } catch (err) {
     console.error("Cart DELETE error:", err);
     res.status(500).json({ message: "Failed to remove item." });
   }
 });
 
-// ✅ CLEAR cart
+// ✅ DELETE /api/user/cart — Clear cart
 router.delete("/", auth, async (req, res) => {
   if (blockAdmin(req, res)) return;
 

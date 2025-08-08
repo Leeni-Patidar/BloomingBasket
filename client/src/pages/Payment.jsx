@@ -8,7 +8,7 @@ const Payment = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  // Fallback if no order data
+  // Redirect if missing order details
   useEffect(() => {
     if (!state) {
       toast.error("Missing payment details. Redirecting...");
@@ -26,28 +26,40 @@ const Payment = () => {
 
   const startPayment = async () => {
     try {
+      // 1️⃣ Get Razorpay key from backend
+      const { data: keyData } = await axios.get("/api/payment/getkey");
+
+      // 2️⃣ Create Razorpay order in backend
       const { data: order } = await axios.post(
         "/api/payment/order",
-        { amount: state.total * 100 }, // amount in paisa
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { amount: state.total }, // ✅ send amount in rupees, backend will convert to paise
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      // 3️⃣ Razorpay options
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        key: keyData.key, // ✅ secure key from backend
         amount: order.amount,
         currency: order.currency,
         name: "Blooming Basket",
         description: "Order Payment",
         order_id: order.id,
         handler: async function (response) {
-          // ✅ Payment successful
           toast.success("Payment successful!");
 
+          // 4️⃣ Save payment in DB
           try {
+            await axios.post(
+              "/api/payment/verify",
+              {
+                orderId: order.id,
+                paymentId: response.razorpay_payment_id,
+                status: "paid",
+              },
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            // 5️⃣ Place order after payment
             await axios.post(
               "/api/order",
               {
@@ -58,16 +70,12 @@ const Payment = () => {
                   razorpay_signature: response.razorpay_signature,
                 },
               },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
+              { headers: { Authorization: `Bearer ${token}` } }
             );
 
             navigate("/order-confirmation");
-          } catch (orderErr) {
-            console.error("Order failed after payment:", orderErr);
+          } catch (err) {
+            console.error("Order save error:", err);
             toast.error("Payment done but order failed. Please contact support.");
           }
         },

@@ -74,6 +74,7 @@ const OrderManagement = () => {
                 <th className="p-3 text-left">Order #</th>
                 <th className="p-3 text-left">Customer</th>
                 <th className="p-3 text-left">Total</th>
+                <th className="p-3 text-left">Payment</th> {/* ✅ New Column */}
                 <th className="p-3 text-left">Status</th>
                 <th className="p-3 text-left">Date</th>
                 <th className="p-3">Actions</th>
@@ -82,15 +83,28 @@ const OrderManagement = () => {
             <tbody>
               {orders.map((order) => (
                 <tr key={order._id} className="border-b">
-                  <td className="p-3 font-medium">{order.orderNumber}</td>
-                  <td className="p-3">{order.shippingAddress.fullName}</td>
-                  <td className="p-3">₹{order.total.toFixed(2)}</td>
-                  <td className={`p-3 font-semibold ${statusColors[order.status]}`}>
-                    {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                  <td className="p-3 font-medium">{order.orderNumber || order._id}</td>
+                  <td className="p-3">{order.shippingAddress?.fullName || "N/A"}</td>
+                  <td className="p-3">₹{order.total?.toFixed(2)}</td>
+
+                  {/* ✅ Payment Info */}
+                  <td className="p-3">
+                    {order.paymentResult?.razorpay_payment_id
+                      ? `Paid (${order.paymentResult.razorpay_payment_id.slice(-6)})`
+                      : "Not Paid"}
                   </td>
+
+                  {/* ✅ Order Status */}
+                  <td className={`p-3 font-semibold ${statusColors[order.status] || ""}`}>
+                    {order.status?.charAt(0).toUpperCase() + order.status?.slice(1)}
+                  </td>
+
+                  {/* ✅ Order Date */}
                   <td className="p-3">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </td>
+
+                  {/* ✅ Status Update Action */}
                   <td className="p-3">
                     <select
                       value={order.status}

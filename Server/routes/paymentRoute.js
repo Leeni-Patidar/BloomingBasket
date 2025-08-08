@@ -1,9 +1,19 @@
-// backend/routes/paymentRoute.js
-const express = require("express")
-const router = express.Router()
-const { createPaymentOrder } = require("../controllers/paymentController")
+const express = require("express");
+const router = express.Router();
+const { auth } = require("../middleware/auth");
+const {
+  getRazorpayKey,
+  createPaymentOrder,
+  verifyPayment,
+} = require("../controllers/paymentController");
 
-// POST /api/payment/order
-router.post("/order", createPaymentOrder)
+// ✅ Get Razorpay Key
+router.get("/getkey", getRazorpayKey);
 
-module.exports = router
+// ✅ Create Order
+router.post("/order", auth, createPaymentOrder);
+
+// ✅ Verify Payment
+router.post("/verify", auth, verifyPayment);
+
+module.exports = router;
