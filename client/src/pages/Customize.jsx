@@ -1,8 +1,11 @@
+"use client"
+
 import { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { CartContext } from "../context/CartContext"
 import { AuthContext } from "../context/AuthContext"
 import { toast } from "react-toastify"
+
 
 const Customize = () => {
   const { addToCart } = useContext(CartContext)
@@ -48,7 +51,7 @@ const Customize = () => {
     reader.readAsDataURL(file)
   }
 
-  const calculatePrice = () => {
+  const calculatePrices = () => {
     const sizePrices = {
       XS: 120,
       S: 150,
@@ -74,8 +77,17 @@ const Customize = () => {
 
     const typePrice = typePrices[customization.bouquetType] || 0
     const sizePrice = sizePrices[customization.size] || 0
+    const finalPrice = typePrice + sizePrice
 
-    return typePrice + sizePrice
+    return {
+      typePrice,
+      sizePrice,
+      finalPrice
+    }
+  }
+
+  const calculatePrice = () => {
+    return calculatePrices().finalPrice
   }
 
   const handleAddToCart = async () => {
@@ -91,16 +103,24 @@ const Customize = () => {
     }
 
     try {
+      const { typePrice, sizePrice, finalPrice } = calculatePrices()
+
       const customProductData = {
         name: `Customize ${customization.bouquetType}`,
         description: `Custom ${customization.bouquetType} - Size: ${customization.size}${
           customization.message ? ` | Message: ${customization.message}` : ""
         }${customization.specialInstructions ? ` | Instructions: ${customization.specialInstructions}` : ""}`,
-        price: calculatePrice(),
+        price: finalPrice,
+        basePrice: typePrice,
+        finalPrice: finalPrice,
+        typePrice: typePrice,
+        sizePrice: sizePrice,
         category: "custom",
         images: [customization.referenceImage || "/placeholder.svg?height=300&width=300"],
         stock: 1,
         isCustom: true,
+        bouquetType: customization.bouquetType,
+        bouquetSize: customization.size,
         customization: { ...customization },
       }
 
@@ -213,6 +233,21 @@ const Customize = () => {
                 </div>
               ))}
             </div>
+            {customization.bouquetType && (
+              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                <div className="text-sm text-blue-800 space-y-1">
+                  <p><strong>Bouquet Type:</strong> {customization.bouquetType} - ₹{calculatePrices().typePrice}</p>
+                  {customization.size && (
+                    <>
+                      <p><strong>Size:</strong> {customization.size} - ₹{calculatePrices().sizePrice}</p>
+                      <p className="font-bold border-t pt-2 mt-2">
+                        <strong>Total Price:</strong> ₹{calculatePrices().finalPrice}
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -248,7 +283,7 @@ const Customize = () => {
               )}
               {customization.referenceImage && (
                 <div className="mt-4">
-                  <img src={customization.referenceImage} alt="Preview" className="w-full max-w-xs rounded-lg shadow-md" />
+                  <img src={customization.referenceImage || "/placeholder.svg"} alt="Preview" className="w-full max-w-xs rounded-lg shadow-md" />
                 </div>
               )}
             </div>
@@ -269,12 +304,22 @@ const Customize = () => {
               {customization.referenceImage && (
                 <div>
                   <span className="font-semibold">Reference Image:</span>
-                  <img src={customization.referenceImage} alt="Reference" className="mt-2 w-full max-w-xs rounded-lg shadow-md" />
+                  <img src={customization.referenceImage || "/placeholder.svg"} alt="Reference" className="mt-2 w-full max-w-xs rounded-lg shadow-md" />
                 </div>
               )}
-              <div className="border-t pt-4 mt-4 flex justify-between items-center">
-                <span className="text-xl font-bold">Total Price:</span>
-                <span className="text-2xl font-bold">₹{calculatePrice()}</span>
+              <div className="border-t pt-4 mt-4 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Bouquet Type Price:</span>
+                  <span className="font-medium">₹{calculatePrices().typePrice}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Size Price:</span>
+                  <span className="font-medium">₹{calculatePrices().sizePrice}</span>
+                </div>
+                <div className="border-t pt-2 flex justify-between items-center">
+                  <span className="text-xl font-bold">Total Price:</span>
+                  <span className="text-2xl font-bold">₹{calculatePrice()}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -310,14 +355,17 @@ const Customize = () => {
 
         {/* Modals */}
         {showSizeChart && (
-          <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50" style={{ backdropFilter: "blur(4px)" }}>
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50" style={{ backdropFilter: "blur(4px)" }}>
             <div className="bg-white p-6 rounded-lg max-w-md w-full">
               <h3 className="text-xl font-bold mb-4">Size Chart</h3>
               <ul className="text-sm space-y-2">
-                <li><strong>Small:</strong> 5–7 stems</li>
-                <li><strong>Medium:</strong> 8–12 stems</li>
-                <li><strong>Large:</strong> 13–20 stems</li>
-                <li><strong>Deluxe:</strong> 20+ stems</li>
+                <li><strong>XS:</strong> Extra Small - Compact arrangement</li>
+                <li><strong>S:</strong> Small - 5–7 stems</li>
+                <li><strong>M:</strong> Medium - 8–12 stems</li>
+                <li><strong>L:</strong> Large - 13–20 stems</li>
+                <li><strong>XL:</strong> Extra Large - 20+ stems</li>
+                <li><strong>XXL:</strong> Double Extra Large - Premium size</li>
+                <li><strong>XXXL:</strong> Triple Extra Large - Luxury arrangement</li>
               </ul>
               <button onClick={() => setShowSizeChart(false)} className="mt-4 button-bg button-bg:hover px-4 py-2 rounded">
                 Close
@@ -326,43 +374,62 @@ const Customize = () => {
           </div>
         )}
 
-       {showPriceChart && (
-  <div
-    className="fixed inset-0  bg-opacity-40 flex items-center justify-center z-50"
-    style={{ backdropFilter: "blur(4px)" }}
-  >
-    <div className="bg-white p-6 rounded-lg max-w-md w-full shadow-lg">
-      <h3 className="text-xl font-bold mb-4 text-center">Price Chart</h3>
+        {showPriceChart && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
+            style={{ backdropFilter: "blur(4px)" }}
+          >
+            <div className="bg-white p-6 rounded-lg max-w-lg w-full shadow-lg max-h-[80vh] overflow-y-auto">
+              <h3 className="text-xl font-bold mb-4 text-center">Price Chart</h3>
 
-      {/* Bouquet Type Chart Only */}
-      <div className="mb-4">
-        <h4 className="font-semibold mb-2">Bouquet Types:</h4>
-        <ul className="text-sm space-y-1 list-disc list-inside">
-          <li>Flower Bouquet – ₹250</li>
-          <li>Chocolate Bouquet – ₹550</li>
-          <li>Soft Toy Bouquet – ₹550</li>
-          <li>Pipecleaner Bouquet – ₹450</li>
-          <li>Butterfly Bouquet – ₹450</li>
-          <li>Hair Clip Bouquet – ₹350</li>
-          <li>Crochet Bouquet – ₹650</li>
-          <li>Origami Bouquet – ₹650</li>
-          <li>Fruit Bouquet – ₹650</li>
-          <li>Skincare Bouquet – ₹650</li>
-        </ul>
-      </div>
+              {/* Bouquet Type Chart */}
+              <div className="mb-6">
+                <h4 className="font-semibold mb-2 text-pink-600">Bouquet Types:</h4>
+                <ul className="text-sm space-y-1 list-disc list-inside">
+                  <li>Flower Bouquet – ₹250</li>
+                  <li>Hair Clip Bouquet – ₹350</li>
+                  <li>Pipecleaner Bouquet – ₹450</li>
+                  <li>Butterfly Bouquet – ₹450</li>
+                  <li>Chocolate Bouquet – ₹550</li>
+                  <li>Soft Toy Bouquet – ₹550</li>
+                  <li>Crochet Bouquet – ₹650</li>
+                  <li>Origami Bouquet – ₹650</li>
+                  <li>Fruit Bouquet – ₹650</li>
+                  <li>Skincare Bouquet – ₹650</li>
+                </ul>
+              </div>
 
-      <div className="text-center">
-        <button
-          onClick={() => setShowPriceChart(false)}
-          className="mt-2 button-bg button-bg:hover px-6 py-2 rounded  font-medium"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+              {/* Size Price Chart */}
+              <div className="mb-4">
+                <h4 className="font-semibold mb-2 text-pink-600">Size Prices:</h4>
+                <ul className="text-sm space-y-1 list-disc list-inside">
+                  <li>XS (Extra Small) – ₹120</li>
+                  <li>S (Small) – ₹150</li>
+                  <li>M (Medium) – ₹275</li>
+                  <li>L (Large) – ₹300</li>
+                  <li>XL (Extra Large) – ₹350</li>
+                  <li>XXL (Double XL) – ₹400</li>
+                  <li>XXXL (Triple XL) – ₹500</li>
+                </ul>
+              </div>
 
+              <div className="bg-pink-50 p-3 rounded-lg mb-4">
+                <p className="text-sm text-pink-800 font-medium text-center">
+                  Final Price = Bouquet Type Price + Size Price
+                </p>
+              </div>
+
+              <div className="text-center">
+                <button
+                  onClick={() => setShowPriceChart(false)}
+                  className="mt-2 button-bg button-bg:hover px-6 py-2 rounded font-medium"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
