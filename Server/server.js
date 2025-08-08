@@ -13,8 +13,8 @@ const app = express();
 // ✅ CORS Setup — Local + Production
 // ==========================
 const allowedOrigins = [
-  process.env.CLIENT_URL,           // Production
-  "http://localhost:5173"           // Local development
+  process.env.CLIENT_URL,        // Production frontend (Render)
+  "http://localhost:5173"        // Local development
 ];
 
 app.use(
@@ -74,9 +74,10 @@ const paymentRoute = require("./routes/paymentRoute");
 // ==========================
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
-// server.js
-app.use("/api/cart", cartRoute);
-app.use("/api/user/cart", cartRoute); // backwards compatibility
+
+// ✅ Cart route — keep only one base path for stability
+app.use("/api/user/cart", cartRoute);
+
 app.use("/api/address", addressRoute);
 app.use("/api/user/address", addressRoute); // backwards compatibility
 
@@ -85,7 +86,6 @@ app.use("/api/products", productRoute);
 app.use("/api/products/custom", customProductRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/upload", uploadRoute);
-// app.use("/api/addresses", addressRoute);
 app.use("/api/contact", contactRoute);
 app.use("/api/payment", paymentRoute);
 
