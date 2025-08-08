@@ -34,7 +34,7 @@ const Checkout = () => {
   const tax = Math.round((subtotal * 18) / 100);
   const total = subtotal + deliveryFee + tax;
 
-  // ✅ Fetch user profile, address, and cart
+  // ✅ Fetch profile, address, cart
   useEffect(() => {
     if (!token) {
       toast.error("Please log in to proceed to checkout");
@@ -74,7 +74,7 @@ const Checkout = () => {
     fetchData();
   }, [token, navigate]);
 
-  // ✅ Add new address
+  // ✅ Add address
   const handleAddAddress = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -112,7 +112,38 @@ const Checkout = () => {
     };
 
     if (paymentMethod === "online") {
-      navigate("/payment", { state: orderData });
+      try {
+        // ✅ Get Razorpay Key + Order from backend
+        const { data: keyData } = await axios.get("/api/payment/getkey");
+        const { data: order } = await axios.post("/api/payment/checkout", orderData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const options = {
+          key: keyData.key, // ✅ from backend
+          amount: order.amount,
+          currency: "INR",
+          name: "Sip & Chill",
+          description: "Order Payment",
+          order_id: order.id,
+          handler: function (response) {
+            toast.success("Payment successful");
+            navigate("/order-confirmation");
+          },
+          prefill: {
+            name: userProfile.name,
+            email: userProfile.email,
+            contact: userProfile.phone || "",
+          },
+          theme: { color: "#F472B6" },
+        };
+
+        const razor = new window.Razorpay(options);
+        razor.open();
+      } catch (err) {
+        console.error(err);
+        toast.error("Payment initialization failed");
+      }
     } else {
       try {
         setLoading(true);
