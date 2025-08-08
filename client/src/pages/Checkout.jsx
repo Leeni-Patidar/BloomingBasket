@@ -31,7 +31,7 @@ const Checkout = () => {
   const tax = Math.round((subtotal * 18) / 100);
   const total = subtotal + deliveryFee + tax;
 
-  // ✅ Fetch user profile, address, and cart
+  // ✅ Fetch profile, address, cart
   useEffect(() => {
     if (!token) {
       toast.error("Please log in to proceed to checkout");
@@ -44,13 +44,13 @@ const Checkout = () => {
         setCartLoading(true);
         const [userRes, addressRes, cartRes] = await Promise.all([
           axios.get("/api/user/profile", { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get("/api/user/address", { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get("/api/addresses", { headers: { Authorization: `Bearer ${token}` } }), // ✅ corrected route
           axios.get("/api/user/cart", { headers: { Authorization: `Bearer ${token}` } }),
         ]);
 
         setUserProfile(userRes.data);
         setAddresses(addressRes.data);
-        setCartItems(cartRes.data.items || []); // ✅ fixed key from backend
+        setCartItems(cartRes.data.items || []);
       } catch (err) {
         console.error("Error loading checkout data:", err.response?.data || err.message);
         toast.error("Failed to load checkout data");
@@ -62,12 +62,12 @@ const Checkout = () => {
     fetchData();
   }, [token, navigate]);
 
-  // ✅ Add new address
+  // ✅ Add address
   const handleAddAddress = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/user/address", newAddress, {
+      const { data } = await axios.post("/api/addresses", newAddress, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setAddresses([...addresses, data]);
@@ -100,7 +100,38 @@ const Checkout = () => {
     };
 
     if (paymentMethod === "online") {
-      navigate("/payment", { state: orderData });
+      try {
+        // ✅ Get Razorpay Key + Order from backend
+        const { data: keyData } = await axios.get("/api/payment/getkey");
+        const { data: order } = await axios.post("/api/payment/checkout", orderData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const options = {
+          key: keyData.key, // ✅ from backend
+          amount: order.amount,
+          currency: "INR",
+          name: "Sip & Chill",
+          description: "Order Payment",
+          order_id: order.id,
+          handler: function (response) {
+            toast.success("Payment successful");
+            navigate("/order-confirmation");
+          },
+          prefill: {
+            name: userProfile.name,
+            email: userProfile.email,
+            contact: userProfile.phone || "",
+          },
+          theme: { color: "#F472B6" },
+        };
+
+        const razor = new window.Razorpay(options);
+        razor.open();
+      } catch (err) {
+        console.error(err);
+        toast.error("Payment initialization failed");
+      }
     } else {
       try {
         setLoading(true);
