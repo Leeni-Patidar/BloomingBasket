@@ -74,12 +74,11 @@ const paymentRoute = require("./routes/paymentRoute");
 // ==========================
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
-
-// ✅ Cart route — keep only one base path for stability
 app.use("/api/user/cart", cartRoute);
 
-app.use("/api/address", addressRoute);
-app.use("/api/user/address", addressRoute); // backwards compatibility
+app.use("/api/addresses", addressRoute);
+app.use("/api/user/addresses", addressRoute);
+
 
 app.use("/api/user/wishlist", wishlistRoute);
 app.use("/api/products", productRoute);
