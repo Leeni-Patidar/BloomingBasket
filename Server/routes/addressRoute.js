@@ -10,10 +10,22 @@ const {
 
 const router = express.Router();
 
-router.get("/", auth, getAddress);
-router.post("/", auth, addAddress);
-router.put("/:id", auth, editAddress);
-router.delete("/:id", auth, deleteAddress);
-router.put("/default/:id", auth, setDefaultAddress); // optional default setter route
+// All address routes require auth
+router.use(auth);
+
+// GET /api/addresses
+router.get("/", getAddress);
+
+// POST /api/addresses
+router.post("/", addAddress);
+
+// PUT /api/addresses/:id
+router.put("/:id", editAddress);
+
+// DELETE /api/addresses/:id
+router.delete("/:id", deleteAddress);
+
+// PUT /api/addresses/default/:id
+router.put("/default/:id", setDefaultAddress);
 
 module.exports = router;
