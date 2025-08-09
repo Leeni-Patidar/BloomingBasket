@@ -176,7 +176,7 @@ router.post("/login", async (req, res) => {
       password === process.env.ADMIN_PASSWORD
     ) {
       const token = jwt.sign(
-        { id: "admin", email: loweredEmail, role: "admin" },
+        { id: "admin", email: loweredEmail, role: "admin" }, // role always included
         process.env.JWT_SECRET,
         { expiresIn: "1d" }
       );

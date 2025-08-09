@@ -5,9 +5,13 @@ const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 const { auth } = require("../middleware/auth");
 
-// Utility to block admin
+// ✅ Utility to block admin safely
 const blockAdmin = (req, res) => {
-  if (!req.user || req.user.role === "admin") {
+  if (
+    !req.user ||
+    req.user.role?.toLowerCase() === "admin" ||
+    req.user.id === "admin"
+  ) {
     res.status(403).json({ message: "Admins cannot perform cart operations" });
     return true;
   }
