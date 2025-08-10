@@ -1,4 +1,3 @@
-// server/routes/wishlistRoute.js
 const express = require("express");
 const router = express.Router();
 const { auth } = require("../middleware/auth");
@@ -7,10 +6,12 @@ const Product = require("../models/Product");
 
 // 🔒 Block admin helper
 const blockAdmin = (req, res) => {
-  if (req.user.role === "admin") {
-    return res.status(403).json({ message: "Admins cannot access wishlist." });
+  if (!req.user || req.user.role?.toLowerCase() === "admin" || req.user.id === "admin") {
+    console.warn(`🚫 Wishlist access blocked for admin: ${req.user?.email || "unknown"}`);
+    res.status(403).json({ message: "Admins cannot perform wishlist operations" });
+    return true;
   }
-  return null;
+  return false;
 };
 
 // 🔹 GET: Fetch wishlist items for logged-in user
@@ -22,7 +23,7 @@ router.get("/", auth, async (req, res) => {
     const products = wishlistItems.map((item) => item.productId).filter(Boolean); // remove nulls
     res.json(products);
   } catch (err) {
-    console.error("❌ Wishlist GET error:", err.message);
+    console.error("❌ Wishlist GET error:", err);
     res.status(500).json({ message: "Failed to fetch wishlist", error: err.message });
   }
 });
@@ -36,18 +37,24 @@ router.post("/", auth, async (req, res) => {
     if (!productId) return res.status(400).json({ message: "Product ID is required" });
 
     const product = await Product.findById(productId);
-    if (!product) return res.status(404).json({ message: "Product not found" });
+    if (!product) {
+      console.warn(`⚠️ Product not found for wishlist: ${productId}`);
+      return res.status(404).json({ message: "Product not found" });
+    }
 
     const exists = await Wishlist.findOne({ userId: req.user.id, productId });
-    if (exists) return res.status(400).json({ message: "Already in wishlist" });
+    if (exists) {
+      console.warn(`⚠️ Product already in wishlist: ${productId}`);
+      return res.status(400).json({ message: "Already in wishlist" });
+    }
 
     const newItem = new Wishlist({ userId: req.user.id, productId });
     await newItem.save();
 
     res.json({ productId });
   } catch (err) {
-    console.error("❌ Wishlist POST error:", err.message);
-    res.status(500).json({ message: "Failed to add to wishlist" });
+    console.error("❌ Wishlist POST error:", err);
+    res.status(500).json({ message: "Failed to add to wishlist", error: err.message });
   }
 });
 
@@ -57,11 +64,16 @@ router.delete("/:productId", auth, async (req, res) => {
 
   try {
     const { productId } = req.params;
-    await Wishlist.findOneAndDelete({ userId: req.user.id, productId });
+    const removed = await Wishlist.findOneAndDelete({ userId: req.user.id, productId });
+
+    if (!removed) {
+      return res.status(404).json({ message: "Item not found in wishlist" });
+    }
+
     res.json({ message: "Removed from wishlist" });
   } catch (err) {
-    console.error("❌ Wishlist DELETE error:", err.message);
-    res.status(500).json({ message: "Failed to remove from wishlist" });
+    console.error("❌ Wishlist DELETE error:", err);
+    res.status(500).json({ message: "Failed to remove from wishlist", error: err.message });
   }
 });
 

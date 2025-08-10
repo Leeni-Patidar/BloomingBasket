@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const path = require("path");
+const rateLimit = require("express-rate-limit");
 
 // Load env variables
 dotenv.config();
@@ -34,6 +35,21 @@ app.use(
 );
 
 // ==========================
+// ✅ Rate Limiting (Global)
+// ==========================
+const rateLimiter = rateLimit({
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000, // default 15 mins
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100, // limit each IP
+  message: {
+    status: 429,
+    message: "Too many requests from this IP, please try again later."
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(rateLimiter);
+
+// ==========================
 // ✅ Middleware
 // ==========================
 app.use(express.json({ limit: "10mb" }));
@@ -53,6 +69,12 @@ mongoose
     console.error("❌ MongoDB connection error:", err.message);
     process.exit(1);
   });
+
+// ==========================
+// ✅ Bcrypt Config (Global Salt Rounds)
+// ==========================
+const bcryptSaltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 12;
+app.set("bcryptSaltRounds", bcryptSaltRounds);
 
 // ==========================
 // ✅ Import Routes
@@ -75,11 +97,7 @@ const paymentRoute = require("./routes/paymentRoute");
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/user/cart", cartRoute);
-
 app.use("/api/addresses", addressRoute);
-// app.use("/api/user/addresses", addressRoute);
-
-
 app.use("/api/user/wishlist", wishlistRoute);
 app.use("/api/products", productRoute);
 app.use("/api/products/custom", customProductRoute);
@@ -96,6 +114,7 @@ app.get("/api/health", (req, res) => {
     status: "OK",
     timestamp: new Date().toISOString(),
     database: mongoose.connection.readyState === 1 ? "Connected" : "Disconnected",
+    bcryptSaltRounds: app.get("bcryptSaltRounds"),
   });
 });
 
@@ -124,4 +143,5 @@ const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`🌱 Environment: ${process.env.NODE_ENV || "development"}`);
+  console.log(`🔐 Bcrypt Salt Rounds: ${bcryptSaltRounds}`);
 });

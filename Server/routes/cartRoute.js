@@ -1,4 +1,3 @@
-// routes/cartRoutes.js
 const express = require("express");
 const router = express.Router();
 const Cart = require("../models/Cart");
@@ -7,11 +6,8 @@ const { auth } = require("../middleware/auth");
 
 // ✅ Utility to block admin safely
 const blockAdmin = (req, res) => {
-  if (
-    !req.user ||
-    req.user.role?.toLowerCase() === "admin" ||
-    req.user.id === "admin"
-  ) {
+  if (!req.user || req.user.role?.toLowerCase() === "admin" || req.user.id === "admin") {
+    console.warn(`🚫 Cart access blocked for admin: ${req.user?.email || "unknown"}`);
     res.status(403).json({ message: "Admins cannot perform cart operations" });
     return true;
   }
@@ -25,8 +21,8 @@ router.get("/", auth, async (req, res) => {
     const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId");
     res.json({ items: cart ? cart.items : [] });
   } catch (err) {
-    console.error("Cart GET error:", err);
-    res.status(500).json({ message: "Failed to fetch cart" });
+    console.error("❌ Cart GET error:", err);
+    res.status(500).json({ message: "Failed to fetch cart", error: err.message });
   }
 });
 
@@ -41,7 +37,10 @@ router.post("/", auth, async (req, res) => {
 
   try {
     const product = await Product.findById(productId);
-    if (!product) return res.status(404).json({ message: "Product not found" });
+    if (!product) {
+      console.warn(`⚠️ Product not found: ${productId}`);
+      return res.status(404).json({ message: "Product not found" });
+    }
 
     let cart = await Cart.findOne({ userId: req.user.id });
     if (!cart) {
@@ -62,8 +61,8 @@ router.post("/", auth, async (req, res) => {
     await cart.populate("items.productId");
     res.json({ items: cart.items });
   } catch (err) {
-    console.error("Cart POST error:", err);
-    res.status(500).json({ message: "Failed to add to cart" });
+    console.error("❌ Cart POST error:", err);
+    res.status(500).json({ message: "Failed to add to cart", error: err.message });
   }
 });
 
@@ -88,8 +87,8 @@ router.put("/:productId", auth, async (req, res) => {
     await cart.populate("items.productId");
     res.json({ items: cart.items });
   } catch (err) {
-    console.error("Cart PUT error:", err);
-    res.status(500).json({ message: "Failed to update quantity." });
+    console.error("❌ Cart PUT error:", err);
+    res.status(500).json({ message: "Failed to update quantity", error: err.message });
   }
 });
 
@@ -106,8 +105,8 @@ router.delete("/:productId", auth, async (req, res) => {
     await cart.populate("items.productId");
     res.json({ items: cart.items });
   } catch (err) {
-    console.error("Cart DELETE error:", err);
-    res.status(500).json({ message: "Failed to remove item." });
+    console.error("❌ Cart DELETE error:", err);
+    res.status(500).json({ message: "Failed to remove item", error: err.message });
   }
 });
 
@@ -123,8 +122,8 @@ router.delete("/", auth, async (req, res) => {
     }
     res.json({ items: [] });
   } catch (err) {
-    console.error("Cart CLEAR error:", err);
-    res.status(500).json({ message: "Failed to clear cart." });
+    console.error("❌ Cart CLEAR error:", err);
+    res.status(500).json({ message: "Failed to clear cart", error: err.message });
   }
 });
 
