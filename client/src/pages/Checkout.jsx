@@ -15,6 +15,9 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [loading, setLoading] = useState(true);
 
+  const deliveryCharge = 50;
+  const taxRate = 0.18;
+
   // Fetch Cart
   const fetchCart = async () => {
     try {
@@ -61,25 +64,60 @@ const Checkout = () => {
     );
   };
 
-  const deliveryCharge = 50;
-  const taxRate = 0.18;
-
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
       toast.error("Please select an address before placing order");
       return;
     }
+
+    const addressObj = addresses.find((addr) => addr._id === selectedAddress);
+    if (!addressObj) {
+      toast.error("Invalid address");
+      return;
+    }
+
+    const orderItems = cartItems.map((item) => ({
+      productId: item.productId._id || item.productId,
+      name: item.productId.name,
+      image: item.productId.image,
+      price: item.productId.price,
+      quantity: item.quantity,
+    }));
+
+    const subtotal = calculateSubtotal();
+    const taxAmount = subtotal * taxRate;
+    const total = subtotal + deliveryCharge + taxAmount;
+
     try {
       await axios.post(
         "/api/orders",
-        { addressId: selectedAddress, paymentMethod },
+        {
+          orderItems,
+          shippingAddress: {
+            fullName: addressObj.name,
+            street: addressObj.street,
+            city: addressObj.city,
+            state: addressObj.state,
+            zipCode: addressObj.zip,
+            country: addressObj.country,
+            phone: addressObj.phone || "",
+            landmark: addressObj.landmark || "",
+            label: addressObj.label || "Home",
+          },
+          total,
+          paymentResult: {
+            status: paymentMethod === "cod" ? "pending" : "created",
+          },
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       toast.success("Order placed successfully");
+      setCartItems([]);
       navigate("/orders");
     } catch (err) {
       console.error("Order placement error:", err.response?.data || err.message);
-      toast.error("Failed to place order");
+      toast.error(err.response?.data?.message || "Failed to place order");
     }
   };
 

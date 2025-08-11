@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
@@ -13,11 +14,17 @@ const blockAdmin = (req, res) => {
   return false;
 };
 
+// ✅ Get cart
 router.get("/", auth, async (req, res) => {
-  console.log("🛒 Cart route - req.user:", req.user);
   if (blockAdmin(req, res)) return;
   try {
     if (!req.user?.id) return res.status(401).json({ message: "Unauthorized" });
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(req.user.id)) {
+      return res.json({ items: [] });
+    }
+
     const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId");
     res.json({ items: cart ? cart.items : [] });
   } catch (err) {
@@ -26,8 +33,8 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
+// ✅ Add to cart
 router.post("/", auth, async (req, res) => {
-  console.log("🛒 Cart route - req.user:", req.user);
   if (blockAdmin(req, res)) return;
   const { productId, quantity } = req.body;
   if (!productId || !quantity || quantity < 1) {
@@ -35,10 +42,16 @@ router.post("/", auth, async (req, res) => {
   }
   try {
     if (!req.user?.id) return res.status(401).json({ message: "Unauthorized" });
+    if (!mongoose.Types.ObjectId.isValid(req.user.id)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
     const product = await Product.findById(productId);
     if (!product) return res.status(404).json({ message: "Product not found" });
+
     let cart = await Cart.findOne({ userId: req.user.id });
     if (!cart) cart = new Cart({ userId: req.user.id, items: [] });
+
     const existingIndex = cart.items.findIndex(item => item.productId.toString() === productId);
     if (existingIndex > -1) {
       cart.items[existingIndex].quantity += quantity;
@@ -54,17 +67,23 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
+// ✅ Update quantity
 router.put("/:productId", auth, async (req, res) => {
-  console.log("🛒 Cart route - req.user:", req.user);
   if (blockAdmin(req, res)) return;
   const { quantity } = req.body;
   if (!quantity || quantity < 1) return res.status(400).json({ message: "Quantity must be at least 1" });
   try {
     if (!req.user?.id) return res.status(401).json({ message: "Unauthorized" });
+    if (!mongoose.Types.ObjectId.isValid(req.user.id)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
     const cart = await Cart.findOne({ userId: req.user.id });
     if (!cart) return res.json({ items: [] });
+
     const item = cart.items.find(i => i.productId.toString() === req.params.productId);
     if (!item) return res.json({ items: cart.items });
+
     item.quantity = quantity;
     await cart.save();
     await cart.populate("items.productId");
@@ -75,13 +94,18 @@ router.put("/:productId", auth, async (req, res) => {
   }
 });
 
+// ✅ Remove from cart
 router.delete("/:productId", auth, async (req, res) => {
-  console.log("🛒 Cart route - req.user:", req.user);
   if (blockAdmin(req, res)) return;
   try {
     if (!req.user?.id) return res.status(401).json({ message: "Unauthorized" });
+    if (!mongoose.Types.ObjectId.isValid(req.user.id)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
     const cart = await Cart.findOne({ userId: req.user.id });
     if (!cart) return res.json({ items: [] });
+
     cart.items = cart.items.filter(i => i.productId.toString() !== req.params.productId);
     await cart.save();
     await cart.populate("items.productId");
@@ -92,11 +116,15 @@ router.delete("/:productId", auth, async (req, res) => {
   }
 });
 
+// ✅ Clear cart
 router.delete("/", auth, async (req, res) => {
-  console.log("🛒 Cart route - req.user:", req.user);
   if (blockAdmin(req, res)) return;
   try {
     if (!req.user?.id) return res.status(401).json({ message: "Unauthorized" });
+    if (!mongoose.Types.ObjectId.isValid(req.user.id)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
     const cart = await Cart.findOne({ userId: req.user.id });
     if (cart) {
       cart.items = [];

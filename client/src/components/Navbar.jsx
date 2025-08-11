@@ -11,7 +11,7 @@ const Navbar = () => {
   const [isUserRegistered, setIsUserRegistered] = useState(false);
 
   const { user, logout } = useContext(AuthContext);
-  const { getCartItemsCount } = useContext(CartContext);
+  const { getCartItemsCount, fetchCart } = useContext(CartContext);
   const { wishlistItems: wishlist } = useContext(WishlistContext);
   const navigate = useNavigate();
 
@@ -19,6 +19,13 @@ const Navbar = () => {
     const registered = localStorage.getItem("isRegistered") === "true";
     setIsUserRegistered(registered);
   }, []);
+
+  // ✅ Fetch cart immediately after login so badge updates
+  useEffect(() => {
+    if (user) {
+      fetchCart();
+    }
+  }, [user, fetchCart]);
 
   const handleLogout = () => {
     logout();
@@ -105,7 +112,7 @@ const Navbar = () => {
 
       <div className="h-1 w-full bg-gradient-to-r from-pink-400 via-pink-500 to-pink-400"></div>
 
-      {/* Mobile menu with animation */}
+      {/* Mobile menu */}
       <div
         className={`md:hidden bg-gray-100 shadow-md px-4 py-4 space-y-2 transform transition-all duration-300 ease-in-out ${
           isMenuOpen ? "max-h-screen opacity-100 scale-100" : "max-h-0 opacity-0 scale-95 overflow-hidden"

@@ -11,7 +11,6 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(false)
 
-  // ✅ Fetch cart when user logs in
   useEffect(() => {
     if (user && token) {
       fetchCart()
@@ -20,7 +19,6 @@ export const CartProvider = ({ children }) => {
     }
   }, [user, token])
 
-  // ✅ Corrected route here
   const fetchCart = async () => {
     if (!token) return
     try {
@@ -30,10 +28,12 @@ export const CartProvider = ({ children }) => {
       })
       setCartItems(res.data.items || [])
     } catch (err) {
-      console.error("Cart fetch error:", err)
-      if (err.response?.status !== 401) {
-        toast.error("Failed to fetch cart.")
+      console.error("Cart fetch error:", err.response?.data || err.message)
+      // Only show error toast if not a "no cart" case
+      if (err.response?.status !== 404) {
+        toast.error(err.response?.data?.message || "Failed to fetch cart.")
       }
+      setCartItems([]) // Ensure frontend doesn't break
     } finally {
       setLoading(false)
     }
@@ -155,6 +155,7 @@ export const CartProvider = ({ children }) => {
         getCartTotal,
         isInCart,
         fetchCart,
+        setCartItems
       }}
     >
       {children}
