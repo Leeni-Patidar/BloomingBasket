@@ -17,6 +17,7 @@ const blockAdmin = (req, res) => {
 // ✅ Get cart
 router.get("/", auth, async (req, res) => {
   if (blockAdmin(req, res)) return;
+  console.log("🧑‍🏫 GET /api/user/cart - req.user:", req.user);
   try {
     if (!req.user?.id) return res.status(401).json({ message: "Unauthorized" });
 
@@ -25,6 +26,7 @@ router.get("/", auth, async (req, res) => {
       return res.json({ items: [] });
     }
 
+    console.log(`📦 Attempting to find cart for userId: ${req.user.id}`);
     const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId");
     res.json({ items: cart ? cart.items : [] });
   } catch (err) {

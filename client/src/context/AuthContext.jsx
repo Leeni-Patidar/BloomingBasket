@@ -1,24 +1,21 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-// Create Context
 export const AuthContext = createContext();
 
-// Auth Provider
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [loading, setLoading] = useState(true);
+  const hasFetchedUser = useRef(false);
 
-  // ✅ Server API Base
   const API = "https://bloomingbasket-server.onrender.com";
   axios.defaults.baseURL = API;
-  axios.defaults.withCredentials = true; // 🔑 Allow credentials (cookies)
+  axios.defaults.withCredentials = true;
 
-  // ✅ Set token in headers if available
   useEffect(() => {
-    if (token) {
+    if (token && !hasFetchedUser.current) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       fetchUser();
     } else {
@@ -26,23 +23,22 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // ✅ Fetch Authenticated User
   const fetchUser = async () => {
     try {
       const res = await axios.get("/api/auth/is-auth");
       if (res.data?.user) {
         setUser(res.data.user);
+        hasFetchedUser.current = true;
       } else {
         logout();
       }
-    } catch (error) {
+    } catch {
       logout();
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Login
   const login = async (email, password) => {
     try {
       const res = await axios.post("/api/auth/login", { email, password });
@@ -51,6 +47,7 @@ export const AuthProvider = ({ children }) => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${receivedToken}`;
       setToken(receivedToken);
       setUser(user);
+      hasFetchedUser.current = true;
       toast.success(message || "Login successful!");
       return { success: true };
     } catch (err) {
@@ -60,20 +57,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ Register
   const register = async (name, email, phone, password) => {
     try {
-      const res = await axios.post("/api/auth/register", {
-        name,
-        email,
-        phone,
-        password,
-      });
+      const res = await axios.post("/api/auth/register", { name, email, phone, password });
       const { token: receivedToken, user, message } = res.data;
       localStorage.setItem("token", receivedToken);
       axios.defaults.headers.common["Authorization"] = `Bearer ${receivedToken}`;
       setToken(receivedToken);
       setUser(user);
+      hasFetchedUser.current = true;
       toast.success(message || "Registration successful!");
       return { success: true };
     } catch (err) {
@@ -83,41 +75,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ Logout
   const logout = () => {
     localStorage.removeItem("token");
     setToken("");
     setUser(null);
+    hasFetchedUser.current = false;
     delete axios.defaults.headers.common["Authorization"];
     toast.info("Logged out successfully.");
-  };
-
-  // ✅ Update Profile
-  const updateProfile = async (profileData) => {
-    try {
-      const { data } = await axios.put("/api/user/profile", profileData);
-      setUser(data.user);
-      toast.success("Profile updated.");
-      return { success: true };
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to update profile.");
-      return { success: false };
-    }
-  };
-
-  // ✅ Change Password
-  const changePassword = async (oldPassword, newPassword) => {
-    try {
-      await axios.put("/api/user/change-password", {
-        currentPassword: oldPassword,
-        newPassword,
-      });
-      toast.success("Password changed successfully.");
-      return { success: true };
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Password change failed.");
-      return { success: false };
-    }
   };
 
   return (
@@ -129,8 +93,6 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         logout,
-        updateProfile,
-        changePassword,
         isAuthenticated: !!token,
       }}
     >

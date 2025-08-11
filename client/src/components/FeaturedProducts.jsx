@@ -65,11 +65,7 @@ const FeaturedProducts = () => {
     <div className="max-w-full mx-auto px-6 md:px-8 lg:px-10 py-5">
       <div
         ref={containerRef}
-        className="flex overflow-x-auto space-x-4 snap-x snap-mandatory py-4 px-2 scrollbar-hide"
-        style={{
-          scrollSnapType: "x mandatory",
-          WebkitOverflowScrolling: "touch",
-        }}
+        className="flex flex-wrap justify-center gap-4 py-4 px-2" // Adjusted classes for wrapping and spacing
       >
         {products.map((product, idx) => {
           const isCentered = centeredId === product._id.toString()
@@ -77,10 +73,7 @@ const FeaturedProducts = () => {
             <div
               key={product._id}
               data-id={product._id}
-              ref={(el) => (itemRefs.current[idx] = el)}
-              className={`snap-center flex-shrink-0 transition-transform duration-300 ${
-                isCentered ? "scale-105" : "scale-100"
-              }`}
+              className="flex-shrink-0" // Removed snap and transition classes
               style={{
                 width: "calc(25% - 1rem)", // four per view minus spacing
                 minWidth: "220px",
@@ -100,9 +93,7 @@ const FeaturedProducts = () => {
           )
         })}
       </div>
-      {/* Optional: left/right fade overlays for affordance */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-white to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white to-transparent" />
+      {/* Removed fade overlays as horizontal scroll is removed */}
     </div>
   )
 }

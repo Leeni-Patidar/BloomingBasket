@@ -7,14 +7,15 @@ import { toast } from "react-toastify"
 export const CartContext = createContext()
 
 export const CartProvider = ({ children }) => {
-  const { user, token } = useContext(AuthContext)
+  const { user, token, loading: authLoading } = useContext(AuthContext)
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(false)
+  const [addingProductId, setAddingProductId] = useState(null);
 
   useEffect(() => {
-    if (user && token) {
+    if (user && token && !authLoading) {
       fetchCart()
-    } else {
+    } else if (!user && !token && !authLoading) {
       setCartItems([])
     }
   }, [user, token])
@@ -45,6 +46,7 @@ export const CartProvider = ({ children }) => {
       return
     }
     try {
+      setAddingProductId(productId);
       setLoading(true)
       const res = await axios.post(
         "/api/user/cart",
@@ -57,7 +59,8 @@ export const CartProvider = ({ children }) => {
       toast.success("Added to cart!")
     } catch (err) {
       console.error("Add to cart error:", err)
-      toast.error(err.response?.data?.message || "Failed to add item.")
+ toast.error(err.response?.data?.message || "Failed to add item.");
+ setAddingProductId(null); // Ensure state is reset on error
       throw err
     } finally {
       setLoading(false)
@@ -148,6 +151,7 @@ export const CartProvider = ({ children }) => {
         cartItems,
         loading,
         addToCart,
+        addingProductId,
         removeFromCart,
         updateQuantity,
         clearCart,

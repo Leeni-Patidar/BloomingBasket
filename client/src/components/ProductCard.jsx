@@ -20,7 +20,7 @@ const categoryLabels = {
 }
 
 const ProductCard = ({ product }) => {
-  const { addToCart, isInCart, loading: cartLoading } = useContext(CartContext)
+  const { addToCart, isInCart, loading: cartLoading, addingProductId } = useContext(CartContext)
   const { addToWishlist, removeFromWishlist, isInWishlist } = useContext(WishlistContext)
   const { user } = useContext(AuthContext)
   const [imageLoading, setImageLoading] = useState(true)
@@ -175,18 +175,18 @@ const ProductCard = ({ product }) => {
         <div className="px-4 pb-4">
           <button
             onClick={handleAddToCart}
-            disabled={cartLoading || product.stock <= 0 || productInCart}
+            disabled={addingProductId === product._id || product.stock <= 0 || productInCart}
             className={`w-full py-2 button-bg px-4 rounded-lg font-semibold transition-all duration-200 ${
               productInCart
                 ? "bg-green-100 cursor-default"
                 : product.stock <= 0
                 ? "bg-gray-300 cursor-not-allowed"
-                : cartLoading
+                : addingProductId === product._id
                 ? "bg-pink-300 button-bg cursor-not-allowed"
                 : "button-bg button-bg:hover active:transform active:scale-95"
             }`}
           >
-            {cartLoading ? (
+            {addingProductId === product._id ? (
               <div className="flex items-center justify-center">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
                 Adding...

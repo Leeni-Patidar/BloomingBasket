@@ -1,16 +1,20 @@
 // controllers/orderController.js
 const Order = require("../models/Order");
+const Product = require("../models/Product"); // Import Product model
+const Cart = require("../models/Cart"); // Import Cart model
 
 // ✅ Create Order
 exports.createOrder = async (req, res) => {
   try {
-    const { orderItems, shippingAddress, total, paymentResult } = req.body;
+    const { orderItems, shippingAddress, total, paymentResult, paymentMethod } = req.body; // Get paymentMethod
 
     if (!orderItems || orderItems.length === 0) {
       return res.status(400).json({ message: "No order items" });
     }
 
     const order = new Order({
+      // Set order status based on payment method
+      status: paymentMethod === 'COD' ? 'pending' : 'confirmed', // Assuming 'pending' for COD initial status
       user: req.user.id,
       orderItems,
       shippingAddress,
@@ -19,6 +23,23 @@ exports.createOrder = async (req, res) => {
     });
 
     const createdOrder = await order.save();
+
+    // Deduct stock for purchased products
+    for (const item of orderItems) {
+      const product = await Product.findById(item.productId);
+      if (product) {
+        product.stock -= item.quantity;
+        await product.save();
+      }
+    }
+
+    // Clear the user's cart
+    const cart = await Cart.findOne({ userId: req.user.id });
+    if (cart) {
+      cart.items = [];
+      await cart.save();
+    }
+
     res.status(201).json(createdOrder);
   } catch (err) {
     console.error("Create Order Error:", err);

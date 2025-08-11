@@ -13,12 +13,17 @@
 }
 
 .button-bg {
-  background-image: linear-gradient(to right, #ba54a9 0%, #fecfef 50%, #ba54a9 100%);
+  background-color: rgba(219, 39, 119, 0.7);
+  color: white;
+  transition: all 0.3s ease;
 }
+
 .button-bg:hover {
-  background-image: linear-gradient(to right, #761461 0%, #fecfef 50%, #761461 100%);
-  transform: translateY(-2px); /* Equivalent to -translate-y-0.5 */
+  background-color: #b91c6b; /* solid darker pink */
+  color: white;
+  transform: translateY(-2px);
 }
+
 
 /* Body Background */
 body {

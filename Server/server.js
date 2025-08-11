@@ -37,17 +37,17 @@ app.use(
 // ==========================
 // ✅ Rate Limiting (Global)
 // ==========================
-const rateLimiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000, // default 15 mins
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100, // limit each IP
-  message: {
-    status: 429,
-    message: "Too many requests from this IP, please try again later."
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-app.use(rateLimiter);
+// const rateLimiter = rateLimit({
+//   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000, // default 15 mins
+//   max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100, // limit each IP
+//   message: {
+//     status: 429,
+//     message: "Too many requests from this IP, please try again later."
+//   },
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
+// app.use(rateLimiter);
 
 // ==========================
 // ✅ Middleware
