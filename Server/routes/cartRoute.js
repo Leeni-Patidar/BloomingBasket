@@ -16,6 +16,11 @@ const blockAdmin = (req, res) => {
 
 // ✅ Get cart
 router.get("/", auth, async (req, res) => {
+  // Prevent admin from accessing cart route
+  if (req.user?.id === "admin") {
+    return res.json({ items: [] });
+  }
+
   if (blockAdmin(req, res)) return;
   console.log("🧑‍🏫 GET /api/user/cart - req.user:", req.user);
   try {

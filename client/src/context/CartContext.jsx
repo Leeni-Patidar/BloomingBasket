@@ -30,7 +30,7 @@ export const CartProvider = ({ children }) => {
       })
       setCartItems(res.data.items || [])
     } catch (err) {
-      console.error("Cart fetch error:", err.response?.data || err.message)
+      console.error("Cart fetch error:", err);
       // Only show error toast if not a "no cart" case
       if (err.response?.status !== 404) {
         toast.error(err.response?.data?.message || "Failed to fetch cart.")
