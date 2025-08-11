@@ -10,12 +10,13 @@ export const CartProvider = ({ children }) => {
   const { user, token, loading: authLoading } = useContext(AuthContext)
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(false)
+  const [cartError, setCartError] = useState(null)
   const [addingProductId, setAddingProductId] = useState(null);
 
   useEffect(() => {
-    if (user && token && !authLoading) {
+    if (user && token && !authLoading && !cartError) {
       fetchCart()
-    } else if (!user && !token && !authLoading) {
+    } else if (!user && !token && !authLoading && !cartError) {
       setCartItems([])
     }
   }, [user, token])
@@ -33,6 +34,7 @@ export const CartProvider = ({ children }) => {
       // Only show error toast if not a "no cart" case
       if (err.response?.status !== 404) {
         toast.error(err.response?.data?.message || "Failed to fetch cart.")
+        setCartError(err); // Set error state to prevent re-fetching
       }
       setCartItems([]) // Ensure frontend doesn't break
     } finally {
@@ -150,6 +152,7 @@ export const CartProvider = ({ children }) => {
       value={{
         cartItems,
         loading,
+ cartError,
         addToCart,
         addingProductId,
         removeFromCart,
