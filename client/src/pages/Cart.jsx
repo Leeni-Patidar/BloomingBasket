@@ -466,171 +466,291 @@
 // export default Cart;
 
 
-import { useEffect, useState, useContext } from "react";
-import axios from "axios";
+// import { useEffect, useState, useContext } from "react";
+// import axios from "axios";
+// import { AuthContext } from "../context/AuthContext";
+// import { Link, useNavigate } from "react-router-dom";
+// import { toast } from "react-toastify";
+
+// const Cart = () => {
+//   const { user, token } = useContext(AuthContext);
+//   const navigate = useNavigate();
+//   const [cartItems, setCartItems] = useState([]);
+//   const [loading, setLoading] = useState(true);
+
+//   const API = "https://bloomingbasket-server.onrender.com";
+//   // axios.defaults.baseURL = API;
+//   // axios.defaults.withCredentials = true;
+  
+//   // Fetch cart
+//   const fetchCart = async () => {
+//     if (!user || !token) return;
+//     setLoading(true);
+//     try {
+//       const res = await axios.get(`${API}/api/user/cart`, {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       setCartItems(res.data.items || []);
+//     } catch (err) {
+//       console.error("Error fetching cart:", err);
+//       toast.error("Failed to load cart");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // Remove from cart
+//   const removeFromCart = async (productId) => {
+//     if (!window.confirm("Are you sure you want to remove this item?")) return;
+//     try {
+//       const res = await axios.delete(`${API}/api/user/cart/${productId}`, {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       setCartItems(res.data.items || []);
+//       toast.success("Item removed from cart");
+//     } catch (err) {
+//       console.error("Error removing from cart:", err);
+//       toast.error("Failed to remove item");
+//     }
+//   };
+
+//   // Update quantity
+//   const updateQuantity = async (productId, quantity) => {
+//     if (quantity < 1) return;
+//     try {
+//       const res = await axios.put(
+//         `${API}/api/user/cart/${productId}`,
+//         { quantity },
+//         { headers: { Authorization: `Bearer ${token}` } }
+//       );
+//       setCartItems(res.data.items || []);
+//     } catch (err) {
+//       console.error("Error updating quantity:", err);
+//       toast.error("Failed to update quantity");
+//     }
+//   };
+
+//   const subtotal = cartItems.reduce(
+//     (sum, item) => sum + (item.productId?.price || 0) * item.quantity,
+//     0
+//   );
+
+//   useEffect(() => {
+//     fetchCart();
+//   }, [user, token]);
+
+//   if (!user) {
+//     return (
+//       <div className="p-6 text-center">
+//         <p className="text-lg">Please login to view your cart.</p>
+//         <Link to="/login" className="text-pink-600 font-semibold hover:underline">
+//           Go to Login
+//         </Link>
+//       </div>
+//     );
+//   }
+
+//   if (loading) {
+//     return <div className="p-6 text-center text-lg">Loading cart...</div>;
+//   }
+
+//   if (cartItems.length === 0) {
+//     return (
+//       <div className="p-6 text-center">
+//         <p className="text-lg mb-4">Your cart is empty.</p>
+//         <Link
+//           to="/shop"
+//           className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700"
+//         >
+//           Shop Now
+//         </Link>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="p-6 max-w-5xl mx-auto">
+//       <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
+//       <div className="grid md:grid-cols-3 gap-6">
+//         {/* Cart Items */}
+//         <div className="md:col-span-2 space-y-4">
+//           {cartItems.map((item) => (
+//             <div
+//               key={item.productId._id}
+//               className="flex items-center justify-between bg-white shadow rounded p-4"
+//             >
+//               <div className="flex items-center space-x-4">
+//                 <img
+//                   src={item.productId.image}
+//                   alt={item.productId.name}
+//                   className="w-20 h-20 object-cover rounded"
+//                 />
+//                 <div>
+//                   <h2 className="font-semibold">{item.productId.name}</h2>
+//                   <p className="text-gray-600">
+//                     ₹{item.productId.price.toFixed(2)}
+//                   </p>
+//                 </div>
+//               </div>
+//               <div className="flex items-center space-x-3">
+//                 <input
+//                   type="number"
+//                   min="1"
+//                   value={item.quantity}
+//                   onChange={(e) =>
+//                     updateQuantity(item.productId._id, parseInt(e.target.value))
+//                   }
+//                   className="border rounded px-2 py-1 w-16 text-center"
+//                 />
+//                 <button
+//                   onClick={() => removeFromCart(item.productId._id)}
+//                   className="text-red-500 hover:underline"
+//                 >
+//                   Remove
+//                 </button>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* Summary */}
+//         <div className="bg-white shadow rounded p-4">
+//           <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+//           <div className="flex justify-between mb-2">
+//             <span>Subtotal</span>
+//             <span>₹{subtotal.toFixed(2)}</span>
+//           </div>
+//           <div className="flex justify-between font-semibold text-lg">
+//             <span>Total</span>
+//             <span>₹{subtotal.toFixed(2)}</span>
+//           </div>
+//           <button
+//             onClick={() => navigate("/checkout")}
+//             className="w-full bg-pink-600 text-white py-2 mt-4 rounded hover:bg-pink-700"
+//           >
+//             Proceed to Checkout
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Cart;
+
+
+
+// src/pages/Cart.jsx
+import React, { useContext, useEffect } from "react";
+import { CartContext } from "../context/CartContext";
 import { AuthContext } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
-  const { user, token } = useContext(AuthContext);
-  const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { cartItems, loading, fetchCart, removeFromCart, updateQuantity, getCartTotal } =
+    useContext(CartContext);
+  const { user, token, loading: authLoading } = useContext(AuthContext);
 
-  const API = "https://bloomingbasket-server.onrender.com";
-  // axios.defaults.baseURL = API;
-  // axios.defaults.withCredentials = true;
-  
-  // Fetch cart
-  const fetchCart = async () => {
-    if (!user || !token) return;
-    setLoading(true);
-    try {
-      const res = await axios.get(`${API}/api/user/cart`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setCartItems(res.data.items || []);
-    } catch (err) {
-      console.error("Error fetching cart:", err);
-      toast.error("Failed to load cart");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Remove from cart
-  const removeFromCart = async (productId) => {
-    if (!window.confirm("Are you sure you want to remove this item?")) return;
-    try {
-      const res = await axios.delete(`${API}/api/user/cart/${productId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setCartItems(res.data.items || []);
-      toast.success("Item removed from cart");
-    } catch (err) {
-      console.error("Error removing from cart:", err);
-      toast.error("Failed to remove item");
-    }
-  };
-
-  // Update quantity
-  const updateQuantity = async (productId, quantity) => {
-    if (quantity < 1) return;
-    try {
-      const res = await axios.put(
-        `${API}/api/user/cart/${productId}`,
-        { quantity },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setCartItems(res.data.items || []);
-    } catch (err) {
-      console.error("Error updating quantity:", err);
-      toast.error("Failed to update quantity");
-    }
-  };
-
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + (item.productId?.price || 0) * item.quantity,
-    0
-  );
-
+  // ✅ Fetch cart only when user is logged in and not loading auth
   useEffect(() => {
-    fetchCart();
-  }, [user, token]);
+    if (token && user && !authLoading) {
+      fetchCart();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, user, authLoading]);
 
-  if (!user) {
+  if (!token) {
     return (
       <div className="p-6 text-center">
-        <p className="text-lg">Please login to view your cart.</p>
-        <Link to="/login" className="text-pink-600 font-semibold hover:underline">
-          Go to Login
-        </Link>
+        <h2 className="text-xl font-semibold">Your cart is empty</h2>
+        <p className="mt-2">Please <Link to="/login" className="text-pink-600">log in</Link> to view your cart.</p>
       </div>
     );
   }
 
   if (loading) {
-    return <div className="p-6 text-center text-lg">Loading cart...</div>;
-  }
-
-  if (cartItems.length === 0) {
     return (
       <div className="p-6 text-center">
-        <p className="text-lg mb-4">Your cart is empty.</p>
+        <p>Loading your cart...</p>
+      </div>
+    );
+  }
+
+  if (!cartItems.length) {
+    return (
+      <div className="p-6 text-center">
+        <h2 className="text-xl font-semibold">Your cart is empty</h2>
         <Link
           to="/shop"
-          className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700"
+          className="mt-4 inline-block px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700"
         >
-          Shop Now
+          Go Shopping
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
-      <div className="grid md:grid-cols-3 gap-6">
-        {/* Cart Items */}
-        <div className="md:col-span-2 space-y-4">
-          {cartItems.map((item) => (
-            <div
-              key={item.productId._id}
-              className="flex items-center justify-between bg-white shadow rounded p-4"
-            >
-              <div className="flex items-center space-x-4">
-                <img
-                  src={item.productId.image}
-                  alt={item.productId.name}
-                  className="w-20 h-20 object-cover rounded"
-                />
-                <div>
-                  <h2 className="font-semibold">{item.productId.name}</h2>
-                  <p className="text-gray-600">
-                    ₹{item.productId.price.toFixed(2)}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <input
-                  type="number"
-                  min="1"
-                  value={item.quantity}
-                  onChange={(e) =>
-                    updateQuantity(item.productId._id, parseInt(e.target.value))
-                  }
-                  className="border rounded px-2 py-1 w-16 text-center"
-                />
-                <button
-                  onClick={() => removeFromCart(item.productId._id)}
-                  className="text-red-500 hover:underline"
-                >
-                  Remove
-                </button>
+    <div className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
+
+      <div className="space-y-4">
+        {cartItems.map((item) => (
+          <div
+            key={item.productId?._id || item.productId}
+            className="flex items-center justify-between border p-4 rounded"
+          >
+            <div className="flex items-center space-x-4">
+              <img
+                src={item.productId?.image || "/placeholder.png"}
+                alt={item.productId?.name || "Product"}
+                className="w-16 h-16 object-cover rounded"
+              />
+              <div>
+                <h2 className="font-semibold">{item.productId?.name}</h2>
+                <p className="text-gray-500">
+                  ₹{item.productId?.price || 0} x {item.quantity}
+                </p>
               </div>
             </div>
-          ))}
-        </div>
 
-        {/* Summary */}
-        <div className="bg-white shadow rounded p-4">
-          <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
-          <div className="flex justify-between mb-2">
-            <span>Subtotal</span>
-            <span>₹{subtotal.toFixed(2)}</span>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() =>
+                  updateQuantity(item.productId?._id || item.productId, item.quantity - 1)
+                }
+                className="px-2 py-1 border rounded hover:bg-gray-100"
+              >
+                -
+              </button>
+              <span>{item.quantity}</span>
+              <button
+                onClick={() =>
+                  updateQuantity(item.productId?._id || item.productId, item.quantity + 1)
+                }
+                className="px-2 py-1 border rounded hover:bg-gray-100"
+              >
+                +
+              </button>
+              <button
+                onClick={() => removeFromCart(item.productId?._id || item.productId)}
+                className="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Remove
+              </button>
+            </div>
           </div>
-          <div className="flex justify-between font-semibold text-lg">
-            <span>Total</span>
-            <span>₹{subtotal.toFixed(2)}</span>
-          </div>
-          <button
-            onClick={() => navigate("/checkout")}
-            className="w-full bg-pink-600 text-white py-2 mt-4 rounded hover:bg-pink-700"
-          >
-            Proceed to Checkout
-          </button>
-        </div>
+        ))}
+      </div>
+
+      <div className="mt-6 flex justify-between items-center border-t pt-4">
+        <h2 className="text-lg font-semibold">Total: ₹{getCartTotal()}</h2>
+        <Link
+          to="/checkout"
+          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+        >
+          Checkout
+        </Link>
       </div>
     </div>
   );

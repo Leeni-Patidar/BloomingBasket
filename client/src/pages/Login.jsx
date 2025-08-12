@@ -34,11 +34,10 @@ const Login = () => {
     const result = await login(email, password);
     setLoading(false);
 
-    if (result.success) {
+    if (result?.success) {
       navigate(from, { replace: true });
     } else {
-      alert(result.message || "Login failed. Please try again."); // 🔔 Alert added
-      setError(result.message || "Login failed. Please try again.");
+      setError(result?.message || "Login failed. Please try again.");
     }
   };
 

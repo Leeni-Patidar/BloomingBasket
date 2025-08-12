@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Eye, EyeOff } from "lucide-react";
 
 const Register = () => {
   const navigate = useNavigate();
-  const API = "https://bloomingbasket-server.onrender.com";
+  const API =
+    window.location.hostname === "localhost"
+      ? "http://localhost:5001"
+      : "https://bloomingbasket-server.onrender.com";
 
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -43,12 +47,12 @@ const Register = () => {
       const res = await axios.post(`${API}/api/auth/send-registration-otp`, {
         email: formData.email,
       });
-      alert(res.data.message || "OTP sent to your email.");
+      toast.success(res.data.message || "OTP sent to your email.");
       setStep(2);
       setTimer(30);
       setResendDisabled(true);
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to send OTP");
+      toast.error(err.response?.data?.message || "Failed to send OTP");
     } finally {
       setLoading(false);
     }
@@ -61,10 +65,10 @@ const Register = () => {
         email: formData.email,
         otp: formData.otp,
       });
-      alert(response.data.message || "OTP verified!");
+      toast.success(response.data.message || "OTP verified!");
       setStep(3);
     } catch (error) {
-      alert(error.response?.data?.message || "OTP verification failed");
+      toast.error(error.response?.data?.message || "OTP verification failed");
     } finally {
       setLoading(false);
     }
@@ -73,16 +77,21 @@ const Register = () => {
   const registerUser = async () => {
     setLoading(true);
     try {
-      await axios.post(`${API}/api/auth/register`, {
+      const res = await axios.post(`${API}/api/auth/register`, {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
         password: formData.password,
       });
-      alert("Registration successful!");
-      navigate("/login");
+
+      if (res.data?.token) {
+        toast.success("Registration successful!");
+        navigate("/login");
+      } else {
+        toast.error(res.data?.message || "Registration failed");
+      }
     } catch (err) {
-      alert(err.response?.data?.message || "Registration failed");
+      toast.error(err.response?.data?.message || "Registration failed");
     } finally {
       setLoading(false);
     }

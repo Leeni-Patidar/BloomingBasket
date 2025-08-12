@@ -170,97 +170,289 @@
 //   )
 // }
 
-import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
-import { AuthContext } from "./AuthContext";
+// import React, { createContext, useContext, useState, useEffect } from "react";
+// import axios from "axios";
+// import { AuthContext } from "./AuthContext";
 
-export const CartContext = createContext();
+// export const CartContext = createContext();
 
-export const CartProvider = ({ children }) => {
-  const { user, token } = useContext(AuthContext);
-  const [cartItems, setCartItems] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [addingProductId, setAddingProductId] = useState(null);
+// export const CartProvider = ({ children }) => {
+//   const { user, token } = useContext(AuthContext);
+//   const [cartItems, setCartItems] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [addingProductId, setAddingProductId] = useState(null);
 
   // Assume baseURL and Authorization header are set globally in AuthContext
   // So you can call axios without full URL or headers
 
+//   const fetchCart = async () => {
+//     if (!user || !token) {
+//       setCartItems([]);
+//       return;
+//     }
+//     try {
+//       setLoading(true);
+//       const res = await axios.get("/api/user/cart");
+//       setCartItems(res.data?.items || []);
+//     } catch (err) {
+//       console.error("Error fetching cart:", err);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const addToCart = async (productId, quantity = 1) => {
+//     if (!user || !token) return;
+//     try {
+//       setAddingProductId(productId);
+//       const res = await axios.post("/api/user/cart", { productId, quantity });
+//       setCartItems(res.data?.items || []);
+//     } catch (err) {
+//       console.error("Error adding to cart:", err);
+//     } finally {
+//       setAddingProductId(null);
+//     }
+//   };
+
+//   const removeFromCart = async (productId) => {
+//     if (!user || !token) return;
+//     try {
+//       const res = await axios.delete(`/api/user/cart/${productId}`);
+//       setCartItems(res.data?.items || []);
+//     } catch (err) {
+//       console.error("Error removing from cart:", err);
+//     }
+//   };
+
+//   const updateQuantity = async (productId, quantity) => {
+//     if (!user || !token) return;
+//     try {
+//       const res = await axios.put(`/api/user/cart/${productId}`, { quantity });
+//       setCartItems(res.data?.items || []);
+//     } catch (err) {
+//       console.error("Error updating cart quantity:", err);
+//     }
+//   };
+
+//   const clearCart = async () => {
+//     if (!user || !token) return;
+//     try {
+//       const res = await axios.delete("/api/user/cart");
+//       setCartItems(res.data?.items || []);
+//     } catch (err) {
+//       console.error("Error clearing cart:", err);
+//     }
+//   };
+
+//   const getCartItemsCount = () =>
+//     cartItems.reduce((total, item) => total + item.quantity, 0);
+
+//   const getCartTotal = () =>
+//     cartItems.reduce((total, item) => {
+//       const price = item.productId?.price || item.price || 0;
+//       return total + item.quantity * price;
+//     }, 0);
+
+//   const isInCart = (productId) =>
+//     cartItems.some(
+//       (item) => (item.productId?._id || item.productId) === productId
+//     );
+
+//   useEffect(() => {
+//     fetchCart();
+//   }, [user, token]);
+
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         setCartItems,
+//         loading,
+//         addingProductId,
+//         fetchCart,
+//         addToCart,
+//         removeFromCart,
+//         updateQuantity,
+//         clearCart,
+//         getCartItemsCount,
+//         getCartTotal,
+//         isInCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// };
+
+
+// src/context/CartContext.jsx
+// 
+
+import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
+import { AuthContext } from "./AuthContext";
+import { toast } from "react-toastify";
+
+export const CartContext = createContext();
+
+// ✅ Dynamic backend base URL — works for local + Render
+const API_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5001"
+    : "https://bloomingbasket-server.onrender.com";
+
+export const CartProvider = ({ children }) => {
+  const { user, token, loading: authLoading } = useContext(AuthContext);
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [addingProductId, setAddingProductId] = useState(null);
+
+  // ==========================
+  // ✅ Fetch Cart
+  // ==========================
   const fetchCart = async () => {
-    if (!user || !token) {
-      setCartItems([]);
-      return;
-    }
+    if (!token || !user || authLoading) return; // ⛔ Prevent loop
+
     try {
       setLoading(true);
-      const res = await axios.get("/api/user/cart");
+      const res = await axios.get(`${API_BASE_URL}/api/user/cart`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
       setCartItems(res.data?.items || []);
     } catch (err) {
-      console.error("Error fetching cart:", err);
+      console.error("Cart fetch error:", err);
+      setCartItems([]);
     } finally {
       setLoading(false);
     }
   };
 
+  // ==========================
+  // ✅ Add to Cart
+  // ==========================
   const addToCart = async (productId, quantity = 1) => {
-    if (!user || !token) return;
+    if (!token) {
+      toast.warn("Please login to add items to cart");
+      return;
+    }
     try {
       setAddingProductId(productId);
-      const res = await axios.post("/api/user/cart", { productId, quantity });
+      setLoading(true);
+      const res = await axios.post(
+        `${API_BASE_URL}/api/user/cart`,
+        { productId, quantity },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        }
+      );
       setCartItems(res.data?.items || []);
+      toast.success("Added to cart!");
     } catch (err) {
-      console.error("Error adding to cart:", err);
+      console.error("Add to cart error:", err);
+      toast.error(err.response?.data?.message || "Failed to add item.");
     } finally {
       setAddingProductId(null);
+      setLoading(false);
     }
   };
 
+  // ==========================
+  // ✅ Remove from Cart
+  // ==========================
   const removeFromCart = async (productId) => {
-    if (!user || !token) return;
+    if (!token) return;
     try {
-      const res = await axios.delete(`/api/user/cart/${productId}`);
+      setLoading(true);
+      const res = await axios.delete(`${API_BASE_URL}/api/user/cart/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
       setCartItems(res.data?.items || []);
+      toast.success("Removed from cart");
     } catch (err) {
-      console.error("Error removing from cart:", err);
+      console.error("Remove from cart error:", err);
+      toast.error(err.response?.data?.message || "Failed to remove item.");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // ==========================
+  // ✅ Update Quantity
+  // ==========================
   const updateQuantity = async (productId, quantity) => {
-    if (!user || !token) return;
+    if (!token || !quantity || Number(quantity) < 1) return;
     try {
-      const res = await axios.put(`/api/user/cart/${productId}`, { quantity });
+      setLoading(true);
+      const res = await axios.put(
+        `${API_BASE_URL}/api/user/cart/${productId}`,
+        { quantity },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        }
+      );
       setCartItems(res.data?.items || []);
     } catch (err) {
-      console.error("Error updating cart quantity:", err);
+      console.error("Update quantity error:", err);
+      toast.error(err.response?.data?.message || "Failed to update quantity.");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // ==========================
+  // ✅ Clear Cart
+  // ==========================
   const clearCart = async () => {
-    if (!user || !token) return;
+    if (!token) {
+      toast.error("You must be logged in to clear your cart");
+      return;
+    }
     try {
-      const res = await axios.delete("/api/user/cart");
+      setLoading(true);
+      const res = await axios.delete(`${API_BASE_URL}/api/user/cart`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
       setCartItems(res.data?.items || []);
+      toast.success("Cart cleared");
     } catch (err) {
-      console.error("Error clearing cart:", err);
+      console.error("Clear cart error:", err);
+      toast.error(err.response?.data?.message || "Failed to clear cart");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // ==========================
+  // ✅ Auto-fetch on login
+  // ==========================
+  useEffect(() => {
+    if (!authLoading && token && user) {
+      fetchCart();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, user, authLoading]);
+
+  // ==========================
+  // ✅ Utility Functions
+  // ==========================
   const getCartItemsCount = () =>
-    cartItems.reduce((total, item) => total + item.quantity, 0);
+    cartItems.reduce((t, i) => t + (i.quantity || 0), 0);
 
   const getCartTotal = () =>
-    cartItems.reduce((total, item) => {
-      const price = item.productId?.price || item.price || 0;
-      return total + item.quantity * price;
-    }, 0);
-
-  const isInCart = (productId) =>
-    cartItems.some(
-      (item) => (item.productId?._id || item.productId) === productId
+    cartItems.reduce(
+      (total, item) =>
+        total +
+        (item.quantity || 0) * (item.productId?.price || item.price || 0),
+      0
     );
 
-  useEffect(() => {
-    fetchCart();
-  }, [user, token]);
+  const isInCart = (productId) =>
+    cartItems.some((it) => (it.productId?._id || it.productId) === productId);
 
   return (
     <CartContext.Provider
