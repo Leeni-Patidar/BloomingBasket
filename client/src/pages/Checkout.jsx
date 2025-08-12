@@ -168,7 +168,7 @@ const Checkout = () => {
                       className="mr-3"
                     />
                     <span>
-                      <strong>{addr.name}</strong>, {addr.street}, {addr.city} -{" "}
+                      <strong>{addr.name}</strong> {addr.street}, {addr.city} -{" "}
                       {addr.zip}, {addr.state}, {addr.country}
                     </span>
                   </label>
