@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import Product from "../models/Product.js";
 
+// Helper to send cart in a consistent format
 const formatCartItems = (cart) => {
   return cart.map((item) => ({
     productId: item.product._id,
@@ -10,16 +11,15 @@ const formatCartItems = (cart) => {
   }));
 };
 
+// ✅ Get Cart
 export const getCart = async (req, res) => {
   try {
     if (req.user.role === "admin") {
       return res.status(403).json({ message: "Admin does not have a cart" });
     }
-
-    const user = await User.findById(req.user._id).populate("cart.product");
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    // Using req.user.id (matches your JWT middleware)
+    const user = await User.findById(req.user.id).populate("cart.product");
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     const items = formatCartItems(user.cart);
     const total = items.reduce((sum, item) => sum + item.subtotal, 0);
@@ -31,10 +31,11 @@ export const getCart = async (req, res) => {
   }
 };
 
+// ✅ Add to Cart
 export const addToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
-    const user = await User.findById(req.user._id).populate("cart.product");
+    const user = await User.findById(req.user.id).populate("cart.product");
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -64,10 +65,13 @@ export const addToCart = async (req, res) => {
   }
 };
 
+// ✅ Remove from Cart
 export const removeFromCart = async (req, res) => {
   try {
     const { productId } = req.params;
-    const user = await User.findById(req.user._id).populate("cart.product");
+    const user = await User.findById(req.user.id).populate("cart.product");
+
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     user.cart = user.cart.filter(
       (item) => item.product._id.toString() !== productId
@@ -86,9 +90,12 @@ export const removeFromCart = async (req, res) => {
   }
 };
 
+// ✅ Clear Cart
 export const clearCart = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
     user.cart = [];
     await user.save();
 

@@ -16,6 +16,7 @@ export const CartProvider = ({ children }) => {
       ? "http://localhost:5001"
       : "https://bloomingbasket-server.onrender.com";
 
+  // ✅ Fetch cart
   const fetchCart = async () => {
     if (!token || !user) return;
     try {
@@ -32,6 +33,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // ✅ Add product to cart
   const addToCart = async (productId, quantity = 1) => {
     if (!token || !user) return;
     try {
@@ -50,6 +52,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // ✅ Remove product from cart
   const removeFromCart = async (productId) => {
     if (!token || !user) return;
     try {
@@ -63,29 +66,32 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // ✅ Clear cart
   const clearCart = async () => {
     if (!token || !user) return;
     try {
       const res = await axios.delete(`${API}/api/user/cart`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setCartItems([]);
-      setTotal(0);
+      setCartItems(res.data.items || []);
+      setTotal(res.data.total || 0);
     } catch (error) {
       console.error("Error clearing cart:", error);
     }
   };
 
-  const getCartItemsCount = () => {
-    return cartItems.reduce((count, item) => count + item.quantity, 0);
-  };
+  // ✅ Helpers
+  const getCartItemsCount = () =>
+    cartItems.reduce((count, item) => count + item.quantity, 0);
 
-  const isInCart = (productId) => {
-    return cartItems.some(
-      (item) => item.productId === productId || item.productId?._id === productId
+  const isInCart = (productId) =>
+    cartItems.some(
+      (item) =>
+        item.productId === productId ||
+        item.productId?._id === productId
     );
-  };
 
+  // ✅ Load cart when user logs in
   useEffect(() => {
     fetchCart();
   }, [token, user]);
