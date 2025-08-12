@@ -49,6 +49,7 @@ const ProductCard = ({ product }) => {
       console.error("Add to cart error:", error)
     }
   }
+  
 
   const handleWishlistToggle = async (e) => {
     e.preventDefault()

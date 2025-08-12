@@ -39,7 +39,7 @@ export const CartProvider = ({ children }) => {
     try {
       setAddingProductId(productId);
       const res = await axios.post(
-        `${API}/api/user/cart`,
+        `${API}/api/user/cart/add`,
         { productId, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -52,11 +52,27 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // ✅ Update quantity
+  const updateQuantity = async (productId, quantity) => {
+    if (!token || !user) return;
+    try {
+      const res = await axios.put(
+       `${API}/api/user/cart/update/${productId}`,
+        { quantity },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setCartItems(res.data.items || []);
+      setTotal(res.data.total || 0);
+    } catch (error) {
+      console.error("Error updating cart quantity:", error);
+    }
+  };
+
   // ✅ Remove product from cart
   const removeFromCart = async (productId) => {
     if (!token || !user) return;
     try {
-      const res = await axios.delete(`${API}/api/user/cart/${productId}`, {
+      const res = await axios.delete(`${API}/api/user/cart/remove/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCartItems(res.data.items || []);
@@ -70,7 +86,7 @@ export const CartProvider = ({ children }) => {
   const clearCart = async () => {
     if (!token || !user) return;
     try {
-      const res = await axios.delete(`${API}/api/user/cart`, {
+      const res = await axios.delete(`${API}/api/user/cart/clear`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCartItems(res.data.items || []);
@@ -84,11 +100,18 @@ export const CartProvider = ({ children }) => {
   const getCartItemsCount = () =>
     cartItems.reduce((count, item) => count + item.quantity, 0);
 
+  const getCartTotal = () =>
+    cartItems.reduce((sum, item) => {
+      const price = item.product?.price ?? item.productId?.price ?? 0;
+      return sum + price * item.quantity;
+    }, 0);
+
   const isInCart = (productId) =>
     cartItems.some(
       (item) =>
         item.productId === productId ||
-        item.productId?._id === productId
+        item.productId?._id === productId ||
+        item.product?._id === productId
     );
 
   // ✅ Load cart when user logs in
@@ -105,9 +128,11 @@ export const CartProvider = ({ children }) => {
         addingProductId,
         fetchCart,
         addToCart,
+        updateQuantity,
         removeFromCart,
         clearCart,
         getCartItemsCount,
+        getCartTotal,
         isInCart,
         setCartItems,
       }}

@@ -16,27 +16,34 @@ router.get("/profile", verifyToken, isAuth)
 // ✅ Get user data with cart and wishlist (for frontend contexts)
 router.get("/", verifyToken, async (req, res) => {
   try {
-    // If requesting all users (admin functionality)
     if (req.query.all === "true") {
-      const users = await User.find().select("-password")
-      return res.status(200).json(users)
+      const users = await User.find().select("-password");
+      return res.status(200).json(users);
     }
 
-    // Default behavior: Return current user data with cart and wishlist
-    const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId")
-    const wishlistItems = await Wishlist.find({ userId: req.user.id }).populate("productId")
-    const wishlistProducts = wishlistItems.map((item) => item.productId).filter(Boolean)
+    const cart = await Cart.findOne({ userId: req.user.id })
+      .populate("items.productId")
+      .lean(); // lean for performance
+
+    const wishlistItems = await Wishlist.find({ userId: req.user.id })
+      .populate("productId")
+      .lean();
+
+    const wishlistProducts = wishlistItems
+      .map((item) => item.productId)
+      .filter(Boolean);
 
     res.json({
       user: req.user,
-      items: cart?.items || [],
+      items: Array.isArray(cart?.items) ? cart.items : [],
       wishlist: wishlistProducts,
-    })
+    });
   } catch (err) {
-    console.error("User GET error:", err)
-    res.status(500).json({ message: "Failed to fetch user data.", error: err })
+    console.error("User GET error:", err);
+    res.status(500).json({ message: "Failed to fetch user data.", error: err });
   }
-})
+});
+
 
 // ✅ Update authenticated user's own profile
 router.put("/profile", verifyToken, updateUserProfile)

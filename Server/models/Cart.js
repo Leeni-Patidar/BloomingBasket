@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const cartItemSchema = new mongoose.Schema(
   {
@@ -14,10 +14,8 @@ const cartItemSchema = new mongoose.Schema(
       default: 1,
     },
   },
-  {
-    timestamps: true,
-  },
-)
+  { timestamps: true }
+);
 
 const cartSchema = new mongoose.Schema(
   {
@@ -29,13 +27,11 @@ const cartSchema = new mongoose.Schema(
     },
     items: [cartItemSchema],
   },
-  {
-    timestamps: true,
-  },
-)
+  { timestamps: true }
+);
 
-// Index for better performance
-cartSchema.index({ userId: 1 })
-cartSchema.index({ "items.productId": 1 })
+// Indexes for faster lookups
+cartSchema.index({ userId: 1 });
+cartSchema.index({ "items.productId": 1 });
 
-module.exports = mongoose.model("Cart", cartSchema)
+module.exports = mongoose.model("Cart", cartSchema);

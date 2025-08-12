@@ -102,7 +102,7 @@ const addReview = async (req, res) => {
     if (!product) return res.status(404).json({ message: "Product not found" });
 
     const alreadyReviewed = product.reviews.find(
-      (review) => review.user.toString() === req.user._id.toString()
+      (review) => review.user.toString() === req.user.id.toString()
     );
 
     if (alreadyReviewed) {
@@ -110,7 +110,7 @@ const addReview = async (req, res) => {
     }
 
     const review = {
-      user: req.user._id,
+      user: req.user.id,
       rating: req.body.rating,
       comment: req.body.comment,
     };
