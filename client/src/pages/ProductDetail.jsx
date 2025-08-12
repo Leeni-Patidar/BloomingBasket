@@ -35,7 +35,8 @@ const ProductDetail = () => {
   }
 
   const handleAddToCart = () => {
-    addToCart(product, quantity)
+    if (!product) return
+    addToCart(product._id, quantity)
     toast.success("Added to cart!")
   }
 

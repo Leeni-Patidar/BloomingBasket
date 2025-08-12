@@ -116,7 +116,7 @@ const Shop = () => {
     try {
       const token = localStorage.getItem("token")
       await axios.post(
-        "/api/user/cart",
+        "/api/user/cart/add",
         { productId: product._id, quantity: 1 },
         {
           headers: { Authorization: `Bearer ${token}` },
