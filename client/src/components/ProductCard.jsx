@@ -5,7 +5,6 @@ import { CartContext } from "../context/CartContext"
 import { WishlistContext } from "../context/WishlistContext"
 import { AuthContext } from "../context/AuthContext"
 
-// Mapping backend category values to readable labels
 const categoryLabels = {
   flower: "Flower Bouquet",
   chocolate: "Chocolate Bouquet",
@@ -20,12 +19,13 @@ const categoryLabels = {
 }
 
 const ProductCard = ({ product }) => {
-  const { addToCart, isInCart, loading: cartLoading, addingProductId } = useContext(CartContext)
+  const { addToCart, isInCart, addingProductId } = useContext(CartContext)
   const { addToWishlist, removeFromWishlist, isInWishlist } = useContext(WishlistContext)
   const { user } = useContext(AuthContext)
   const [imageLoading, setImageLoading] = useState(true)
   const [imageError, setImageError] = useState(false)
 
+  // ✅ Check cart using product._id mapped to productId in cart
   const productInCart = isInCart(product._id)
   const productInWishlist = isInWishlist(product._id)
   const isAdmin = user?.role === "admin"
@@ -38,14 +38,13 @@ const ProductCard = ({ product }) => {
       alert("Please login to add items to cart")
       return
     }
-
     if (product.stock <= 0) {
       alert("Product is out of stock")
       return
     }
 
     try {
-      await addToCart(product._id, 1)
+      await addToCart(product._id, 1) // ✅ Send the product._id (CartContext expects this)
     } catch (error) {
       console.error("Add to cart error:", error)
     }
@@ -59,7 +58,6 @@ const ProductCard = ({ product }) => {
       alert("Please login to manage wishlist")
       return
     }
-
     try {
       if (productInWishlist) {
         await removeFromWishlist(product._id)
