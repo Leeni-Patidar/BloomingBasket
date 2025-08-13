@@ -5,7 +5,10 @@ import { Eye, EyeOff } from "lucide-react";
 
 const Register = () => {
   const navigate = useNavigate();
-  const API = "https://bloomingbasket-server.onrender.com";
+  const API =
+    window.location.hostname === "localhost"
+      ? "http://localhost:5001"
+      : "https://bloomingbasket-server.onrender.com";
 
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({

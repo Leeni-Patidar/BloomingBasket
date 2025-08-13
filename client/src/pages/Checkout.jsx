@@ -1,3 +1,4 @@
+
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
@@ -91,43 +92,76 @@ const Checkout = () => {
     }
   };
 
-  const handlePlaceOrder = async () => {
-    if (!selectedAddress) return toast.error("Please select a delivery address");
-    const addressObj = addresses.find((a) => a._id === selectedAddress);
-    if (!addressObj) return toast.error("Selected address not found");
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (document.getElementById("razorpay-script")) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement("script");
+      script.id = "razorpay-script";
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handleOnlinePayment = async (payload) => {
+    const res = await loadRazorpayScript();
+
+    if (!res) {
+      toast.error("Razorpay SDK failed to load");
+      setLoading(false);
+      return;
+    }
 
     try {
-      setLoading(true);
+      const { data: order } = await axios.post(
+        "/api/payment/order",
+        { amount: total  }, // amount in paise (Razorpay expects smallest currency unit)
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-      const orderPayload = {
-        items: cartItems.map((item) => ({
-          productId: item.productId._id,
-          quantity: item.quantity,
-          price: item.productId.price,
-        })),
-        shippingAddress: {
-          fullName: userProfile?.name || "Customer",
-          phone: userProfile?.phone || "0000000000",
-          addressLine1: addressObj.street,
-          addressLine2: addressObj.landmark || "",
-          city: addressObj.city,
-          state: addressObj.state,
-          pincode: addressObj.zipCode,
-          country: addressObj.country || "India",
+      const options = {
+        key: "rzp_test_1FrE9xUhkujHMF",
+        amount: order.amount,
+        currency: order.currency,
+        name: "Blooming Basket",
+        description: "Online Payment",
+        order_id: order.id,
+        handler: async function (response) {
+          // You can verify payment here with server if you want before placing order
+          await placeOrder(payload);
         },
-        paymentMethod,
-        orderNotes,
-        subtotal,
-        deliveryFee,
-        tax,
-        total,
+        prefill: {
+          name: userProfile?.name || "Customer",
+          email: userProfile?.email || "",
+          contact: userProfile?.phone || "",
+        },
+        theme: {
+          color: "#ec4899",
+        },
       };
 
-      const res = await axios.post("/api/orders", orderPayload, {
+      const razor = new window.Razorpay(options);
+      razor.open();
+    } catch (err) {
+      console.error("Online payment error:", err);
+      toast.error("Payment initiation failed");
+      setLoading(false);
+    }
+  };
+
+  const placeOrder = async (payload) => {
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/orders", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // ✅ Only clear cart for non-admin users
       if (user?.role !== "admin") {
         await clearCart();
       }
@@ -139,6 +173,43 @@ const Checkout = () => {
       toast.error(err.response?.data?.message || "Order failed");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePlaceOrder = async () => {
+    if (!selectedAddress) return toast.error("Please select a delivery address");
+    const addressObj = addresses.find((a) => a._id === selectedAddress);
+    if (!addressObj) return toast.error("Selected address not found");
+
+    const orderPayload = {
+      items: cartItems.map((item) => ({
+        productId: item.productId._id,
+        quantity: item.quantity,
+        price: item.productId.price,
+      })),
+      shippingAddress: {
+        fullName: userProfile?.name || "Customer",
+        phone: userProfile?.phone || "0000000000",
+        addressLine1: addressObj.street,
+        addressLine2: addressObj.landmark || "",
+        city: addressObj.city,
+        state: addressObj.state,
+        pincode: addressObj.zipCode,
+        country: addressObj.country || "India",
+      },
+      paymentMethod,
+      orderNotes,
+      subtotal,
+      deliveryFee,
+      tax,
+      total,
+    };
+
+    if (paymentMethod === "cod") {
+      await placeOrder(orderPayload);
+    } else {
+      setLoading(true);
+      await handleOnlinePayment(orderPayload);
     }
   };
 

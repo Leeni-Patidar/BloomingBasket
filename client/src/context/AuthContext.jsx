@@ -12,7 +12,12 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   // ✅ Server API Base
-  const API = "https://bloomingbasket-server.onrender.com";
+
+  const API =
+    window.location.hostname === "localhost"
+      ? "http://localhost:5001"
+      : "https://bloomingbasket-server.onrender.com";
+  // const API = "https://bloomingbasket-server.onrender.com";
   axios.defaults.baseURL = API;
   axios.defaults.withCredentials = true; // 🔑 Allow credentials (cookies)
 

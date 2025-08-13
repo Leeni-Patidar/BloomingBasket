@@ -4,6 +4,7 @@ import axios from "axios"
 import { AuthContext } from "./AuthContext"
 import { toast } from "react-toastify"
 
+axios.defaults.baseURL = "http://localhost:5001";
 export const CartContext = createContext()
 
 export const CartProvider = ({ children }) => {
@@ -109,7 +110,7 @@ export const CartProvider = ({ children }) => {
         return
       }
 
-      await axios.delete("/api/user/cart", {
+      await axios.delete("/api/user/cart/:productId", {
         headers: { Authorization: `Bearer ${token}` },
       })
 

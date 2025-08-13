@@ -14,17 +14,35 @@ const blockAdmin = (req, res) => {
 };
 
 // GET /api/user/cart
+// router.get("/", auth, async (req, res) => {
+//   if (blockAdmin(req, res)) return;
+
+//   try {
+//     const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId");
+//     res.json({ items: cart?.items || [] });
+//   } catch (err) {
+//     console.error("Cart GET error:", err);
+//     res.status(500).json({ message: "Failed to fetch cart." });
+//   }
+// });
+
 router.get("/", auth, async (req, res) => {
   if (blockAdmin(req, res)) return;
 
   try {
+    console.log("Fetching cart for user:", req.user.id);
+
     const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId");
+
+    console.log("Cart document:", cart);
+
     res.json({ items: cart?.items || [] });
   } catch (err) {
     console.error("Cart GET error:", err);
     res.status(500).json({ message: "Failed to fetch cart." });
   }
 });
+
 
 // POST /api/user/cart
 router.post("/", auth, async (req, res) => {
