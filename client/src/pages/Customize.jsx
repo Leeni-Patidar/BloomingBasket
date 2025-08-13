@@ -1,4 +1,3 @@
-"use client"
 
 import { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
@@ -165,7 +164,7 @@ const Customize = () => {
           <h1 className="text-3xl md:text-4xl font-bold mb-4">Customize Your Perfect Bouquet</h1>
           <p className="text-lg">Craft your own personalized bouquet for any occasion</p>
           {!user && step === 1 && (
-            <div className="mt-4 py-3  button-bg rounded-lg cursor-pointer" onClick={() => navigate("/login")}>
+            <div className="mt-4 p-3 button-bg rounded-lg cursor-pointer" onClick={() => navigate("/login")}>
               <p className="text-black">
                 Please <span className="font-semibold">login</span> to continue with your customization
               </p>

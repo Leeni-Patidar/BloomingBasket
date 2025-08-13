@@ -1,89 +1,127 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
+// Create Context
 export const AuthContext = createContext();
 
-const API =
-  window.location.hostname === "localhost"
-    ? "http://localhost:5001"
-    : "https://bloomingbasket-server.onrender.com";
-
+// Auth Provider
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [loading, setLoading] = useState(true);
 
-  // ==========================
-  // ✅ Check Authentication
-  // ==========================
-  const checkAuth = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setUser(null);
-      setLoading(false);
-      return;
-    }
+  // ✅ Server API Base
 
+  const API =
+    window.location.hostname === "localhost"
+      ? "http://localhost:5001"
+      : "https://bloomingbasket-server.onrender.com";
+  // const API = "https://bloomingbasket-server.onrender.com";
+  axios.defaults.baseURL = API;
+  axios.defaults.withCredentials = true; // 🔑 Allow credentials (cookies)
+
+  // ✅ Set token in headers if available
+  useEffect(() => {
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      fetchUser();
+    } else {
+      setLoading(false);
+    }
+  }, [token]);
+
+  // ✅ Fetch Authenticated User
+  const fetchUser = async () => {
     try {
-      const res = await axios.get(`${API}/api/auth/is-auth`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUser(res.data.user);
-    } catch (err) {
-      console.error("Auth fetch error:", err);
-      setUser(null);
-      localStorage.removeItem("token");
+      const res = await axios.get("/api/auth/is-auth");
+      if (res.data?.user) {
+        setUser(res.data.user);
+      } else {
+        logout();
+      }
+    } catch (error) {
+      logout();
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  // ==========================
   // ✅ Login
-  // ==========================
   const login = async (email, password) => {
     try {
-      const res = await axios.post(`${API}/api/auth/login`, { email, password });
-
-      if (res.data?.token) {
-        localStorage.setItem("token", res.data.token);
-        setUser(res.data.user);
-        return { success: true, message: res.data.message, user: res.data.user };
-      } else {
-        return { success: false, message: "Invalid server response" };
-      }
+      const res = await axios.post("/api/auth/login", { email, password });
+      const { token: receivedToken, user, message } = res.data;
+      localStorage.setItem("token", receivedToken);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${receivedToken}`;
+      setToken(receivedToken);
+      setUser(user);
+      toast.success(message || "Login successful!");
+      return { success: true };
     } catch (err) {
-      console.error("Login error:", err);
-      return {
-        success: false,
-        message: err.response?.data?.message || "Login failed",
-      };
+      const msg = err.response?.data?.message || "Login failed.";
+      toast.error(msg);
+      return { success: false, message: msg };
     }
   };
 
-  // ==========================
-  // ✅ Logout
-  // ==========================
-  const logout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
+  // ✅ Register
+  const register = async (name, email, phone, password) => {
+    try {
+      const res = await axios.post("/api/auth/register", {
+        name,
+        email,
+        phone,
+        password,
+      });
+      const { token: receivedToken, user, message } = res.data;
+      localStorage.setItem("token", receivedToken);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${receivedToken}`;
+      setToken(receivedToken);
+      setUser(user);
+      toast.success(message || "Registration successful!");
+      return { success: true };
+    } catch (err) {
+      const msg = err.response?.data?.message || "Registration failed.";
+      toast.error(msg);
+      return { success: false, message: msg };
+    }
   };
 
-  // ==========================
-  // ✅ Register
-  // ==========================
-  const register = async (formData) => {
+  // ✅ Logout
+  const logout = () => {
+    localStorage.removeItem("token");
+    setToken("");
+    setUser(null);
+    delete axios.defaults.headers.common["Authorization"];
+    toast.info("Logged out successfully.");
+  };
+
+  // ✅ Update Profile
+  const updateProfile = async (profileData) => {
     try {
-      const res = await axios.post(`${API}/api/auth/register`, formData);
-      return { success: true, message: res.data.message };
-    } catch (err) {
-      return {
-        success: false,
-        message: err.response?.data?.message || "Registration failed",
-      };
+      const { data } = await axios.put("/api/user/profile", profileData);
+      setUser(data.user);
+      toast.success("Profile updated.");
+      return { success: true };
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to update profile.");
+      return { success: false };
+    }
+  };
+
+  // ✅ Change Password
+  const changePassword = async (oldPassword, newPassword) => {
+    try {
+      await axios.put("/api/user/change-password", {
+        currentPassword: oldPassword,
+        newPassword,
+      });
+      toast.success("Password changed successfully.");
+      return { success: true };
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Password change failed.");
+      return { success: false };
     }
   };
 
@@ -91,11 +129,14 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
+        token,
         loading,
         login,
-        logout,
         register,
-        checkAuth,
+        logout,
+        updateProfile,
+        changePassword,
+        isAuthenticated: !!token,
       }}
     >
       {children}
