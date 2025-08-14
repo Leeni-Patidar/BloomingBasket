@@ -24,7 +24,7 @@ const CategoryGrid = () => {
         {bouquetCategories.map((cat, index) => (
           <Link
             key={index}
-            to={`/bouquets/${cat.name.toLowerCase().replace(/\s+/g, "-")}`}
+            to={`/shop`}
             className="flex flex-col items-center text-center hover:text-[#ba54a9] transition"
           >
             <span className="text-sm md:text-base font-medium mb-2">
