@@ -1,4 +1,4 @@
-// models/Order.js
+
 const mongoose = require("mongoose");
 
 const paymentResultSchema = new mongoose.Schema(
@@ -51,6 +51,14 @@ const orderSchema = new mongoose.Schema(
     orderItems: [orderItemSchema],
     shippingAddress: shippingAddressSchema,
     paymentResult: paymentResultSchema,
+
+    // ✅ Added field for payment method
+    paymentMethod: {
+      type: String,
+      enum: ["cod", "online"],
+      required: true,
+    },
+
     total: { type: Number, required: true },
     status: {
       type: String,

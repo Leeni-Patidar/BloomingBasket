@@ -1,12 +1,11 @@
-// controllers/orderController.js
 const Order = require("../models/Order");
 const Product = require("../models/Product"); // Import Product model
-const Cart = require("../models/Cart"); // Import Cart model
+const Cart = require("../models/Cart");       // Import Cart model
 
 // ✅ Create Order
 exports.createOrder = async (req, res) => {
   try {
-    const { orderItems, shippingAddress, total, paymentResult, paymentMethod } = req.body; // Get paymentMethod
+    const { orderItems, shippingAddress, total, paymentResult, paymentMethod } = req.body;
 
     if (!orderItems || orderItems.length === 0) {
       return res.status(400).json({ message: "No order items" });
@@ -14,12 +13,13 @@ exports.createOrder = async (req, res) => {
 
     const order = new Order({
       // Set order status based on payment method
-      status: paymentMethod === 'COD' ? 'pending' : 'confirmed', // Assuming 'pending' for COD initial status
+      status: paymentMethod === "cod" ? "pending" : "confirmed",
       user: req.user.id,
       orderItems,
       shippingAddress,
       total,
-      paymentResult, // Razorpay payment details
+      paymentResult, // Razorpay payment details (if online)
+      paymentMethod, // ✅ Save payment method
     });
 
     const createdOrder = await order.save();
@@ -40,7 +40,7 @@ exports.createOrder = async (req, res) => {
       await cart.save();
     }
 
-    res.status(201).json(createdOrder);
+    res.status(201).json({ order: createdOrder });
   } catch (err) {
     console.error("Create Order Error:", err);
     res.status(500).json({ message: "Failed to create order" });
@@ -106,20 +106,35 @@ exports.getAllOrders = async (req, res) => {
   }
 };
 
-// ✅ Admin: Update Order Status
+// ✅ Admin: Update Order Status (Option 1 → findByIdAndUpdate)
 exports.updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
-    const order = await Order.findById(req.params.id);
+
+    const validStatuses = [
+      "pending",
+      "confirmed",
+      "processing",
+      "shipped",
+      "delivered",
+      "cancelled",
+      "returned",
+    ];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: `Invalid status value: ${status}` });
+    }
+
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true, runValidators: false } // ✅ no validation on other fields
+    );
 
     if (!order) return res.status(404).json({ message: "Order not found" });
 
-    order.status = status;
-    await order.save();
-
     res.json({ message: "Order status updated", order });
   } catch (err) {
-    console.error("Update Order Status Error:", err);
-    res.status(500).json({ message: "Failed to update status" });
+    console.error("Update Order Status Error:", err.message, err.stack);
+    res.status(500).json({ message: "Failed to update status", error: err.message });
   }
 };

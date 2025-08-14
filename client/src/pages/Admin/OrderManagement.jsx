@@ -1,3 +1,5 @@
+
+
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
@@ -74,7 +76,7 @@ const OrderManagement = () => {
                 <th className="p-3 text-left">Order #</th>
                 <th className="p-3 text-left">Customer</th>
                 <th className="p-3 text-left">Total</th>
-                <th className="p-3 text-left">Payment</th> {/* ✅ New Column */}
+                <th className="p-3 text-left">Payment</th>
                 <th className="p-3 text-left">Status</th>
                 <th className="p-3 text-left">Date</th>
                 <th className="p-3">Actions</th>
@@ -83,20 +85,33 @@ const OrderManagement = () => {
             <tbody>
               {orders.map((order) => (
                 <tr key={order._id} className="border-b">
-                  <td className="p-3 font-medium">{order.orderNumber || order._id}</td>
-                  <td className="p-3">{order.shippingAddress?.fullName || "N/A"}</td>
+                  <td className="p-3 font-medium">
+                    {order.orderNumber || order._id}
+                  </td>
+                  <td className="p-3">
+                    {order.shippingAddress?.fullName || "N/A"}
+                  </td>
                   <td className="p-3">₹{order.total?.toFixed(2)}</td>
 
-                  {/* ✅ Payment Info */}
+                  {/* ✅ Payment Info with Mode */}
                   <td className="p-3">
-                    {order.paymentResult?.razorpay_payment_id
-                      ? `Paid (${order.paymentResult.razorpay_payment_id.slice(-6)})`
-                      : "Not Paid"}
+                    {order.paymentMethod === "cod"
+                      ? "Cash on Delivery"
+                      : order.paymentResult?.razorpay_payment_id
+                      ? `Online (Paid, ${order.paymentResult.razorpay_payment_id.slice(
+                          -6
+                        )})`
+                      : "Online (Not Paid)"}
                   </td>
 
                   {/* ✅ Order Status */}
-                  <td className={`p-3 font-semibold ${statusColors[order.status] || ""}`}>
-                    {order.status?.charAt(0).toUpperCase() + order.status?.slice(1)}
+                  <td
+                    className={`p-3 font-semibold ${
+                      statusColors[order.status] || ""
+                    }`}
+                  >
+                    {order.status?.charAt(0).toUpperCase() +
+                      order.status?.slice(1)}
                   </td>
 
                   {/* ✅ Order Date */}
@@ -108,7 +123,9 @@ const OrderManagement = () => {
                   <td className="p-3">
                     <select
                       value={order.status}
-                      onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
+                      onChange={(e) =>
+                        handleStatusUpdate(order._id, e.target.value)
+                      }
                       className="border px-2 py-1 rounded"
                     >
                       <option value="pending">Pending</option>
