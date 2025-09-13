@@ -3,7 +3,7 @@
 An online bouquet & flower shop built with the MERN stack.
 BloomingBasket allows users to browse bouquets, customize bouquets, and place orders online, while admins can manage products, orders, and inventory.
 
-🚀 Live Demo: [BloomingBasket Client](https://bloomingbasket-client.onrender.com)
+🚀 Live Demo: [BloomingBasket ](https://bloomingbasket-client.onrender.com)
 
  # Features
 👥 User Features
