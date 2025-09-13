@@ -39,7 +39,7 @@ BloomingBasket allows users to browse bouquets, customize bouquets, and place or
 - JWT Authentication
 - Nodemailer (OTP emails)
 - Cloudinary (image uploads)
-- Razorpay (payment gateway) `
+- Razorpay (payment gateway) 
 
 # Deployment
 
