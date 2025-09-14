@@ -57,29 +57,29 @@ const Cart = () => {
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Your Cart</h2>
-        <button
+        {/* <button
           onClick={clearCart}
           className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
         >
           Clear Cart
-        </button>
+        </button> */}
       </div>
 
       <div className="grid gap-6">
         {cartItems.map((item) => (
           <div
-            key={item.product._id}
+            key={item.productId._id}
             className="flex items-center justify-between border-b pb-4"
           >
             <div className="flex items-center gap-4">
               <img
-                src={item.product.images?.[0] || "/placeholder.svg"}
-                alt={item.product.name}
+                src={item.productId.images?.[0] || "/placeholder.svg"}
+                alt={item.productId.name}
                 className="w-20 h-20 object-cover rounded"
               />
               <div>
-                <h3 className="font-semibold">{item.product.name}</h3>
-                <p className="text-gray-600">₹{item.product.price}</p>
+                <h3 className="font-semibold">{item.productId.name}</h3>
+                <p className="text-gray-600">₹{item.productId.price}</p>
               </div>
             </div>
 
@@ -89,13 +89,13 @@ const Cart = () => {
                 min="1"
                 value={item.quantity}
                 onChange={(e) =>
-                  updateQuantity(item.product._id, parseInt(e.target.value))
+                  updateQuantity(item.productId._id, parseInt(e.target.value))
                 }
                 className="w-16 border rounded px-2 py-1 text-center"
               />
               <button
-                onClick={() => removeFromCart(item.product._id)}
-                className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                onClick={() => removeFromCart(item.productId._id)}
+                className="px-3 py-1 button-bg "
               >
                 Remove
               </button>
