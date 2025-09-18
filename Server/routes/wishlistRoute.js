@@ -4,20 +4,8 @@ const { auth } = require("../middleware/auth");
 const Wishlist = require("../models/Wishlist");
 const Product = require("../models/Product");
 
-// 🔒 Block admin helper
-const blockAdmin = (req, res) => {
-  if (!req.user || req.user.role?.toLowerCase() === "admin" || req.user.id === "admin") {
-    console.warn(`🚫 Wishlist access blocked for admin: ${req.user?.email || "unknown"}`);
-    res.status(403).json({ message: "Admins cannot perform wishlist operations" });
-    return true;
-  }
-  return false;
-};
-
 // 🔹 GET: Fetch wishlist items for logged-in user
 router.get("/", auth, async (req, res) => {
-  if (blockAdmin(req, res)) return;
-
   try {
     const wishlistItems = await Wishlist.find({ userId: req.user.id }).populate("productId");
     const products = wishlistItems.map((item) => item.productId).filter(Boolean); // remove nulls
@@ -30,8 +18,6 @@ router.get("/", auth, async (req, res) => {
 
 // 🔹 POST: Add item to wishlist
 router.post("/", auth, async (req, res) => {
-  if (blockAdmin(req, res)) return;
-
   try {
     const { productId } = req.body;
     if (!productId) return res.status(400).json({ message: "Product ID is required" });
@@ -60,8 +46,6 @@ router.post("/", auth, async (req, res) => {
 
 // 🔹 DELETE: Remove item from wishlist
 router.delete("/:productId", auth, async (req, res) => {
-  if (blockAdmin(req, res)) return;
-
   try {
     const { productId } = req.params;
     const removed = await Wishlist.findOneAndDelete({ userId: req.user.id, productId });

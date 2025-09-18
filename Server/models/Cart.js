@@ -34,4 +34,10 @@ const cartSchema = new mongoose.Schema(
 cartSchema.index({ userId: 1 });
 cartSchema.index({ "items.productId": 1 });
 
+// ✅ Pre-save hook to remove invalid productIds
+cartSchema.pre("save", function(next) {
+  this.items = this.items.filter(item => mongoose.Types.ObjectId.isValid(item.productId));
+  next();
+});
+
 module.exports = mongoose.model("Cart", cartSchema);

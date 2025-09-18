@@ -1,161 +1,158 @@
 "use client"
+
 import { createContext, useContext, useEffect, useState } from "react"
 import axios from "axios"
 import { AuthContext } from "./AuthContext"
 import { toast } from "react-toastify"
 
-axios.defaults.baseURL = "http://localhost:5001";
 export const CartContext = createContext()
 
 export const CartProvider = ({ children }) => {
-  const { user, token } = useContext(AuthContext)
+  const { user } = useContext(AuthContext)
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(false)
 
-  // ✅ Fetch cart when user logs in
-  useEffect(() => {
-    if (user && token) {
-      fetchCart()
-    } else {
-      setCartItems([])
-    }
-  }, [user, token])
-
-  // ✅ Corrected route here
+  // Fetch cart
   const fetchCart = async () => {
-    if (!token) return
     try {
       setLoading(true)
-      const res = await axios.get("/api/user/cart", {
+      const token = localStorage.getItem("token")
+      if (!token) return
+
+      const res = await axios.get("/api/user", {
         headers: { Authorization: `Bearer ${token}` },
       })
+
       setCartItems(res.data.items || [])
     } catch (err) {
       console.error("Cart fetch error:", err)
-      if (err.response?.status !== 401) {
+      if (err.response?.status !== 401 && err.response?.status !== 500)
         toast.error("Failed to fetch cart.")
-      }
     } finally {
       setLoading(false)
     }
   }
 
+  // Fetch cart on login
+  useEffect(() => {
+    if (user) fetchCart()
+    else setCartItems([])
+  }, [user])
+
+  // Add item
   const addToCart = async (productId, quantity = 1) => {
-    if (!token) {
-      toast.warn("Please login to add items to cart")
-      return
-    }
     try {
       setLoading(true)
-      const res = await axios.post(
+      const token = localStorage.getItem("token")
+      if (!token) return toast.warn("Please login to add items")
+
+      await axios.post(
         "/api/user/cart",
         { productId, quantity },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       )
-      setCartItems(res.data.items || [])
+
+      await fetchCart()
       toast.success("Added to cart!")
     } catch (err) {
       console.error("Add to cart error:", err)
       toast.error(err.response?.data?.message || "Failed to add item.")
-      throw err
     } finally {
       setLoading(false)
     }
   }
 
-  const removeFromCart = async (productId) => {
-    if (!token) return
-    try {
-      setLoading(true)
-      const res = await axios.delete(`/api/user/cart/${productId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      setCartItems(res.data.items || [])
-    } catch (err) {
-      console.error("Remove from cart error:", err)
-      toast.error("Failed to remove item.")
-    } finally {
-      setLoading(false)
-    }
-  }
-
+  // Update quantity
   const updateQuantity = async (productId, quantity) => {
-    if (quantity < 1) return
-    if (!token) return
     try {
+      if (quantity < 1) return
       setLoading(true)
-      const res = await axios.put(
+      const token = localStorage.getItem("token")
+      if (!token) return
+
+      await axios.put(
         `/api/user/cart/${productId}`,
         { quantity },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       )
-      setCartItems(res.data.items || [])
+
+      await fetchCart()
     } catch (err) {
-      console.error("Update quantity error:", err)
+      console.error("Update cart error:", err)
       toast.error("Failed to update quantity.")
     } finally {
       setLoading(false)
     }
   }
 
-  // ✅ Fixed clearCart to sync backend + frontend
-  const clearCart = async () => {
+  // Remove item
+  const removeFromCart = async (productId) => {
     try {
-      if (!token) {
-        toast.error("You must be logged in to clear your cart")
-        return
-      }
+      setLoading(true)
+      const token = localStorage.getItem("token")
+      if (!token) return
 
-      await axios.delete("/api/user/cart/:productId", {
+      await axios.delete(`/api/user/cart/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
 
-      setCartItems([]) // ✅ frontend update
+      await fetchCart()
+      toast.success("Removed from cart")
+    } catch (err) {
+      console.error("Remove cart error:", err)
+      toast.error("Failed to remove item.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Clear cart
+  const clearCart = async () => {
+    try {
+      setLoading(true)
+      const token = localStorage.getItem("token")
+      if (!token) return toast.error("You must be logged in")
+
+      await axios.delete("/api/user/cart", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+
+      await fetchCart()
       toast.success("Cart cleared")
     } catch (err) {
       console.error("Clear cart error:", err)
       toast.error(err.response?.data?.message || "Failed to clear cart")
+    } finally {
+      setLoading(false)
     }
   }
 
-  const getCartItemsCount = () => {
-    return cartItems.reduce((total, item) => total + item.quantity, 0)
-  }
+  // Helpers
+  const isInCart = (productId) =>
+    cartItems.some((item) => (item.productId?._id || item.productId) === productId)
 
-  const getCartTotal = () => {
-    return cartItems.reduce(
-      (total, item) => total + item.quantity * (item.productId?.price || 0),
+  const getCartItemsCount = () =>
+    cartItems.reduce((total, item) => total + (item.quantity || 0), 0)
+
+  const getCartTotal = () =>
+    cartItems.reduce(
+      (total, item) => total + (item.productId?.price || 0) * (item.quantity || 0),
       0
     )
-  }
-
-  const isInCart = (productId) => {
-    if (!productId) return false
-    if (!cartItems || cartItems.length === 0) return false
-
-    return cartItems.some((item) => {
-      const itemProductId = item.productId?._id || item.productId
-      return itemProductId === productId
-    })
-  }
 
   return (
     <CartContext.Provider
       value={{
         cartItems,
         loading,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-        getCartItemsCount,
-        getCartTotal,
-        isInCart,
         fetchCart,
+        addToCart,
+        updateQuantity,
+        removeFromCart,
+        clearCart,
+        isInCart,
+        getCartItemsCount,
+        getCartTotal, // ✅ included here
       }}
     >
       {children}

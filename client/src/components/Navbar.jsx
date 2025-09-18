@@ -25,7 +25,7 @@ const Navbar = () => {
     if (user) {
       fetchCart();
     }
-  }, [user, fetchCart]);
+  }, [user]);
 
   const handleLogout = () => {
     logout();
