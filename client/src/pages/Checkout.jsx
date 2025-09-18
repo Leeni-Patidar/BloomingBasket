@@ -1,4 +1,3 @@
-
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
@@ -7,7 +6,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 const Checkout = () => {
-  const { cartItems, getCartTotal, clearCart, loading: cartLoading } = useContext(CartContext);
+  const { cartItems = [], getCartTotal, clearCart, loading: cartLoading } = useContext(CartContext);
   const { user, token } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -29,13 +28,21 @@ const Checkout = () => {
     isDefault: false,
   });
 
-  const subtotal = getCartTotal();
+  // Fallback if getCartTotal is not available
+  const subtotal =
+    typeof getCartTotal === "function"
+      ? getCartTotal()
+      : cartItems.reduce((acc, item) => acc + (item.productId?.price || 0) * item.quantity, 0);
+
   const deliveryFee = subtotal > 500 ? 0 : 50;
   const tax = Math.round(subtotal * 0.18);
   const total = subtotal + deliveryFee + tax;
 
   useEffect(() => {
-    if (!user) return navigate("/login");
+    if (!user) {
+      navigate("/login");
+      return;
+    }
     fetchAddresses();
     fetchUserProfile();
   }, [user]);
@@ -45,10 +52,11 @@ const Checkout = () => {
       const res = await axios.get("/api/addresses", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setAddresses(res.data);
-      const defaultAddr = res.data.find((a) => a.isDefault);
+      setAddresses(res.data || []);
+      const defaultAddr = res.data?.find((a) => a.isDefault);
       if (defaultAddr) setSelectedAddress(defaultAddr._id);
     } catch (err) {
+      console.error("Fetch addresses error:", err);
       toast.error("Failed to load addresses");
     }
   };
@@ -58,8 +66,9 @@ const Checkout = () => {
       const res = await axios.get("/api/user/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setUserProfile(res.data.user);
+      setUserProfile(res.data?.user || null);
     } catch (err) {
+      console.error("Fetch profile error:", err);
       toast.error("Failed to load user profile");
     }
   };
@@ -86,14 +95,14 @@ const Checkout = () => {
       fetchAddresses();
     } catch (err) {
       console.error("Add address error:", err);
-      toast.error("Failed to add address");
+      toast.error(err.response?.data?.message || "Failed to add address");
     } finally {
       setLoading(false);
     }
   };
 
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
+  const loadRazorpayScript = () =>
+    new Promise((resolve) => {
       if (document.getElementById("razorpay-script")) {
         resolve(true);
         return;
@@ -105,11 +114,9 @@ const Checkout = () => {
       script.onerror = () => resolve(false);
       document.body.appendChild(script);
     });
-  };
 
   const handleOnlinePayment = async (payload) => {
     const res = await loadRazorpayScript();
-
     if (!res) {
       toast.error("Razorpay SDK failed to load");
       setLoading(false);
@@ -119,35 +126,39 @@ const Checkout = () => {
     try {
       const { data: order } = await axios.post(
         "/api/payment/order",
-        { amount: total  }, // amount in paise (Razorpay expects smallest currency unit)
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { amount: total },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const options = {
-        key: "rzp_test_1FrE9xUhkujHMF",
+        key: process.env.REACT_APP_RAZORPAY_KEY || "rzp_test_1FrE9xUhkujHMF",
         amount: order.amount,
         currency: order.currency,
         name: "Blooming Basket",
         description: "Online Payment",
         order_id: order.id,
         handler: async function (response) {
-          // You can verify payment here with server if you want before placing order
-          await placeOrder(payload);
+          // Add payment result to payload for online payments
+          const updatedPayload = {
+            ...payload,
+            paymentResult: {
+              razorpay_order_id: order.id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              status: "paid"
+            }
+          };
+          await placeOrder(updatedPayload);
         },
         prefill: {
           name: userProfile?.name || "Customer",
           email: userProfile?.email || "",
           contact: userProfile?.phone || "",
         },
-        theme: {
-          color: "#ec4899",
-        },
+        theme: { color: "#ec4899" },
       };
 
-      const razor = new window.Razorpay(options);
-      razor.open();
+      new window.Razorpay(options).open();
     } catch (err) {
       console.error("Online payment error:", err);
       toast.error("Payment initiation failed");
@@ -181,30 +192,31 @@ const Checkout = () => {
     const addressObj = addresses.find((a) => a._id === selectedAddress);
     if (!addressObj) return toast.error("Selected address not found");
 
-   const orderPayload = {
-  items: cartItems.map((item) => ({
-    productId: item.productId._id,
-    quantity: item.quantity,
-    price: item.productId.price,
-  })),
-  shippingAddress: {
-    fullName: userProfile?.name || "Customer",
-    phone: userProfile?.phone || "0000000000",
-    street: addressObj.street,
-    landmark: addressObj.landmark || "",
-    city: addressObj.city,
-    state: addressObj.state,
-    zipCode: addressObj.zipCode,
-    country: addressObj.country || "India",
-  },
-  paymentMethod,
-  orderNotes,
-  subtotal,
-  deliveryFee,
-  tax,
-  total,
-};
-
+    // ✅ Fixed: Match backend expected structure
+    const orderPayload = {
+      orderItems: cartItems.map((item) => ({
+        productId: item.productId?._id,
+        name: item.productId?.name || "Unknown Product",
+        image: item.productId?.images?.[0] || "",
+        price: item.productId?.price || 0,
+        quantity: item.quantity,
+      })),
+      shippingAddress: {
+        fullName: userProfile?.name || "Customer",
+        phone: userProfile?.phone || "0000000000",
+        street: addressObj.street,
+        landmark: addressObj.landmark || "",
+        city: addressObj.city,
+        state: addressObj.state,
+        zipCode: addressObj.zipCode,
+        country: addressObj.country || "India",
+        label: addressObj.label || "Home"
+      },
+      paymentMethod,
+      total, // ✅ Send single total value
+      // Only include paymentResult for COD (empty object) or it will be added by Razorpay handler
+      paymentResult: paymentMethod === "cod" ? {} : undefined
+    };
 
     if (paymentMethod === "cod") {
       await placeOrder(orderPayload);
@@ -219,6 +231,7 @@ const Checkout = () => {
       <div className="max-w-6xl mx-auto px-4">
         <h1 className="text-3xl font-bold mb-6">Checkout</h1>
 
+        {/* Account Info */}
         {userProfile && (
           <div className="bg-white p-6 rounded shadow mb-6">
             <h2 className="text-xl font-semibold mb-2">Account Info</h2>
@@ -229,7 +242,7 @@ const Checkout = () => {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Side: Address & Payment */}
+          {/* Left: Address & Payment */}
           <div className="lg:col-span-2 space-y-6">
             {/* Address Selection */}
             <div className="bg-white p-6 rounded shadow">
@@ -270,7 +283,7 @@ const Checkout = () => {
                   <p>No addresses saved.</p>
                 ) : (
                   addresses.map((addr) => (
-                    <div key={addr._id} className={`p-4 border rounded-lg ${selectedAddress === addr._id ? "border-pink-500 bg-pink-50" : "border-gray-200"}`} onClick={() => setSelectedAddress(addr._id)}>
+                    <div key={addr._id} className={`p-4 border rounded-lg cursor-pointer ${selectedAddress === addr._id ? "border-pink-500 bg-pink-50" : "border-gray-200"}`} onClick={() => setSelectedAddress(addr._id)}>
                       <div className="flex items-start gap-2">
                         <input type="radio" checked={selectedAddress === addr._id} onChange={() => setSelectedAddress(addr._id)} />
                         <div>
@@ -299,18 +312,18 @@ const Checkout = () => {
             </div>
           </div>
 
-          {/* Right Side: Order Summary */}
+          {/* Right: Order Summary */}
           <div className="bg-white p-6 rounded shadow sticky top-4 h-fit lg:col-span-1">
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {cartItems.map((item) => (
-                <div key={item.productId._id} className="flex gap-3 border-b pb-2">
-                  <img src={item.productId.images?.[0] || "/placeholder.svg"} alt={item.productId.name} className="w-12 h-12 object-cover rounded" />
+                <div key={item.productId?._id} className="flex gap-3 border-b pb-2">
+                  <img src={item.productId?.images?.[0] || "/placeholder.svg"} alt={item.productId?.name || "Product"} className="w-12 h-12 object-cover rounded" />
                   <div>
-                    <h4 className="text-sm font-medium">{item.productId.name}</h4>
+                    <h4 className="text-sm font-medium">{item.productId?.name}</h4>
                     <p className="text-xs">Qty: {item.quantity}</p>
                   </div>
-                  <span className="ml-auto font-semibold text-sm">₹{(item.productId.price * item.quantity).toFixed(2)}</span>
+                  <span className="ml-auto font-semibold text-sm">₹{((item.productId?.price || 0) * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
             </div>
@@ -323,14 +336,16 @@ const Checkout = () => {
             </div>
 
             <button
-              disabled={!selectedAddress || loading || cartLoading}
+              disabled={!selectedAddress || loading || cartLoading || cartItems.length === 0}
               onClick={handlePlaceOrder}
               className="w-full mt-6 py-3 button-bg rounded-lg font-semibold disabled:opacity-50"
             >
               {loading ? "Placing Order..." : `Place Order - ₹${total.toFixed(2)}`}
             </button>
 
-            {subtotal < 500 && <p className="text-xs mt-2 text-center">Add ₹{(500 - subtotal).toFixed(2)} more for free delivery</p>}
+            {subtotal < 500 && cartItems.length > 0 && (
+              <p className="text-xs mt-2 text-center">Add ₹{(500 - subtotal).toFixed(2)} more for free delivery</p>
+            )}
           </div>
         </div>
       </div>
