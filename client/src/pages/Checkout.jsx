@@ -181,29 +181,30 @@ const Checkout = () => {
     const addressObj = addresses.find((a) => a._id === selectedAddress);
     if (!addressObj) return toast.error("Selected address not found");
 
-    const orderPayload = {
-      items: cartItems.map((item) => ({
-        productId: item.productId._id,
-        quantity: item.quantity,
-        price: item.productId.price,
-      })),
-      shippingAddress: {
-        fullName: userProfile?.name || "Customer",
-        phone: userProfile?.phone || "0000000000",
-        addressLine1: addressObj.street,
-        addressLine2: addressObj.landmark || "",
-        city: addressObj.city,
-        state: addressObj.state,
-        pincode: addressObj.zipCode,
-        country: addressObj.country || "India",
-      },
-      paymentMethod,
-      orderNotes,
-      subtotal,
-      deliveryFee,
-      tax,
-      total,
-    };
+   const orderPayload = {
+  items: cartItems.map((item) => ({
+    productId: item.productId._id,
+    quantity: item.quantity,
+    price: item.productId.price,
+  })),
+  shippingAddress: {
+    fullName: userProfile?.name || "Customer",
+    phone: userProfile?.phone || "0000000000",
+    street: addressObj.street,
+    landmark: addressObj.landmark || "",
+    city: addressObj.city,
+    state: addressObj.state,
+    zipCode: addressObj.zipCode,
+    country: addressObj.country || "India",
+  },
+  paymentMethod,
+  orderNotes,
+  subtotal,
+  deliveryFee,
+  tax,
+  total,
+};
+
 
     if (paymentMethod === "cod") {
       await placeOrder(orderPayload);

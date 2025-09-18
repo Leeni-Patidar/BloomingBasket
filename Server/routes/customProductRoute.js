@@ -1,10 +1,10 @@
 const express = require("express")
 const { auth } = require("../middleware/auth")
-const mongoose = require("mongoose")
+const Product = require("../models/Product")
 
 const router = express.Router()
 
-// Create custom product (TEMPORARY - not saved in DB)
+// Create custom product
 router.post("/", auth, async (req, res) => {
   try {
     const { name, description, price, category, images, stock, isCustom, customization } = req.body
@@ -16,12 +16,8 @@ router.post("/", auth, async (req, res) => {
       })
     }
 
-    // Generate a temporary ID for the product
-    const tempId = new mongoose.Types.ObjectId()
-
-    // Build a custom product object (not saved in DB)
-    const customProduct = {
-      _id: tempId,
+    // Create custom product
+    const customProduct = new Product({
       name,
       description,
       price,
@@ -32,16 +28,18 @@ router.post("/", auth, async (req, res) => {
       featured: false,
       isCustom: isCustom || true,
       customization: customization || {},
+      // Add user reference for custom products
       createdBy: req.user.id,
-      createdAt: new Date(),
-    }
+    })
+
+    await customProduct.save()
 
     res.status(201).json({
-      message: "Custom product created (not stored in DB)",
+      message: "Custom product created successfully",
       product: customProduct,
     })
   } catch (error) {
-    console.error("Custom product creation error:", error)
+    console.error("Create custom product error:", error)
     res.status(500).json({
       message: "Failed to create custom product",
       error: process.env.NODE_ENV === "development" ? error.message : "Internal server error",
