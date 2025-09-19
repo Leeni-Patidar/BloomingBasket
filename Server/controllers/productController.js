@@ -1,10 +1,11 @@
 const Product = require("../models/Product");
 
+
 const getProducts = async (req, res) => {
   try {
     const {
       page = 1,
-      limit = 12,
+      limit = 8,
       category,
       search,
       minPrice,
@@ -15,8 +16,21 @@ const getProducts = async (req, res) => {
 
     const filter = { isActive: true };
 
-    if (category && category !== "all") filter.category = category;
-    if (search) filter.$text = { $search: search };
+    // Category filter
+    if (category && category !== "all") {
+      filter.category = category;
+    }
+
+    // Search (name + description)
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // Price range
+
     if (minPrice || maxPrice) {
       filter.price = {};
       if (minPrice) filter.price.$gte = parseFloat(minPrice);

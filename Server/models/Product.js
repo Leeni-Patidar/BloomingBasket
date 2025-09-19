@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
   {
@@ -33,12 +33,16 @@ const productSchema = new mongoose.Schema(
         "custom", // Added custom category
       ],
     },
-    images: [
-      {
-        type: String,
-        required: true,
+    images: {
+      type: [String],
+      required: true,
+      validate: {
+        validator: function (arr) {
+          return arr.length > 0; // must have at least 1 image
+        },
+        message: "At least one image is required",
       },
-    ],
+    },
     stock: {
       type: Number,
       required: true,
@@ -116,20 +120,22 @@ const productSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  },
-)
+  }
+);
 
-productSchema.index({ name: "text", description: "text", tags: "text" })
+// ✅ Full-text search index
+productSchema.index({ name: "text", description: "text", tags: "text" });
 
+// ✅ Method to calculate average rating
 productSchema.methods.calculateAverageRating = function () {
   if (this.reviews.length === 0) {
-    this.rating.average = 0
-    this.rating.count = 0
+    this.rating.average = 0;
+    this.rating.count = 0;
   } else {
-    const sum = this.reviews.reduce((acc, review) => acc + review.rating, 0)
-    this.rating.average = sum / this.reviews.length
-    this.rating.count = this.reviews.length
+    const sum = this.reviews.reduce((acc, review) => acc + review.rating, 0);
+    this.rating.average = sum / this.reviews.length;
+    this.rating.count = this.reviews.length;
   }
-}
+};
 
-module.exports = mongoose.model("Product", productSchema)
+module.exports = mongoose.model("Product", productSchema);

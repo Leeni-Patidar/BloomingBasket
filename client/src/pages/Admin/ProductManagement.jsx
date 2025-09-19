@@ -47,7 +47,7 @@ const ProductManagement = () => {
       setLoading(true)
       const params = new URLSearchParams({
         page: currentPage.toString(),
-        limit: "10",
+        limit: "8",
         ...(searchTerm && { search: searchTerm }),
         ...(categoryFilter !== "all" && { category: categoryFilter }),
       })
@@ -288,32 +288,44 @@ const ProductManagement = () => {
                     />
                   </div>
 
-                  {/* Local file upload with preview */}
+                  {/* Image URLs input with preview */}
                   <div>
-                    <label className="block text-sm font-medium mb-1">Upload Images</label>
+                    <label className="block text-sm font-medium mb-1">Image URLs</label>
                     {productForm.images.map((img, index) => (
                       <div key={index} className="flex items-center gap-2 mb-2">
                         <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => handleImageUpload(e, index)}
+                          type="text"
+                          placeholder="https://example.com/image.jpg"
+                          value={img}
+                          onChange={(e) => updateImageField(index, e.target.value)}
                           className="flex-1 border border-gray-300 rounded-lg px-3 py-2"
                         />
                         {img && (
-                          <img src={img} alt="preview" className="w-16 h-16 object-cover rounded" />
+                          <img
+                            src={img}
+                            alt="preview"
+                            className="w-16 h-16 object-cover rounded"
+                          />
                         )}
                         {productForm.images.length > 1 && (
-                          <button type="button" onClick={() => removeImageField(index)} className="text-red-500">
+                          <button
+                            type="button"
+                            onClick={() => removeImageField(index)}
+                            className="text-red-500"
+                          >
                             Remove
                           </button>
                         )}
                       </div>
                     ))}
-                    <button type="button" onClick={addImageField} className="button-bg button-bg:hover text-sm rounded p-2 mt-1">
+                    <button
+                      type="button"
+                      onClick={addImageField}
+                      className="button-bg button-bg:hover text-sm rounded p-2 mt-1"
+                    >
                       + Add Another Image
                     </button>
                   </div>
-
                   <div className="flex gap-3 pt-4">
                     <button type="submit" className="button-bg button-bg:hover px-6 py-2 rounded-lg">
                       {editingProduct ? "Update Product" : "Create Product"}
@@ -381,9 +393,8 @@ const ProductManagement = () => {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`px-4 py-2 border rounded ${
-                    currentPage === page ? "bg-pink-500 text-white" : "hover:bg-gray-100"
-                  }`}
+                  className={`px-4 py-2 border rounded ${currentPage === page ? "bg-pink-500 text-white" : "hover:bg-gray-100"
+                    }`}
                 >
                   {page}
                 </button>

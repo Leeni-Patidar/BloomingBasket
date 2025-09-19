@@ -1,9 +1,9 @@
 const express = require("express")
 const router = express.Router()
-const User = require("../models/User")
-const Cart = require("../models/Cart")
-const Wishlist = require("../models/Wishlist")
-const { auth: verifyToken } = require("../middleware/auth")
+const User = require("../models/User.js")
+const Cart = require("../models/Cart.js")
+const Wishlist = require("../models/Wishlist.js")
+const { auth: verifyToken } = require("../middleware/auth.js")
 const {
   updateUserProfile,
   changePassword,

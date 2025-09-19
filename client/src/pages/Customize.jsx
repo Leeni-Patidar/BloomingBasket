@@ -38,16 +38,16 @@ const Customize = () => {
     setCustomization(prev => ({ ...prev, [field]: value }))
   }
 
-  const handleFileChange = e => {
-    const file = e.target.files[0]
-    if (!file) return
+const handleUrlChange = (e) => {
+  const url = e.target.value
+  if (!url) return
 
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      setCustomization(prev => ({ ...prev, referenceImage: reader.result }))
-    }
-    reader.readAsDataURL(file)
-  }
+  setCustomization((prev) => ({
+    ...prev,
+    referenceImage: url,
+  }))
+}
+
 
   const calculatePrices = () => {
     const sizePrices = { XS: 120, S: 150, M: 275, L: 300, XL: 350, XXL: 400, XXXL: 500 }
@@ -220,8 +220,8 @@ const Customize = () => {
                 value={customization.specialInstructions} onChange={e=>handleInputChange("specialInstructions", e.target.value)} />
             </div>
             <div>
-              <label className="block font-medium mb-2">Upload Reference Image <span className="text-red-500">*</span></label>
-              <input type="file" accept="image/*" onChange={handleFileChange}
+              <label className="block font-medium mb-2">Upload Reference Image URL <span className="text-red-500">*</span></label>
+              <input type="url" accept="image/*" onChange={handleUrlChange}
                 className="w-full border-2 border-gray-300 rounded-lg px-4 py-3" />
             </div>
           </div>
