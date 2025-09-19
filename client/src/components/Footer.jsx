@@ -110,15 +110,15 @@ const Footer = () => {
                 </div>
                 <div className="flex items-center gap-3">
                   <i className="fas fa-map-marker-alt  w-5"></i>
-                  <span>123 Flower Street, Garden City, GC 12345</span>
+                  <span>123 XXX, YYY, ZZZ 12345</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <i className="fas fa-phone  w-5"></i>
-                  <span>+1 (555) 123-4567</span>
+                  <span>+91 XXXXXXX888</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <i className="fas fa-envelope  w-5"></i>
-                  <span>info@bloomingbasket.com</span>
+                  <span>leenip04@gmail.com</span>
                 </div>
               </div>
             </div>
@@ -128,9 +128,19 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="flex flex-wrap -mx-4 text-gray-300">
           <div className="w-full px-4 text-center">
-            <p className=" m-0 text-sm">
-              © Blooming Basket. All rights reserved. Made with ❤️ for flower lovers.
-            </p>
+            <p className="text-white/60 text-sm">
+            © 2025 Blooming Basket. All rights reserved. Made with ❤️ and lots of flowers.
+            Made by{" "}
+            <a
+              href="https://www.linkedin.com/in/leeni-patidar-128274318/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:underline"
+            >
+              Leeni Patidar
+            </a>
+          </p>
+
           </div>
         </div>
       </div>

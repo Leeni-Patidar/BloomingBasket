@@ -176,17 +176,17 @@ const Contact = () => {
 
               <div className="mb-8">
                 <h5 className="mb-2 font-semibold">Address</h5>
-                <p>123 xxxx , xxxxx , xxxxx</p>
+                <p> 123 XXX, YYY, ZZZ 12345</p>
               </div>
 
               <div className="mb-8">
                 <h5 className="mb-2 font-semibold">Phone</h5>
-                <p>+1 (555) 123-4567</p>
+                <p>+91 XXXXXXX888</p>
               </div>
 
               <div className="mb-8">
                 <h5 className="mb-2 font-semibold">Email</h5>
-                <p>info@bloomingbasket.com</p>
+                <p>leenip04@gmail.com</p>
               </div>
 
               <div className="mt-8 pt-8 border-t border-gray-200">
