@@ -20,7 +20,8 @@ const OrderConfirmation = () => {
       const response = await axios.get(`/api/orders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      setOrder(response.data || null)
+      // ✅ Fix: pick nested "order" object
+      setOrder(response.data.order || null)
     } catch (error) {
       console.error("Fetch order error:", error)
       toast.error("Failed to load order details")
@@ -51,7 +52,7 @@ const OrderConfirmation = () => {
   }
 
   // Fallbacks
-  const orderStatus = order.orderStatus || "pending"
+  const orderStatus = order.status || "pending"
   const orderNumber = order.orderNumber || order._id || "N/A"
   const orderItems = order.orderItems || []
 

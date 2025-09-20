@@ -13,12 +13,10 @@ const wishlistSchema = new mongoose.Schema(
       required: true,
     },
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true }
 )
 
-// Ensure a user can't add the same product twice
+// Ensure one product per user only once
 wishlistSchema.index({ userId: 1, productId: 1 }, { unique: true })
 
 module.exports = mongoose.model("Wishlist", wishlistSchema)

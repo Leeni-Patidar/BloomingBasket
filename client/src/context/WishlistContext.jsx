@@ -12,7 +12,7 @@ export const WishlistProvider = ({ children }) => {
   const [wishlistItems, setWishlistItems] = useState([])
   const [loading, setLoading] = useState(false)
 
-  // Fetch wishlist on user login
+  // Fetch wishlist when user logs in/out
   useEffect(() => {
     if (user) {
       fetchWishlist()
@@ -28,11 +28,10 @@ export const WishlistProvider = ({ children }) => {
       if (!token) return
 
       const res = await axios.get("/api/user", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
-      // Updated to handle the new backend response structure
+
+      // Backend returns { wishlist: [...] }
       setWishlistItems(res.data.wishlist || [])
     } catch (err) {
       console.error("Wishlist fetch error:", err)
@@ -53,18 +52,14 @@ export const WishlistProvider = ({ children }) => {
         return
       }
 
-      await axios.post(
-        "/api/user/wishlist",
+      const res = await axios.post(
+        "/api/user/wishlist/add",
         { productId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+        { headers: { Authorization: `Bearer ${token}` } }
       )
 
-      // Refresh wishlist after adding
-      await fetchWishlist()
+      // Update wishlist with returned data
+      setWishlistItems(res.data.wishlist || [])
       toast.success("Added to wishlist")
     } catch (err) {
       console.error("Add to wishlist error:", err)
@@ -84,19 +79,16 @@ export const WishlistProvider = ({ children }) => {
       const token = localStorage.getItem("token")
       if (!token) return
 
-      await axios.delete(`/api/user/wishlist/${productId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await axios.delete(`/api/user/wishlist/remove/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` },
       })
 
-      // Update local state immediately for better UX
-      setWishlistItems((prev) => prev.filter((item) => item._id !== productId))
+      // Update wishlist with returned data
+      setWishlistItems(res.data.wishlist || [])
       toast.success("Removed from wishlist")
     } catch (err) {
       console.error("Remove from wishlist error:", err)
       toast.error("Failed to remove from wishlist.")
-      // Refresh wishlist on error to sync with server
       fetchWishlist()
     } finally {
       setLoading(false)
@@ -104,12 +96,10 @@ export const WishlistProvider = ({ children }) => {
   }
 
   const isInWishlist = (productId) => {
-    return wishlistItems.some((item) => item._id === productId)
+    return Array.isArray(wishlistItems) && wishlistItems.some((item) => item._id === productId)
   }
 
-  const getWishlistCount = () => {
-    return wishlistItems.length
-  }
+  const getWishlistCount = () => wishlistItems.length
 
   return (
     <WishlistContext.Provider

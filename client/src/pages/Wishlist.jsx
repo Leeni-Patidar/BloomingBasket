@@ -1,18 +1,20 @@
-import React, { useContext } from "react";
-import { WishlistContext } from "../context/WishlistContext";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react"
+import { WishlistContext } from "../context/WishlistContext"
+import { Link } from "react-router-dom"
 
 const Wishlist = () => {
-  const { wishlistItems, removeFromWishlist } = useContext(WishlistContext);
+  const { wishlistItems, removeFromWishlist } = useContext(WishlistContext)
 
   if (!wishlistItems || wishlistItems.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center ">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="mb-8">
             <i className="fas fa-heart text-6xl text-gray-300 mb-4"></i>
-            <h2 className="text-3xl font-bold  mb-2">Your Wishlist is empty</h2>
-            <p className=" mb-6">Looks like you haven't added anything to your wishlist yet.</p>
+            <h2 className="text-3xl font-bold mb-2">Your Wishlist is empty</h2>
+            <p className="mb-6">
+              Looks like you haven't added anything to your wishlist yet.
+            </p>
             <div className="space-x-4">
               <Link
                 to="/shop"
@@ -21,16 +23,16 @@ const Wishlist = () => {
                 <i className="fas fa-shopping-bag mr-2"></i>
                 Shop Products
               </Link>
-              </div>
+            </div>
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      <h2 className="text-3xl font-bold text-gray-800 mb-10 text-center ">
+      <h2 className="text-3xl font-bold text-gray-800 mb-10 text-center">
         My Wishlist
       </h2>
 
@@ -54,7 +56,9 @@ const Wishlist = () => {
                   <h3 className="text-lg font-semibold text-gray-800 hover:underline">
                     {product.name}
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">₹{product.price}</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    ₹{product.price}
+                  </p>
                 </Link>
               </div>
 
@@ -69,7 +73,7 @@ const Wishlist = () => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Wishlist;
+export default Wishlist
