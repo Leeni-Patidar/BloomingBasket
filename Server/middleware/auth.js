@@ -11,10 +11,10 @@ const auth = async (req, res, next) => {
     }
 
     const token = authHeader.split(" ")[1];
-    console.log("Auth token received:", token);
+    // console.log("Auth token received:", token);
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Decoded token:", decoded);
+    // console.log("Decoded token:", decoded);
 
     // Allow environment-based Admin login (not stored in DB)
     if (decoded.id === "admin") {

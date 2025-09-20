@@ -12,9 +12,7 @@ const OrderConfirmation = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (orderId && token) {
-      fetchOrderDetails()
-    }
+    if (orderId && token) fetchOrderDetails()
   }, [orderId, token])
 
   const fetchOrderDetails = async () => {
@@ -22,7 +20,7 @@ const OrderConfirmation = () => {
       const response = await axios.get(`/api/orders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      setOrder(response.data.order)
+      setOrder(response.data || null)
     } catch (error) {
       console.error("Fetch order error:", error)
       toast.error("Failed to load order details")
@@ -43,7 +41,7 @@ const OrderConfirmation = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold  mb-4">Order Not Found</h1>
+          <h1 className="text-2xl font-bold mb-4">Order Not Found</h1>
           <Link to="/shop" className="text-pink-500 hover:text-pink-600">
             Continue Shopping
           </Link>
@@ -52,8 +50,13 @@ const OrderConfirmation = () => {
     )
   }
 
+  // Fallbacks
+  const orderStatus = order.orderStatus || "pending"
+  const orderNumber = order.orderNumber || order._id || "N/A"
+  const orderItems = order.orderItems || []
+
   return (
-    <div className="min-h-screen  py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
@@ -66,8 +69,8 @@ const OrderConfirmation = () => {
                 />
               </svg>
             </div>
-            <h1 className="text-3xl font-bold  mb-2">Order Confirmed!</h1>
-            <p className="">Thank you for your order. We'll send you updates via email.</p>
+            <h1 className="text-3xl font-bold mb-2">Order Confirmed!</h1>
+            <p>Thank you for your order. We'll send you updates via email.</p>
           </div>
 
           {/* Order Info */}
@@ -75,98 +78,89 @@ const OrderConfirmation = () => {
             <div className="border-b border-gray-200 pb-4 mb-4">
               <div className="flex justify-between items-start">
                 <div>
-                  <h2 className="text-xl font-semibold ">Order #{order.orderNumber}</h2>
-                  <p className="">Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
+                  <h2 className="text-xl font-semibold">Order #{orderNumber}</h2>
+                  <p>Placed on {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "N/A"}</p>
                 </div>
                 <span
                   className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    order.status === "pending"
+                    orderStatus === "pending"
                       ? "bg-yellow-100 text-yellow-800"
-                      : order.status === "confirmed"
+                      : orderStatus === "confirmed"
                       ? "bg-blue-100 text-blue-800"
-                      : order.status === "shipped"
+                      : orderStatus === "shipped"
                       ? "bg-purple-100 text-purple-800"
-                      : order.status === "delivered"
+                      : orderStatus === "delivered"
                       ? "bg-green-100 text-green-800"
                       : "bg-red-100 text-red-800"
                   }`}
                 >
-                  {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                  {orderStatus.charAt(0).toUpperCase() + orderStatus.slice(1)}
                 </span>
               </div>
             </div>
 
             {/* Items */}
             <div className="mb-6">
-              <h3 className="font-semibold  mb-3">Order Items</h3>
+              <h3 className="font-semibold mb-3">Order Items</h3>
               <div className="space-y-3">
-                {order.items.map((item, index) => (
-                  <div key={index} className="flex items-center gap-4 p-3 border border-gray-200 rounded-lg">
-                    <img
-                      src={item.productSnapshot?.images?.[0] || "/placeholder.svg"}
-                      alt={item.productSnapshot?.name || "Product"}
-                      className="w-16 h-16 object-cover rounded"
-                    />
-                    <div className="flex-1">
-                      <h4 className="font-medium ">{item.productSnapshot?.name || "Product"}</h4>
-                      <p className=" text-sm">Quantity: {item.quantity}</p>
-                      <p className=" text-sm">Price: ₹{item.price}</p>
+                {orderItems.length > 0 ? (
+                  orderItems.map((item, index) => (
+                    <div key={index} className="flex items-center gap-4 p-3 border border-gray-200 rounded-lg">
+                      <img
+                        src={item.image || "/placeholder.svg"}
+                        alt={item.name}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <div className="flex-1">
+                        <h4 className="font-medium">{item.name || "Unnamed Product"}</h4>
+                        <p className="text-sm">Quantity: {item.quantity || 1}</p>
+                        <p className="text-sm">Price: ₹{item.price || 0}</p>
+                      </div>
+                      <span className="font-semibold">₹{((item.price || 0) * (item.quantity || 1)).toFixed(2)}</span>
                     </div>
-                    <span className="font-semibold ">₹{(item.price * item.quantity).toFixed(2)}</span>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p>No items found in this order.</p>
+                )}
               </div>
             </div>
 
             {/* Address */}
-            <div className="mb-6">
-              <h3 className="font-semibold  mb-3">Delivery Address</h3>
-              <div className="p-3 border border-gray-200 rounded-lg">
-                <p className="font-medium ">{order.shippingAddress.fullName}</p>
-                <p className="">
-                  {order.shippingAddress.addressLine1}
-                  {order.shippingAddress.addressLine2 && `, ${order.shippingAddress.addressLine2}`}
-                </p>
-                <p className="">
-                  {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}
-                </p>
-                <p className="">Phone: {order.shippingAddress.phone}</p>
+            {order.shippingAddress && (
+              <div className="mb-6">
+                <h3 className="font-semibold mb-3">Delivery Address</h3>
+                <div className="p-3 border border-gray-200 rounded-lg">
+                  <p className="font-medium">{order.shippingAddress.fullName || "N/A"}</p>
+                  <p>{order.shippingAddress.street || ""}</p>
+                  {order.shippingAddress.landmark && <p>{order.shippingAddress.landmark}</p>}
+                  <p>
+                    {order.shippingAddress.city || ""}, {order.shippingAddress.state || ""} -{" "}
+                    {order.shippingAddress.zipCode || ""}
+                  </p>
+                  <p>Phone: {order.shippingAddress.phone || "N/A"}</p>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Payment */}
             <div className="border-t border-gray-200 pt-4">
               <div className="flex justify-between mb-2">
-                <span className="">Payment Method:</span>
-                <span className="font-medium ">
+                <span>Payment Method:</span>
+                <span className="font-medium">
                   {order.paymentMethod === "cod" ? "Cash on Delivery" : "Online Payment"}
                 </span>
               </div>
-              <div className="flex justify-between mb-2">
-                <span className="">Subtotal:</span>
-                <span className="">₹{order.subtotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between mb-2">
-                <span className="">Delivery Fee:</span>
-                <span className="">
-                  {order.deliveryFee === 0 ? "FREE" : `₹${order.deliveryFee.toFixed(2)}`}
-                </span>
-              </div>
-              <div className="flex justify-between mb-2">
-                <span className="">Tax:</span>
-                <span className="">₹{order.tax.toFixed(2)}</span>
-              </div>
               <div className="border-t border-gray-200 pt-2 flex justify-between font-semibold text-lg">
-                <span className="">Total:</span>
-                <span className="text-pink-600">₹{order.total.toFixed(2)}</span>
+                <span>Total:</span>
+                <span className="text-pink-600">₹{(order.total || 0).toFixed(2)}</span>
               </div>
             </div>
 
             {/* Notes */}
             {order.orderNotes && (
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <h3 className="font-semibold  mb-2">Order Notes:</h3>
-                <p className="">{order.orderNotes}</p>
+                <h3 className="font-semibold mb-2">Order Notes:</h3>
+                <p>{order.orderNotes}</p>
               </div>
             )}
           </div>
@@ -181,7 +175,7 @@ const OrderConfirmation = () => {
             </Link>
             <Link
               to="/"
-              className="bg-gray-200  px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+              className="bg-gray-200 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
             >
               Done
             </Link>

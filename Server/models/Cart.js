@@ -31,7 +31,7 @@ const cartSchema = new mongoose.Schema(
 );
 
 // Indexes for faster lookups
-cartSchema.index({ userId: 1 });
+// cartSchema.index({ userId: 1 });
 cartSchema.index({ "items.productId": 1 });
 
 // ✅ Pre-save hook to remove invalid productIds

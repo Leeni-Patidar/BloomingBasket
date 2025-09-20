@@ -1,12 +1,17 @@
-
 const mongoose = require("mongoose");
+const { v4: uuidv4 } = require("uuid"); // for generating unique order numbers
 
 const paymentResultSchema = new mongoose.Schema(
   {
     razorpay_order_id: { type: String },
     razorpay_payment_id: { type: String },
     razorpay_signature: { type: String },
-    status: { type: String, default: "created" }, // created, paid, failed
+    status: {
+      type: String,
+      enum: ["created", "paid", "failed"],
+      default: "created",
+    },
+    paidAt: { type: Date },
   },
   { _id: false }
 );
@@ -51,15 +56,21 @@ const orderSchema = new mongoose.Schema(
     orderItems: [orderItemSchema],
     shippingAddress: shippingAddressSchema,
     paymentResult: paymentResultSchema,
-
-    // ✅ Added field for payment method
     paymentMethod: {
       type: String,
       enum: ["cod", "online"],
       required: true,
     },
-
     total: { type: Number, required: true },
+
+    // ✅ Add orderNumber
+    orderNumber: {
+      type: String,
+      unique: true,
+      required: true,
+      default: () => uuidv4(),
+    },
+
     status: {
       type: String,
       enum: [
@@ -73,6 +84,12 @@ const orderSchema = new mongoose.Schema(
       ],
       default: "pending",
     },
+
+    isPaid: { type: Boolean, default: false },
+    paidAt: { type: Date },
+
+    isDelivered: { type: Boolean, default: false },
+    deliveredAt: { type: Date },
   },
   { timestamps: true }
 );

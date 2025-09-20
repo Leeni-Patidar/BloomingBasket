@@ -186,19 +186,18 @@ const Checkout = () => {
       setLoading(false);
     }
   };
-
   const handlePlaceOrder = async () => {
     if (!selectedAddress) return toast.error("Please select a delivery address");
     const addressObj = addresses.find((a) => a._id === selectedAddress);
     if (!addressObj) return toast.error("Selected address not found");
 
-    // ✅ Fixed: Match backend expected structure
+    // ✅ Fixed: Match backend expected structure and ensure productId is valid
     const orderPayload = {
       orderItems: cartItems.map((item) => ({
-        productId: item.productId?._id,
-        name: item.productId?.name || "Unknown Product",
-        image: item.productId?.images?.[0] || "",
-        price: item.productId?.price || 0,
+        productId: item.productId?._id || item.productId, // fallback if only ID exists
+        name: item.productId?.name || item.name || "Unknown Product",
+        image: item.productId?.images?.[0] || item.image || "",
+        price: item.productId?.price || item.price || 0,
         quantity: item.quantity,
       })),
       shippingAddress: {
@@ -210,13 +209,16 @@ const Checkout = () => {
         state: addressObj.state,
         zipCode: addressObj.zipCode,
         country: addressObj.country || "India",
-        label: addressObj.label || "Home"
+        label: addressObj.label || "Home",
       },
       paymentMethod,
-      total, // ✅ Send single total value
-      // Only include paymentResult for COD (empty object) or it will be added by Razorpay handler
-      paymentResult: paymentMethod === "cod" ? {} : undefined
+      total,
+      // COD gets empty object, online handled in Razorpay handler
+      paymentResult: paymentMethod === "cod" ? {} : undefined,
     };
+
+    // Debugging helper (optional, remove later)
+    console.log("📦 Sending Order Payload:", orderPayload);
 
     if (paymentMethod === "cod") {
       await placeOrder(orderPayload);
@@ -225,6 +227,7 @@ const Checkout = () => {
       await handleOnlinePayment(orderPayload);
     }
   };
+
 
   return (
     <div className="min-h-screen py-8">

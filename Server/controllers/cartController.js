@@ -145,13 +145,24 @@ const removeFromCart = async (req, res) => {
  */
 const clearCart = async (req, res) => {
   try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
     const userId = req.user.id;
     const cart = await Cart.findOne({ userId });
+
     if (!cart) {
+      // Cart not found, but still return success
       return res.json({ message: "Cart cleared", items: [], total: 0 });
     }
 
+    // Clear items
     cart.items = [];
+    
+    // Optional: reset total if stored
+    if (cart.total) cart.total = 0;
+
     await cart.save();
 
     return res.json({ message: "Cart cleared", items: [], total: 0 });
@@ -160,6 +171,7 @@ const clearCart = async (req, res) => {
     return res.status(500).json({ message: "Failed to clear cart." });
   }
 };
+
 
 module.exports = {
   getCart,
