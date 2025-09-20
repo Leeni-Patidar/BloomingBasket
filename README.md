@@ -60,7 +60,7 @@ Install frontend:
 - npm install
 - npm run dev
 
-# Install backend:
+ Install backend:
 - cd server
 - npm install
 - node server.js
