@@ -9,10 +9,10 @@ import { AuthContext } from "../context/AuthContext"
 const categoryLabels = {
   flower: "Flower Bouquet",
   chocolate: "Chocolate Bouquet",
-  softtoy: "Soft Toy Bouquet",
+  "soft-toy": "Soft Toy Bouquet",
   pipecleaner: "Pipecleaner Bouquet",
   butterfly: "Butterfly Bouquet",
-  hairclip: "Hair Clip Bouquet",
+  "hair-clip": "Hair Clip Bouquet",
   crochet: "Crochet Bouquet",
   origami: "Origami Bouquet",
   fruit: "Fruit Bouquet",

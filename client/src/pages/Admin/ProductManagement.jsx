@@ -31,7 +31,7 @@ const ProductManagement = () => {
     "soft-toy",
     "pipecleaner",
     "butterfly",
-    "hairclip",
+    "hair-clip",
     "crochet",
     "origami",
     "fruit",

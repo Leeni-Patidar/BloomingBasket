@@ -50,12 +50,12 @@ const handleUrlChange = (e) => {
 
 
   const calculatePrices = () => {
-    const sizePrices = { XS: 120, S: 150, M: 275, L: 300, XL: 350, XXL: 400, XXXL: 500 }
+    const sizePrices = { XS: 190, S: 350, M: 500, L: 750, XL: 950, XXL: 1000 }
     const typePrices = {
-      "Flower Bouquet": 250,
+      "Flower Bouquet": 350,
       "Chocolate Bouquet": 550,
       "Soft Toy Bouquet": 550,
-      "Pipecleaner Bouquet": 450,
+      "Pipecleaner Bouquet": 550,
       "Butterfly Bouquet": 450,
       "Hair Clip Bouquet": 350,
       "Crochet Bouquet": 650,
