@@ -46,7 +46,7 @@ router.post(
         "soft-toy",
         "pipecleaner",
         "butterfly",
-        "hair-clip",
+        "hairclip",
         "crochet",
         "origami",
         "fruit",

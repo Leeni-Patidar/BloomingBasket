@@ -25,7 +25,7 @@ const productSchema = new mongoose.Schema(
         "soft-toy",
         "pipecleaner",
         "butterfly",
-        "hair-clip",
+        "hairclip",
         "crochet",
         "origami",
         "fruit",

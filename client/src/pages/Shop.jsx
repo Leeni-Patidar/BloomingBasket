@@ -11,10 +11,10 @@ import { useNavigate } from "react-router-dom"
 const categoryMap = {
   "Flower Bouquet": "flower",
   "Chocolate Bouquet": "chocolate",
-  "Soft Toy Bouquet": "soft-toy",
+  "Soft Toy Bouquet": "softtoy",
   "Pipecleaner Bouquet": "pipecleaner",
   "Butterfly Bouquet": "butterfly",
-  "Hair Clip Bouquet": "hair-clip",
+  "Hair Clip Bouquet": "hairclip",
   "Crochet Bouquet": "crochet",
   "Origami Bouquet": "origami",
   "Fruit Bouquet": "fruit",

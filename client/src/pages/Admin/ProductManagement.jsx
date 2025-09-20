@@ -31,7 +31,7 @@ const ProductManagement = () => {
     "soft-toy",
     "pipecleaner",
     "butterfly",
-    "hair-clip",
+    "hairclip",
     "crochet",
     "origami",
     "fruit",
@@ -251,7 +251,7 @@ const ProductManagement = () => {
                   />
                   <textarea
                     placeholder="Description *"
-                    rows="3"
+                    rows="2"
                     value={productForm.description}
                     onChange={(e) => setProductForm((prev) => ({ ...prev, description: e.target.value }))}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2"
@@ -267,7 +267,8 @@ const ProductManagement = () => {
                       className="border border-gray-300 rounded-lg px-3 py-2"
                       required
                     />
-                    <select
+                    <select 
+                    placeholder="Categories *"
                       value={productForm.category}
                       onChange={(e) => setProductForm((prev) => ({ ...prev, category: e.target.value }))}
                       className="border border-gray-300 rounded-lg px-3 py-2"
